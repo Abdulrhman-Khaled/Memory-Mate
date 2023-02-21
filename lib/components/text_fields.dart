@@ -27,6 +27,7 @@ Widget textField(
         Function()? onTapFunction,
         Function(String)? onChangeFunction,
         dynamic focusNode,
+        String validatText = 'Error',
         String helperText = ''}) =>
     SizedBox(
       width: width,
@@ -34,6 +35,12 @@ Widget textField(
       child: TextFormField(
         onTap: onTapFunction,
         onChanged: onChangeFunction,
+        validator:(value) {
+          if (value == null || value.isEmpty) {
+                return validatText;
+              }
+              return null;
+        },
         focusNode: focusNode,
         keyboardType: textType,
         obscureText: isPassword,

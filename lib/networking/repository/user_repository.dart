@@ -3,7 +3,7 @@ import 'package:dio/dio.dart';
 import '../../models/new_user.dart';
 import '../../models/patient_user.dart';
 import '../api/dio_exception.dart';
-import '../api/user_api.dart';
+import '../models api/user_api.dart';
 
 class UserRepository {
   final UserApi userApi;

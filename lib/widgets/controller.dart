@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import '../models/new_user.dart';
 import '../models/patient_user.dart';
 import '../networking/api/dio_client.dart';
-import '../networking/api/user_api.dart';
+import '../networking/models api/user_api.dart';
 import '../networking/repository/user_repository.dart';
 
 class HomeController {

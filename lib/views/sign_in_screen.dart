@@ -18,13 +18,13 @@ class _SignInState extends State<SignIn> {
   final emailFocusNode = FocusNode();
   final passwordFocusNode = FocusNode();
 
+  final formKey = GlobalKey<FormState>();
+
   bool obscured = false;
 
   @override
   void initState() {
     super.initState();
-    //emailController.text = testEmail;
-    //passwordController.text = testPassword;
     obscured = true;
   }
 
@@ -52,6 +52,7 @@ class _SignInState extends State<SignIn> {
         ),
       ),
       body: Form(
+        key: formKey,
         child: SingleChildScrollView(
           child: Column(
             children: [
@@ -65,16 +66,16 @@ class _SignInState extends State<SignIn> {
               Directionality(
                 textDirection: TextDirection.rtl,
                 child: textField(
-                  width: 300,
-                  labelText: 'الإيميل او رقم الهاتف',
-                  helperText:
-                      'أدخل الإيميل او الهاتف الذي قمت بانشاء حسابك من خلاله',
-                  iconLead: Icons.email_outlined,
-                  hintText: 'example@gmail.com',
-                  textType: TextInputType.emailAddress,
-                  textFormController: emailController,
-                  focusNode: emailFocusNode,
-                ),
+                    width: 300,
+                    labelText: 'الإيميل او رقم الهاتف',
+                    helperText:
+                        'أدخل الإيميل او الهاتف الذي قمت بانشاء حسابك من خلاله',
+                    iconLead: Icons.email_outlined,
+                    hintText: 'example@gmail.com',
+                    textType: TextInputType.emailAddress,
+                    textFormController: emailController,
+                    focusNode: emailFocusNode,
+                    validatText: 'يرجي ادخال إيميل او رقم هاتف صالح'),
               ),
               const SizedBox(height: 25),
               Directionality(
@@ -89,6 +90,7 @@ class _SignInState extends State<SignIn> {
                   textType: TextInputType.visiblePassword,
                   textFormController: passwordController,
                   focusNode: passwordFocusNode,
+                  validatText: 'يرجي ادخال كلمة مرور صحيحة',
                   needSuffix: true,
                   isPassword: obscured,
                   iconSuffix: obscured
@@ -122,8 +124,15 @@ class _SignInState extends State<SignIn> {
                 height: 50,
                 buttonText: 'تسجيل الدخول',
                 function: () {
-                  if (kDebugMode) {
-                    print('object');
+                  if (formKey.currentState!.validate()) {
+                    // you'd often call a server or save the information in a database.
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                          backgroundColor: Colors.red,
+                          content:
+                              Text('هناك خطأ في البيانات يرجي إعادة المحاولة')),
+                    );
                   }
                 },
               ),
