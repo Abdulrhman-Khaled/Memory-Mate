@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:memory_mate/constants/color_constatnts.dart';
-import 'package:memory_mate/views/sign_in_screen.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+
+import 'views/patient_home_screen.dart';
 
 void main() {
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
@@ -33,12 +34,13 @@ class MyApp extends StatelessWidget {
       supportedLocales: const [
         Locale('ar', 'AE'),
         Locale("en", "US"),
+        Locale("en", "UK"),
       ],
       theme: ThemeData(
         fontFamily: 'Boutros',
         primarySwatch: mintGreenMaterial,
       ),
-      home: const SignIn(),
+      home: HomePage(),
     );
   }
 }
