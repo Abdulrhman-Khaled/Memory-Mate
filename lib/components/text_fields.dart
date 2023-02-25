@@ -27,6 +27,7 @@ Widget textField(
         Function()? onTapFunction,
         Function(String)? onChangeFunction,
         dynamic focusNode,
+        String validatText2 = '',
         String validatText = 'Error',
         String helperText = ''}) =>
     SizedBox(
@@ -39,7 +40,7 @@ Widget textField(
           if (value == null || value.isEmpty) {
                 return validatText;
               }
-              return null;
+              return validatText2;
         },
         focusNode: focusNode,
         keyboardType: textType,

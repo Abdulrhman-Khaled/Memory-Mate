@@ -1,8 +1,10 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:memory_mate/components/buttons.dart';
 import 'package:memory_mate/components/text_fields.dart';
 import 'package:memory_mate/constants/color_constatnts.dart';
+import 'package:page_transition/page_transition.dart';
+
+import '../splash and onboarding/for_pass1.dart';
 
 class SignIn extends StatefulWidget {
   const SignIn({super.key});
@@ -108,7 +110,13 @@ class _SignInState extends State<SignIn> {
                 width: 300,
                 alignment: AlignmentDirectional.topStart,
                 child: InkWell(
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      PageTransition(
+                          type: PageTransitionType.fade, child: forgetOne()),
+                    );
+                  },
                   child: const Text(
                     'نسيت كلمة المرور',
                     style: TextStyle(

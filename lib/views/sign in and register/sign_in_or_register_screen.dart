@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:memory_mate/components/buttons.dart';
 import 'package:memory_mate/constants/color_constatnts.dart';
-import 'package:memory_mate/views/sign_in_screen.dart';
+import 'package:memory_mate/views/sign in and register/sign_in_screen.dart';
 import 'package:page_transition/page_transition.dart';
 
 class SignInOrRegister extends StatefulWidget {
@@ -17,7 +17,9 @@ class _SignInOrRegisterState extends State<SignInOrRegister> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.white,
-      body: SingleChildScrollView(
+      body: 
+      
+      SingleChildScrollView(
         child: Column(
           children: [
             const SizedBox(height: 40),

@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:memory_mate/constants/color_constatnts.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-
-import 'views/patient_home_screen.dart';
+import 'package:memory_mate/views/sign%20in%20and%20register/signup.dart';
+import 'package:memory_mate/views/splash%20and%20onboarding/splash.dart';
 
 void main() {
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
@@ -40,7 +40,7 @@ class MyApp extends StatelessWidget {
         fontFamily: 'Boutros',
         primarySwatch: mintGreenMaterial,
       ),
-      home: HomePage(),
+      home: sign_up(),
     );
   }
 }
