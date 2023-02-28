@@ -1,8 +1,8 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:memory_mate/components/buttons.dart';
 import 'package:memory_mate/constants/color_constatnts.dart';
 import 'package:memory_mate/views/sign in and register/sign_in_screen.dart';
+import 'package:memory_mate/views/sign%20in%20and%20register/sign_up_screen.dart';
 import 'package:page_transition/page_transition.dart';
 
 class SignInOrRegister extends StatefulWidget {
@@ -13,12 +13,13 @@ class SignInOrRegister extends StatefulWidget {
 }
 
 class _SignInOrRegisterState extends State<SignInOrRegister> {
+
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.white,
       body: 
-      
       SingleChildScrollView(
         child: Column(
           children: [
@@ -45,9 +46,11 @@ class _SignInOrRegisterState extends State<SignInOrRegister> {
               height: 50,
               buttonText: 'إنشاء حساب جديد',
               function: () {
-                if (kDebugMode) {
-                  print('object');
-                }
+               Navigator.push(
+                    context,
+                    PageTransition(
+                        type: PageTransitionType.fade, child: const SignUp()),
+                  );
               },
             ),
             const SizedBox(height: 20),

@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:memory_mate/components/buttons.dart';
 import 'package:memory_mate/components/text_fields.dart';
 import 'package:memory_mate/constants/color_constatnts.dart';
+import 'package:memory_mate/views/sign%20in%20and%20register/sign_up_screen.dart';
 import 'package:page_transition/page_transition.dart';
 
-import '../splash and onboarding/for_pass1.dart';
+import '../home pages/patient_home_screen.dart';
+import '../splash and onboarding/forget_password_first_screen.dart';
 
 class SignIn extends StatefulWidget {
   const SignIn({super.key});
@@ -69,15 +71,14 @@ class _SignInState extends State<SignIn> {
                 textDirection: TextDirection.rtl,
                 child: textField(
                     width: 300,
-                    labelText: 'الإيميل او رقم الهاتف',
-                    helperText:
-                        'أدخل الإيميل او الهاتف الذي قمت بانشاء حسابك من خلاله',
+                    labelText: 'الإيميل',
+                    helperText: 'أدخل الإيميل الذي قمت بانشاء حسابك من خلاله',
                     iconLead: Icons.email_outlined,
                     hintText: 'example@gmail.com',
                     textType: TextInputType.emailAddress,
                     textFormController: emailController,
                     focusNode: emailFocusNode,
-                    validatText: 'يرجي ادخال إيميل او رقم هاتف صالح'),
+                    validatText: 'يرجي ادخال إيميل صالح'),
               ),
               const SizedBox(height: 25),
               Directionality(
@@ -132,8 +133,14 @@ class _SignInState extends State<SignIn> {
                 height: 50,
                 buttonText: 'تسجيل الدخول',
                 function: () {
-                  if (formKey.currentState!.validate()) {
-                    // you'd often call a server or save the information in a database.
+                  FocusManager.instance.primaryFocus?.unfocus();
+                  if (formKey.currentState!.validate()) {                   
+                    Navigator.pushReplacement(
+                      context,
+                      PageTransition(
+                          type: PageTransitionType.fade,
+                          child: const PatientHomeScreen()),
+                    );
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
@@ -149,7 +156,14 @@ class _SignInState extends State<SignIn> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   InkWell(
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        PageTransition(
+                            type: PageTransitionType.fade,
+                            child: const SignUp()),
+                      );
+                    },
                     child: const Text(
                       'انشاء حساب الأن',
                       style: TextStyle(

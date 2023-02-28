@@ -1,33 +1,33 @@
 import 'package:flutter/material.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../constants/color_constatnts.dart';
 import '../../models/onboard_model.dart';
 import '../sign in and register/sign_in_or_register_screen.dart';
 
-class OnBoard extends StatefulWidget {
-  const OnBoard({key});
+class OnBoardingScreen extends StatefulWidget {
+  const OnBoardingScreen({super.key});
 
   @override
-  _OnBoardState createState() => _OnBoardState();
+  _OnBoardingScreenState createState() => _OnBoardingScreenState();
 }
 
-class _OnBoardState extends State<OnBoard> {
+class _OnBoardingScreenState extends State<OnBoardingScreen> {
   int currentIndex = 0;
   late PageController _pageController;
   List<OnboardModel> screens = <OnboardModel>[
     OnboardModel(
       img: 'assets/images/pictures/picone.png',
-      text: "نهتم من خلال البرنامج بتنظيم الحالة الصحية لمرضي الزهايمر كتنظيم موعيد الادوية",
-      desc:
-          "",
+      text:
+          "نهتم من خلال البرنامج بتنظيم الحالة الصحية لمريض الزهايمر كتنظيم مواعيد الادوية",
+      desc: "",
       bg: Colors.white,
       button: Colors.white30,
     ),
     OnboardModel(
       img: 'assets/images/pictures/pictwo.png',
       text: "ونهتم بالحالة النفسية كمشاركة الذكريات والمحادثات والألعاب",
-      desc:
-          "",
+      desc: "",
       bg: Colors.white,
       button: Colors.white30,
     ),
@@ -46,11 +46,9 @@ class _OnBoardState extends State<OnBoard> {
   }
 
   _storeOnboardInfo() async {
-    print("Shared pref called");
     int isViewed = 0;
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setInt('onBoard', isViewed);
-    print(prefs.getInt('onBoard'));
   }
 
   @override
@@ -58,11 +56,11 @@ class _OnBoardState extends State<OnBoard> {
     return Scaffold(
       backgroundColor: AppColors.white,
       body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20.0,vertical:40.0),
+        padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 40.0),
         child: PageView.builder(
             itemCount: screens.length,
             controller: _pageController,
-            physics: NeverScrollableScrollPhysics(),
+            physics: const NeverScrollableScrollPhysics(),
             onPageChanged: (int index) {
               setState(() {
                 currentIndex = index;
@@ -74,25 +72,23 @@ class _OnBoardState extends State<OnBoard> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  SizedBox(
-                          height: 65.0,
-                        ),
-                  Image.asset(screens[index].img),
-
+                  const SizedBox(
+                    height: 65.0,
+                  ),
+                  SizedBox(height: 300, child: Image.asset(screens[index].img)),
                   Text(
                     screens[index].text,
                     textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 15.0,
-                      fontWeight: FontWeight.bold,
+                    style: const TextStyle(
+                      fontSize: 25.0,
                       fontFamily: 'Boutros',
                       color: AppColors.mintGreen,
                     ),
                   ),
+                  const SizedBox(
+                    height: 100.0,
+                  ),
                   SizedBox(
-                          height: 100.0,
-                        ),
-                  Container(
                     height: 10.0,
                     child: ListView.builder(
                       itemCount: screens.length,
@@ -103,7 +99,8 @@ class _OnBoardState extends State<OnBoard> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Container(
-                                margin: EdgeInsets.symmetric(horizontal: 3.0),
+                                margin:
+                                    const EdgeInsets.symmetric(horizontal: 3.0),
                                 width: currentIndex == index ? 25 : 8,
                                 height: 5,
                                 decoration: BoxDecoration(
@@ -117,36 +114,35 @@ class _OnBoardState extends State<OnBoard> {
                       },
                     ),
                   ),
-                  
                   InkWell(
                     onTap: () async {
-                      print(index);
                       if (index == screens.length - 1) {
                         await _storeOnboardInfo();
                         // ignore: use_build_context_synchronously
-                        Navigator.pushReplacement(context,
-                            MaterialPageRoute(builder: (context) => SignInOrRegister()));
+                        Navigator.pushReplacement(
+                            context,
+                            PageTransition(
+                                type: PageTransitionType.fade,
+                                child: const SignInOrRegister()));
                       }
 
                       _pageController.nextPage(
-                        duration: Duration(milliseconds: 150),
+                        duration: const Duration(milliseconds: 150),
                         curve: Curves.bounceIn,
                       );
                     },
                     child: Container(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 30.0),
+                      padding: const EdgeInsets.symmetric(horizontal: 30.0),
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(25.0)),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min, children: [
-                        
-                        const Text(
+                      child:
+                          Row(mainAxisSize: MainAxisSize.min, children: const [
+                        Text(
                           "التالي",
                           style: TextStyle(
-                              fontSize: 20.0,
-                              color: AppColors.mintGreen,
-                              ),
+                            fontSize: 20.0,
+                            color: AppColors.mintGreen,
+                          ),
                         ),
                         SizedBox(
                           width: 15.0,

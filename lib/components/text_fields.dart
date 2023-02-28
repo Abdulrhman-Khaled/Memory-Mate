@@ -9,38 +9,51 @@ Widget textField(
         Color fillColor = AppColors.lightmintGreenOp,
         double textSize = 20.0,
         Color textColor = AppColors.lightBlack,
-        String hintText = 'hint',
+        String hintText = '',
         Color hintColor = AppColors.lightGrey,
         double hintSize = 20.0,
-        int maxLetters = 80,
+        int maxLetters = 11,
         bool needMax = false,
         bool needSuffix = false,
         IconData iconLead = Icons.add,
         IconData iconSuffix = Icons.add,
         Color iconColor = AppColors.mintGreen,
         double iconSize = 35.0,
-        String labelText = 'label',
+        String labelText = '',
         Color labelColor = AppColors.mintGreen,
         double labelSize = 20.0,
+        int inputLength = 8,
         bool isPassword = false,
         Function()? function,
         Function()? onTapFunction,
         Function(String)? onChangeFunction,
+        Function()? validateFunction,
         dynamic focusNode,
-        String validatText2 = '',
-        String validatText = 'Error',
+        bool readOnly = false,
+        bool isLength = false,
+        bool isMatch = false,
+        String passwordNotBigText = 'كلمة المرور يجب ان تساوي 8 رموز علي الأقل',
+        String passwordNotMatchText = 'كلمة المرور غير متطابقة',
+        String matchPassword = '',
+        String thisPasssword = '',
+        String validatText = '',
         String helperText = ''}) =>
     SizedBox(
       width: width,
       height: height,
       child: TextFormField(
+        readOnly: readOnly,
         onTap: onTapFunction,
         onChanged: onChangeFunction,
-        validator:(value) {
+        validator: (value) {
           if (value == null || value.isEmpty) {
-                return validatText;
-              }
-              return validatText2;
+            return validatText;
+          } else if (isLength == true && value.length < inputLength) {
+            return passwordNotBigText;
+          } else if (isMatch == true && thisPasssword != matchPassword) {
+            return passwordNotMatchText;
+          }
+          return null;
         },
         focusNode: focusNode,
         keyboardType: textType,
@@ -48,6 +61,7 @@ Widget textField(
         controller: textFormController,
         cursorColor: AppColors.mintGreen,
         style: TextStyle(fontSize: textSize, color: textColor),
+        maxLength: needMax == true ? maxLetters : null,
         decoration: InputDecoration(
           floatingLabelBehavior: FloatingLabelBehavior.auto,
           enabledBorder: OutlineInputBorder(
@@ -61,6 +75,20 @@ Widget textField(
             borderRadius: BorderRadius.circular(20),
             borderSide: const BorderSide(
               color: AppColors.mintGreen,
+              width: 1.0,
+            ),
+          ),
+          errorBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(20),
+            borderSide: const BorderSide(
+              color: Colors.red,
+              width: 1.0,
+            ),
+          ),
+          focusedErrorBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(20),
+            borderSide: const BorderSide(
+              color: Colors.red,
               width: 1.0,
             ),
           ),
