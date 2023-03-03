@@ -6,7 +6,8 @@ import 'package:memory_mate/views/sign%20in%20and%20register/sign_up_screen.dart
 import 'package:page_transition/page_transition.dart';
 
 import '../home pages/patient_home_screen.dart';
-import '../splash and onboarding/forget_password_first_screen.dart';
+import 'forget_password_first_screen.dart';
+
 
 class SignIn extends StatefulWidget {
   const SignIn({super.key});
@@ -133,7 +134,7 @@ class _SignInState extends State<SignIn> {
                 height: 50,
                 buttonText: 'تسجيل الدخول',
                 function: () {
-                  FocusManager.instance.primaryFocus?.unfocus();
+                  
                   if (formKey.currentState!.validate()) {                   
                     Navigator.pushReplacement(
                       context,

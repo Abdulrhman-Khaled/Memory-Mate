@@ -50,7 +50,7 @@ Widget textField(
             return validatText;
           } else if (isLength == true && value.length < inputLength) {
             return passwordNotBigText;
-          } else if (isMatch == true && thisPasssword != matchPassword) {
+          } else if (isMatch == true && textFormController?.text != matchPassword) {
             return passwordNotMatchText;
           }
           return null;

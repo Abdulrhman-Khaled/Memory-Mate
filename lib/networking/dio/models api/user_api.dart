@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 
-import '../../constants/endpoints_constants.dart';
+import '../../../constants/endpoints_constants.dart';
 import '../api/dio_client.dart';
 
 class UserApi {
@@ -13,7 +13,7 @@ Future<Response> addUserApi(String name, String job) async {
     final Response response = await dioClient.post(
       Endpoints.users,
       data: {
-        // data to be posted
+        'name':name,
       },
     );
     return response;
@@ -36,7 +36,7 @@ Future<Response> updateUserApi(int id, String name, String job) async {
     final Response response = await dioClient.put(
       '${Endpoints.users}/$id',
       data: {
-        // data to be updated
+        'name':name,
       },
     );
     return response;

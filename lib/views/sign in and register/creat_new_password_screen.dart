@@ -70,7 +70,8 @@ class _CreatPasswordState extends State<CreatPassword> {
               Directionality(
                 textDirection: TextDirection.rtl,
                 child: textField(
-                  isLength: true,
+                  isMatch: true,
+                  isLength: true,               
                   width: 300,
                   hintText: '•••••••••••••••••',
                   labelText: 'كلمة المرور',
@@ -78,6 +79,8 @@ class _CreatPasswordState extends State<CreatPassword> {
                   textType: TextInputType.visiblePassword,
                   iconLead: Icons.lock_outlined,
                   textFormController: passwordController,
+                  matchPassword: passwordConfirmController.text,
+                  thisPasssword: passwordController.text,
                   focusNode: passwordFocusNode,
                   validatText: validatText,
                   needSuffix: true,

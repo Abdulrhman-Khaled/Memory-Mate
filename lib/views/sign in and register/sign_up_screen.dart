@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
+
 import 'package:memory_mate/views/sign%20in%20and%20register/sign_up_as_patient_screen.dart';
 import 'package:page_transition/page_transition.dart';
 
@@ -142,6 +141,8 @@ class _SignUpState extends State<SignUp> {
                 child: Directionality(
                   textDirection: TextDirection.rtl,
                   child: ListTile(
+                    horizontalTitleGap: 0,
+                    minLeadingWidth: 35,
                     title: const Text(
                       'مريض',
                       style: TextStyle(
@@ -167,6 +168,8 @@ class _SignUpState extends State<SignUp> {
                 child: Directionality(
                   textDirection: TextDirection.rtl,
                   child: ListTile(
+                    horizontalTitleGap: 0,
+                    minLeadingWidth: 35,
                     title: const Text(
                       'مقدم رعاية',
                       style: TextStyle(

@@ -1,38 +1,38 @@
-class PatientUser {
+class CareGiverUser {
   int? id;
   String? userName;
   String? phoneNumber;
   String? email;
   String? address;
   String? dateOfBirth;
-  String? job;
-  String? diseaseLevel;
+  String? relation;
+  String? patientId;
   String? password;
   String? avatar;
   int? age;
 
-  PatientUser(
+  CareGiverUser(
       {this.id,
       this.userName,
       this.phoneNumber,
       this.email,
       this.address,
       this.dateOfBirth,
-      this.job,
-      this.diseaseLevel,
+      this.relation,
+      this.patientId,
       this.password,
       this.avatar,
       this.age});
 
-  PatientUser.fromJson(Map<String, dynamic> json) {
+  CareGiverUser.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     userName = json['user_name'];
     phoneNumber = json['phone_number'];
     email = json['email'];
     address = json['address'];
     dateOfBirth = json['date_of_birth'];
-    job = json['job'];
-    diseaseLevel = json['disease_level'];
+    relation = json['relation'];
+    patientId = json['patient_id'];
     password = json['password'];
     avatar = json['avatar'];
     age = json['age'];
@@ -46,8 +46,8 @@ class PatientUser {
     data['email'] = email;
     data['address'] = address;
     data['date_of_birth'] = dateOfBirth;
-    data['job'] = job;
-    data['disease_level'] = diseaseLevel;
+    data['relation'] = relation;
+    data['patient_id'] = patientId;
     data['password'] = password;
     data['avatar'] = avatar;
     data['age'] = age;

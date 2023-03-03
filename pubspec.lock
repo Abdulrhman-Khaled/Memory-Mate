@@ -235,6 +235,14 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_otp_text_field:
+    dependency: "direct main"
+    description:
+      name: flutter_otp_text_field
+      sha256: c9164ba391071fb9783698256ddbb9efc960cfed056d843db164711c65b1b114
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.1.1"
   flutter_test:
     dependency: "direct dev"
     description: flutter
@@ -245,14 +253,6 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-  flutter_zoom_drawer:
-    dependency: "direct main"
-    description:
-      name: flutter_zoom_drawer
-      sha256: "93c4f2cfe1edfe2f9e48b94a7f9538520d2f2593e202b8e89c394b7d27137a8e"
-      url: "https://pub.dev"
-    source: hosted
-    version: "3.0.3"
   frontend_server_client:
     dependency: transitive
     description:

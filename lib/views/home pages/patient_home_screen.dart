@@ -14,15 +14,12 @@ class PatientHomeScreen extends StatefulWidget {
 }
 
 class _PatientHomeScreenState extends State<PatientHomeScreen> {
-  final int _selectedDestination = 0;
+  
 
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
-
-    final theme = Theme.of(context);
-    final textTheme = theme.textTheme;
 
     String username = 'عبدالرحمن';
 
