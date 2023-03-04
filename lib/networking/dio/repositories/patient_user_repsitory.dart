@@ -37,15 +37,7 @@ class PatientUserRepository {
     try {
       final response = await patientUserApi.postPatientUser(
           userName,
-          phoneNumber,
-          email,
-          address,
-          dateOfBirth,
-          job,
-          diseaseLevel,
-          password,
-          avatar,
-          age);
+          );
       return PatientUser.fromJson(response.data);
     } on DioError catch (e) {
       final errorMessage = DioExceptions.fromDioError(e).toString();
@@ -56,28 +48,12 @@ class PatientUserRepository {
   Future<PatientUser> updatePatientUserRequest(
       int id,
       String userName,
-      String phoneNumber,
-      String email,
-      String address,
-      String dateOfBirth,
-      String job,
-      String diseaseLevel,
-      String password,
-      String avatar,
-      int age) async {
+      ) async {
     try {
       final response = await patientUserApi.putPatientUser(
           id,
           userName,
-          phoneNumber,
-          email,
-          address,
-          dateOfBirth,
-          job,
-          diseaseLevel,
-          password,
-          avatar,
-          age);
+          );
       return PatientUser.fromJson(response.data);
     } on DioError catch (e) {
       final errorMessage = DioExceptions.fromDioError(e).toString();

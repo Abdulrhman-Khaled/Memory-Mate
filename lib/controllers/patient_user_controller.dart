@@ -60,28 +60,12 @@ class PatientUserController {
   Future<PatientUser> updatePatientUser(
       int id,
       String userName,
-      String phoneNumber,
-      String email,
-      String address,
-      String dateOfBirth,
-      String job,
-      String diseaseLevel,
-      String password,
-      String avatar,
-      int age) async {
+      ) async {
     final updatePatientUser =
         await patientUserRepository.updatePatientUserRequest(
             id,
             userName,
-            phoneNumber,
-            email,
-            address,
-            dateOfBirth,
-            job,
-            diseaseLevel,
-            password,
-            avatar,
-            age);
+            );
     patientUserList[id] = updatePatientUser;
     return updatePatientUser;
   }

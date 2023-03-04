@@ -2,20 +2,19 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:page_transition/page_transition.dart';
 
 import '../../components/buttons.dart';
 import '../../constants/color_constatnts.dart';
 import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
 
-class OTPScreen extends StatefulWidget {
-  const OTPScreen({super.key});
+class OTPSignUpScreen extends StatefulWidget {
+  const OTPSignUpScreen({super.key});
 
   @override
-  State<OTPScreen> createState() => _OTPScreenState();
+  State<OTPSignUpScreen> createState() => _OTPSignUpScreenState();
 }
 
-class _OTPScreenState extends State<OTPScreen> {
+class _OTPSignUpScreenState extends State<OTPSignUpScreen> {
   int secondsRemaining = 30;
   bool enableOnTap = true;
   late Timer _timer;

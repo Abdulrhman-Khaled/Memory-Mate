@@ -19,29 +19,13 @@ class PatientUserApi {
 
   Future<Response> postPatientUser(
       String userName,
-      String phoneNumber,
-      String email,
-      String address,
-      String dateOfBirth,
-      String job,
-      String diseaseLevel,
-      String password,
-      String avatar,
-      int age) async {
+    ) async {
     try {
       final Response response = await dioClient.post(
         Endpoints.users,
         data: {
           'user_name': userName,
-          'phone_number': phoneNumber,
-          'email': email,
-          'address': address,
-          'date_of_birth': dateOfBirth,
-          'job': job,
-          'disease_level': diseaseLevel,
-          'password': password,
-          'avatar': avatar,
-          'age': age,
+          
         },
       );
       return response;
@@ -53,29 +37,13 @@ class PatientUserApi {
   Future<Response> putPatientUser(
       int id,
       String userName,
-      String phoneNumber,
-      String email,
-      String address,
-      String dateOfBirth,
-      String job,
-      String diseaseLevel,
-      String password,
-      String avatar,
-      int age) async {
+      ) async {
     try {
       final Response response = await dioClient.put(
         '${Endpoints.users}/$id',
         data: {
           'user_name': userName,
-          'phone_number': phoneNumber,
-          'email': email,
-          'address': address,
-          'date_of_birth': dateOfBirth,
-          'job': job,
-          'disease_level': diseaseLevel,
-          'password': password,
-          'avatar': avatar,
-          'age': age,
+          
         },
       );
       return response;
