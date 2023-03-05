@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:memory_mate/components/buttons.dart';
 import 'package:memory_mate/components/text_fields.dart';
 import 'package:memory_mate/constants/color_constatnts.dart';
-import 'package:memory_mate/views/sign%20in%20and%20register/sign%20up/sign_up_screen.dart';
+import 'package:memory_mate/views/sign%20in%20and%20register/sign%20up%20and%20register/sign_up_screen.dart';
 
 import 'package:page_transition/page_transition.dart';
 
