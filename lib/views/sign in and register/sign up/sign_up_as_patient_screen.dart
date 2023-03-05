@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:memory_mate/views/sign%20in%20and%20register/creat_new_password_screen.dart';
+
 
 import 'package:page_transition/page_transition.dart';
 
-import '../../components/buttons.dart';
-import '../../components/text_fields.dart';
-import '../../constants/color_constatnts.dart';
+import '../../../components/buttons.dart';
+import '../../../components/text_fields.dart';
+import '../../../constants/color_constatnts.dart';
+import 'creat_new_password_screen.dart';
+
+
 
 class SignUpAsPatiant extends StatefulWidget {
   const SignUpAsPatiant({super.key});

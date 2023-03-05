@@ -3,12 +3,13 @@ import 'package:page_transition/page_transition.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../constants/color_constatnts.dart';
 import '../../models/onboard_model.dart';
-import '../sign in and register/sign_in_or_register_screen.dart';
+import '../sign in and register/sign up/sign_in_or_register_screen.dart';
 
 class OnBoardingScreen extends StatefulWidget {
   const OnBoardingScreen({super.key});
 
   @override
+  // ignore: library_private_types_in_public_api
   _OnBoardingScreenState createState() => _OnBoardingScreenState();
 }
 

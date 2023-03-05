@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:memory_mate/views/home%20pages/patient_home_screen.dart';
 import 'package:page_transition/page_transition.dart';
 
-import '../../components/buttons.dart';
-import '../../components/text_fields.dart';
-import '../../constants/color_constatnts.dart';
+import '../../../components/buttons.dart';
+import '../../../components/text_fields.dart';
+import '../../../constants/color_constatnts.dart';
+
+
 
 class CreatPassword extends StatefulWidget {
   const CreatPassword({super.key});

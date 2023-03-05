@@ -3,8 +3,9 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import '../../components/buttons.dart';
-import '../../constants/color_constatnts.dart';
+import '../../../components/buttons.dart';
+import '../../../constants/color_constatnts.dart';
+
 import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
 
 class OTPSignUpScreen extends StatefulWidget {
