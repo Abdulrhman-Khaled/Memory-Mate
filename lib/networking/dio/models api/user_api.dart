@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:memory_mate/models/user.dart';
 
 import '../../../constants/endpoints_constants.dart';
 import '../api/dio_client.dart';
@@ -7,6 +8,35 @@ class UserApi {
 final DioClient dioClient;
 
 UserApi({required this.dioClient});
+
+Future<Response> register(User user) async{
+  try{
+    final Response response = await dioClient.post(
+      "/users/register",
+      data:user.toJson()
+    );
+    return response;
+  }
+  catch(e){
+    rethrow;
+  }
+}
+
+Future<Response> login(email, password) async{
+  try{
+    final Response response = await dioClient.post(
+      "/users/login",
+      data:{
+        email:email,
+        password:password
+      }
+    );
+    return response;
+  }
+  catch(e){
+    rethrow;
+  }
+}
 
 Future<Response> addUserApi(String name, String job) async {
   try {
