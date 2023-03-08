@@ -1,6 +1,12 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:memory_mate/models/user.dart';
+import 'package:memory_mate/networking/dio/api/dio_client.dart';
+import 'package:memory_mate/networking/dio/models%20api/user_api.dart';
+import 'package:memory_mate/networking/dio/repositories/auth.dart';
 import 'package:memory_mate/views/home%20pages/patient_home_screen.dart';
 import 'package:page_transition/page_transition.dart';
+import 'dart:developer';
 
 import '../../../components/buttons.dart';
 import '../../../components/text_fields.dart';
@@ -14,6 +20,10 @@ class CreatPasswordScreen extends StatefulWidget {
 }
 
 class _CreatPasswordScreenState extends State<CreatPasswordScreen> {
+  late Dio dio;
+  late DioClient dioClient;
+  late UserApi userApi;
+  late AuthRepository authRepository;
   final passwordController = TextEditingController();
   final passwordConfirmController = TextEditingController();
 
@@ -31,6 +41,7 @@ class _CreatPasswordScreenState extends State<CreatPasswordScreen> {
   @override
   void initState() {
     super.initState();
+
     obscured = true;
     obscured2 = true;
   }
@@ -44,6 +55,12 @@ class _CreatPasswordScreenState extends State<CreatPasswordScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final arguments =
+        ModalRoute.of(context)!.settings.arguments as Map<String, String>;
+    dio = Dio();
+    dioClient = DioClient(dio);
+    userApi = UserApi(dioClient: dioClient);
+    authRepository = AuthRepository(userApi);
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -133,18 +150,27 @@ class _CreatPasswordScreenState extends State<CreatPasswordScreen> {
                   height: 50,
                   buttonText: 'التالي',
                   buttonColor: AppColors.mintGreen,
-                  function: () {
+                  function: () async {
                     FocusManager.instance.primaryFocus?.unfocus();
 
                     if (formKey.currentState!.validate() ||
                         passwordController.text ==
                             passwordConfirmController.text) {
-                      Navigator.pushAndRemoveUntil(
-                          context,
-                          PageTransition(
-                              type: PageTransitionType.fade,
-                              child: const PatientHomeScreen()),
-                          (Route<dynamic> route) => false);
+                      User user = User.fromJson({
+                        ...arguments,
+                        "password": passwordController.value.text,
+                        "firstname": "sharaf eldeen",
+                        "lastname": "ashraf"
+                      });
+                      log(user.toJson().toString());
+                      var res = await authRepository.register(user);
+                      log(res.toString());
+                      // Navigator.pushAndRemoveUntil(
+                      //     context,
+                      //     PageTransition(
+                      //         type: PageTransitionType.fade,
+                      //         child: const PatientHomeScreen()),
+                      //     (Route<dynamic> route) => false);
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(

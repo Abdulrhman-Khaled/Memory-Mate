@@ -2,7 +2,7 @@ class Endpoints {
   Endpoints._();
 
   // base url
-  static const String baseUrl = "https://reqres.in/api";
+  static const String baseUrl = "http://192.168.1.2:5000";
 
   // receiveTimeout
   static const Duration receiveTimeout = Duration(milliseconds: 15000);

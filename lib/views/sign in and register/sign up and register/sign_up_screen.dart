@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:memory_mate/views/sign%20in%20and%20register/sign%20up%20and%20register/sign_up_as_patient_screen.dart';
+import 'dart:developer';
 
 
 import 'package:page_transition/page_transition.dart';
@@ -20,18 +21,16 @@ class SignUp extends StatefulWidget {
 }
 
 class _SignUpState extends State<SignUp> {
-  var namecontroller = TextEditingController();
+  var usernamecontroller = TextEditingController();
   var emailcontroller = TextEditingController();
   var phonecontroller = TextEditingController();
   var formKey = GlobalKey<FormState>();
-
   final nameFocusNode = FocusNode();
   final emailFocusNode = FocusNode();
   final phoneFocusNode = FocusNode();
 
   SingingCharacter? _character = SingingCharacter.patient;
   late bool isChecked = true;
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -68,8 +67,7 @@ class _SignUpState extends State<SignUp> {
                     hintText: "اسم المستخدم",
                     labelText: "اسم المستخدم",
                     iconLead: Icons.person_outlined,
-                    textFormController: namecontroller,
-                    function: () {},
+                    textFormController: usernamecontroller,
                     textType: TextInputType.name,
                     validatText: 'لا يمكن ترك هذا الحقل فارغ',
                   ),
@@ -206,12 +204,24 @@ class _SignUpState extends State<SignUp> {
                             ? Navigator.push(
                                 context,
                                 PageTransition(
+                                    settings:RouteSettings(arguments: {
+                                      'username':usernamecontroller.value.text,
+                                      "phone":phonecontroller.value.text,
+                                      "email":emailcontroller.value.text,
+                                      "user_type":'patient'
+                                    }),
                                     type: PageTransitionType.fade,
                                     child: const SignUpAsPatiant()),
-                              )
+                        )
                             : Navigator.push(
                                 context,
                                 PageTransition(
+                                  settings:RouteSettings(arguments:{
+                                  'username':usernamecontroller.value.text,
+                                  "phone":phonecontroller.value.text,
+                                  "email":emailcontroller.value.text,
+                                  "user_type":'caregiver'
+                                  }),
                                     type: PageTransitionType.fade,
                                     child: const SignUpAsCaregiver()),
                               );

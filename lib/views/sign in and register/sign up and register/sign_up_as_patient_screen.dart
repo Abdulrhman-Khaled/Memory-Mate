@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:developer';
 
 import 'package:page_transition/page_transition.dart';
 
@@ -15,6 +16,8 @@ class SignUpAsPatiant extends StatefulWidget {
 }
 
 class _SignUpAsPatiantState extends State<SignUpAsPatiant> {
+
+
   var addressController = TextEditingController();
   var dobController = TextEditingController();
   var jobController = TextEditingController();
@@ -31,6 +34,9 @@ class _SignUpAsPatiantState extends State<SignUpAsPatiant> {
 
   @override
   Widget build(BuildContext context) {
+    final arguments = ModalRoute.of(context)!.settings.arguments as Map<String, String>;
+    log(arguments.toString());
+
     dobController.text =
         '${customDateOfBirth.year}/${customDateOfBirth.month}/${customDateOfBirth.day}';
     return Scaffold(
@@ -144,6 +150,12 @@ class _SignUpAsPatiantState extends State<SignUpAsPatiant> {
                       Navigator.push(
                         context,
                         PageTransition(
+                            settings:RouteSettings(arguments:{
+                              ...arguments,
+                              "address":addressController.value.text,
+                              "date_of_birth":customDateOfBirth.toString().substring(0,10)
+
+                            }),
                             type: PageTransitionType.fade,
                             child: const CreatPasswordScreen()),
                       );
