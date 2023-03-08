@@ -146,7 +146,7 @@ class _SignUpAsCaregiverState extends State<SignUpAsCaregiver> {
                         context,
                         PageTransition(
                             type: PageTransitionType.fade,
-                            child: const CreatPassword()),
+                            child: const CreatPasswordScreen()),
                       );
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(

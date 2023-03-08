@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:memory_mate/constants/color_constatnts.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:memory_mate/views/sign%20in%20and%20register/forget%20password/forget_password_screen.dart';
-
+import 'package:memory_mate/views/sign%20in%20and%20register/sign%20in/sign_in_or_register_screen.dart';
 
 void main() {
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
@@ -40,7 +39,7 @@ class MyApp extends StatelessWidget {
         fontFamily: 'Boutros',
         primarySwatch: mintGreenMaterial,
       ),
-      home: ForgetPasswordScreen(),
+      home: const SignInOrRegister(),
     );
   }
 }
