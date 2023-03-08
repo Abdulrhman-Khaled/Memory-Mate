@@ -6,16 +6,14 @@ import '../../../components/buttons.dart';
 import '../../../components/text_fields.dart';
 import '../../../constants/color_constatnts.dart';
 
-
-
-class CreatPassword extends StatefulWidget {
-  const CreatPassword({super.key});
+class CreatPasswordScreen extends StatefulWidget {
+  const CreatPasswordScreen({super.key});
 
   @override
-  State<CreatPassword> createState() => _CreatPasswordState();
+  State<CreatPasswordScreen> createState() => _CreatPasswordScreenState();
 }
 
-class _CreatPasswordState extends State<CreatPassword> {
+class _CreatPasswordScreenState extends State<CreatPasswordScreen> {
   final passwordController = TextEditingController();
   final passwordConfirmController = TextEditingController();
 
@@ -73,7 +71,7 @@ class _CreatPasswordState extends State<CreatPassword> {
                 textDirection: TextDirection.rtl,
                 child: textField(
                   isMatch: true,
-                  isLength: true,               
+                  isLength: true,
                   width: 300,
                   hintText: '•••••••••••••••••',
                   labelText: 'كلمة المرور',
@@ -137,13 +135,16 @@ class _CreatPasswordState extends State<CreatPassword> {
                   buttonColor: AppColors.mintGreen,
                   function: () {
                     FocusManager.instance.primaryFocus?.unfocus();
-                    if (formKey.currentState!.validate()) {
-                      Navigator.pushReplacement(
-                        context,
-                        PageTransition(
-                            type: PageTransitionType.fade,
-                            child: const PatientHomeScreen()),
-                      );
+
+                    if (formKey.currentState!.validate() ||
+                        passwordController.text ==
+                            passwordConfirmController.text) {
+                      Navigator.pushAndRemoveUntil(
+                          context,
+                          PageTransition(
+                              type: PageTransitionType.fade,
+                              child: const PatientHomeScreen()),
+                          (Route<dynamic> route) => false);
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(

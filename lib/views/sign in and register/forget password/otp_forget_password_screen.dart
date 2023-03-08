@@ -3,22 +3,25 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
+import 'package:page_transition/page_transition.dart';
 
 import '../../../components/buttons.dart';
 import '../../../constants/color_constatnts.dart';
+import '../sign up and register/creat_new_password_screen.dart';
 
 class OTPForgetPasswordScreen extends StatefulWidget {
   const OTPForgetPasswordScreen({super.key});
 
   @override
-  State<OTPForgetPasswordScreen> createState() => _OTPForgetPasswordScreenState();
+  State<OTPForgetPasswordScreen> createState() =>
+      _OTPForgetPasswordScreenState();
 }
 
 class _OTPForgetPasswordScreenState extends State<OTPForgetPasswordScreen> {
   int secondsRemaining = 30;
   bool enableOnTap = true;
   final oneSec = const Duration(seconds: 1);
-  late Timer _timer = Timer(oneSec, () { });
+  late Timer _timer = Timer(oneSec, () {});
   int _start = 30;
   bool isVisiable = false;
   Color sendAgain = AppColors.lightBlack;
@@ -114,11 +117,9 @@ class _OTPForgetPasswordScreenState extends State<OTPForgetPasswordScreen> {
                     const TextStyle(fontSize: 20, color: AppColors.white),
                 cursorColor: AppColors.white,
                 //runs when a code is typed in
-                onCodeChanged: (String code) {
-                  //handle validation or checks here
-                },
+                onCodeChanged: (String code) {},
                 //runs when every textfield is filled
-                onSubmit: (String verificationCode) {
+                onSubmit: (String verificationCode) {                
                   showDialog(
                       context: context,
                       builder: (context) {
@@ -135,7 +136,14 @@ class _OTPForgetPasswordScreenState extends State<OTPForgetPasswordScreen> {
               filledButton(
                 width: 300,
                 height: 50,
-                function: () {},
+                function: () {
+                  Navigator.push(
+                    context,
+                    PageTransition(
+                        type: PageTransitionType.fade,
+                        child: const CreatPasswordScreen()),
+                  );
+                },
                 buttonColor: AppColors.white,
                 buttonText: 'تفعيل',
                 buttonTextColor: AppColors.mintGreen,
