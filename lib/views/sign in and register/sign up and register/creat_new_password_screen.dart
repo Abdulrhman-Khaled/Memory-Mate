@@ -136,7 +136,7 @@ class _CreatPasswordScreenState extends State<CreatPasswordScreen> {
                   function: () {
                     FocusManager.instance.primaryFocus?.unfocus();
 
-                    if (formKey.currentState!.validate() ||
+                    if (formKey.currentState!.validate() &&
                         passwordController.text ==
                             passwordConfirmController.text) {
                       Navigator.pushAndRemoveUntil(

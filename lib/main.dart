@@ -1,10 +1,13 @@
+import 'package:camera/camera.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:memory_mate/constants/color_constatnts.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:memory_mate/views/sign%20in%20and%20register/sign%20in/sign_in_or_register_screen.dart';
 
-void main() {
+List<CameraDescription> cameras = [];
+void main() async {
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
     systemNavigationBarColor: AppColors.mintGreen, // navigation bar color
     statusBarColor: AppColors.white, // status bar color
@@ -14,6 +17,16 @@ void main() {
         AppColors.mintGreen, //Navigation bar divider color
     systemNavigationBarIconBrightness: Brightness.light, //navigation bar icon
   ));
+
+  try {
+    WidgetsFlutterBinding.ensureInitialized();
+    cameras = await availableCameras();
+  } on CameraException catch (e) {
+    if (kDebugMode) {
+      print('Error in fetching the cameras: $e');
+    }
+  }
+  
   runApp(const MyApp());
 }
 

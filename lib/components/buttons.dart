@@ -22,7 +22,11 @@ Widget filledButton(
         onPressed: function,
         child: Text(
           buttonText,
-          style: TextStyle(color: buttonTextColor, fontSize: textSize),
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            color: buttonTextColor,
+            fontSize: textSize,
+          ),
         ),
       ),
     );
@@ -54,6 +58,7 @@ Widget filledIconButton(
           color: buttonTextColor,
         ),
         label: Text(
+          textAlign: TextAlign.center,
           buttonText,
           style: TextStyle(color: buttonTextColor, fontSize: textSize),
         ),

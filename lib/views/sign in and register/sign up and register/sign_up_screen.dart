@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:memory_mate/views/sign%20in%20and%20register/sign%20up%20and%20register/sign_up_as_patient_screen.dart';
-
+import 'package:memory_mate/views/sign%20in%20and%20register/sign%20up%20and%20register/sign_up_continue_screen.dart';
 
 import 'package:page_transition/page_transition.dart';
-
 
 import '../../../components/buttons.dart';
 import '../../../components/text_fields.dart';
 import '../../../constants/color_constatnts.dart';
-import 'sign_up_as_caregiver_screen.dart';
+
 
 enum SingingCharacter { patient, caregiver }
 
@@ -207,13 +205,16 @@ class _SignUpState extends State<SignUp> {
                                 context,
                                 PageTransition(
                                     type: PageTransitionType.fade,
-                                    child: const SignUpAsPatiant()),
+                                    child: const SignUpData(
+                                      'إنشاء حساب لمريض',
+                                    )),
                               )
                             : Navigator.push(
                                 context,
                                 PageTransition(
                                     type: PageTransitionType.fade,
-                                    child: const SignUpAsCaregiver()),
+                                    child: const SignUpData(
+                                        'إنشاء حساب لمقدم رعاية')),
                               );
                       } else {
                         ScaffoldMessenger.of(context).showSnackBar(

@@ -1,10 +1,13 @@
 import 'dart:math';
 
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'package:memory_mate/constants/color_constatnts.dart';
 import 'package:page_transition/page_transition.dart';
+
+import '../camera and face detection/camera_and_face_detection.dart';
 
 class PatientHomeScreen extends StatefulWidget {
   const PatientHomeScreen({super.key});
@@ -15,7 +18,6 @@ class PatientHomeScreen extends StatefulWidget {
 
 class _PatientHomeScreenState extends State<PatientHomeScreen> {
   
-
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
@@ -402,7 +404,14 @@ class _PatientHomeScreenState extends State<PatientHomeScreen> {
                                     borderRadius: BorderRadius.circular(25.0),
                                   ),
                                 ),
-                                onPressed: () {},
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    PageTransition(
+                                        type: PageTransitionType.fade,
+                                        child:  const CameraAndFaceDetectionScreen()),
+                                  );
+                                },
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: <Widget>[

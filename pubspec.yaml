@@ -43,6 +43,14 @@ dependencies:
   socket_io_client: ^2.0.1
   shared_preferences: ^2.0.18
   flutter_otp_text_field: ^1.1.1
+  image_picker:
+  fluttertoast: ^8.0.8
+  full_screen_image_null_safe: ^2.0.0
+  camera: ^0.10.3+2
+  video_player:
+  path_provider:
+  path:
+  permission_handler: ^10.2.0
 
   
   
