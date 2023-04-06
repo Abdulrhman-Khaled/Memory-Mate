@@ -24,6 +24,8 @@ Widget textField(
         double labelSize = 20.0,
         int inputLength = 8,
         bool isPassword = false,
+        int minlines = 1,
+        int maxlines = 1,
         Function()? function,
         Function()? onTapFunction,
         Function(String)? onChangeFunction,
@@ -41,7 +43,7 @@ Widget textField(
     SizedBox(
       width: width,
       height: height,
-      child: TextFormField(
+      child: TextFormField(      
         readOnly: readOnly,
         onTap: onTapFunction,
         onChanged: onChangeFunction,
@@ -60,6 +62,8 @@ Widget textField(
         obscureText: isPassword,
         controller: textFormController,
         cursorColor: AppColors.mintGreen,
+        minLines: minlines,
+        maxLines: maxlines,
         style: TextStyle(fontSize: textSize, color: textColor),
         maxLength: needMax == true ? maxLetters : null,
         decoration: InputDecoration(

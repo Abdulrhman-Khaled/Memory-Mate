@@ -1,7 +1,12 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
+import 'dart:typed_data';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:page_transition/page_transition.dart';
@@ -11,32 +16,40 @@ import '../../../components/text_fields.dart';
 import '../../../constants/color_constatnts.dart';
 import 'creat_new_password_screen.dart';
 
+// ignore: must_be_immutable
 class SignUpData extends StatefulWidget {
-  final String title;
-  const SignUpData(this.title, {super.key});
+  String title;
+  String name;
+  String email;
+  String phone;
+  String type;
+  SignUpData(
+      {required this.title,
+      required this.name,
+      required this.email,
+      required this.phone,
+      required this.type,
+      super.key});
 
   @override
   State<SignUpData> createState() => _SignUpDataState();
 }
 
 class _SignUpDataState extends State<SignUpData> {
-  var addressController = TextEditingController();
-  var dobController = TextEditingController();
-  var jobController = TextEditingController();
-  var healthController = TextEditingController();
+  TextEditingController addressController = TextEditingController();
+  TextEditingController dobController = TextEditingController();
 
   var formKey = GlobalKey<FormState>();
 
   final addressFocusNode = FocusNode();
   final dobFocusNode = FocusNode();
-  final jobFocusNode = FocusNode();
-  final healthFocusNode = FocusNode();
 
   File? avatarImageFile;
 
-  final photoUrl = '';
-  DateTime customDateOfBirth = DateTime(2001, 1, 1);
+ 
 
+  DateTime customDateOfBirth = DateTime(2001, 1, 1);
+  
   getImage() async {
     ImagePicker imagePicker = ImagePicker();
     XFile? pickedFile = await imagePicker
@@ -47,7 +60,7 @@ class _SignUpDataState extends State<SignUpData> {
     });
     File? image;
     if (pickedFile != null) {
-      image = File(pickedFile.path);
+       image = File(pickedFile.path);
     }
     if (image != null) {
       setState(() {
@@ -64,6 +77,7 @@ class _SignUpDataState extends State<SignUpData> {
   Widget build(BuildContext context) {
     dobController.text =
         '${customDateOfBirth.year}/${customDateOfBirth.month}/${customDateOfBirth.day}';
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -102,11 +116,12 @@ class _SignUpDataState extends State<SignUpData> {
                       margin: const EdgeInsets.fromLTRB(0, 15, 0, 20),
                       child: avatarImageFile == null
                           ? const Image(
-                               image: AssetImage('assets/images/pictures/avatar.png'),
-                               fit: BoxFit.cover,
-                               width: 200,
-                               height: 200,
-                          )
+                              image: AssetImage(
+                                  'assets/images/pictures/avatar.png'),
+                              fit: BoxFit.cover,
+                              width: 200,
+                              height: 200,
+                            )
                           : ClipRRect(
                               borderRadius: BorderRadius.circular(100),
                               child: Image.file(
@@ -137,8 +152,8 @@ class _SignUpDataState extends State<SignUpData> {
                         child: IconButton(
                           icon: const Icon(Icons.add_a_photo),
                           color: AppColors.white,
-                          onPressed: () {
-                            getImage();
+                          onPressed: () async {
+                            await getImage();
                             setState(() {});
                           },
                         ),
@@ -204,7 +219,16 @@ class _SignUpDataState extends State<SignUpData> {
                         context,
                         PageTransition(
                             type: PageTransitionType.fade,
-                            child: const CreatPasswordScreen()),
+                            child: CreatPasswordScreen(
+                              name: widget.name,
+                              email: widget.email,
+                              phone: widget.phone,
+                              type: widget.type,
+                              image: avatarImageFile == null ? "assets/images/pictures/avatar.png" : avatarImageFile!.path,
+                              date:
+                                  customDateOfBirth.toString().substring(0, 10),
+                              address: addressController.value.text,
+                            )),
                       );
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(

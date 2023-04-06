@@ -51,6 +51,10 @@ dependencies:
   path_provider:
   path:
   permission_handler: ^10.2.0
+  awesome_dialog: ^3.0.2
+  flutter_datetime_picker: ^1.5.1
+  syncfusion_flutter_datepicker: ^20.4.53
+  text_scroll: ^0.1.2
 
   
   

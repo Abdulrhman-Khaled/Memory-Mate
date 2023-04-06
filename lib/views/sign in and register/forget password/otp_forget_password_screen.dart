@@ -137,12 +137,12 @@ class _OTPForgetPasswordScreenState extends State<OTPForgetPasswordScreen> {
                 width: 300,
                 height: 50,
                 function: () {
-                  Navigator.push(
+                  /*Navigator.push(
                     context,
                     PageTransition(
                         type: PageTransitionType.fade,
-                        child: const CreatPasswordScreen()),
-                  );
+                        child:  CreatPasswordScreen()),
+                  );*/
                 },
                 buttonColor: AppColors.white,
                 buttonText: 'تفعيل',

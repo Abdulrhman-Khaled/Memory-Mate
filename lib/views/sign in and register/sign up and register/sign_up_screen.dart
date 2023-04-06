@@ -7,7 +7,6 @@ import '../../../components/buttons.dart';
 import '../../../components/text_fields.dart';
 import '../../../constants/color_constatnts.dart';
 
-
 enum SingingCharacter { patient, caregiver }
 
 class SignUp extends StatefulWidget {
@@ -18,14 +17,14 @@ class SignUp extends StatefulWidget {
 }
 
 class _SignUpState extends State<SignUp> {
-  var namecontroller = TextEditingController();
-  var emailcontroller = TextEditingController();
-  var phonecontroller = TextEditingController();
+  TextEditingController nameController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
+  TextEditingController phoneController = TextEditingController();
   var formKey = GlobalKey<FormState>();
 
-  final nameFocusNode = FocusNode();
-  final emailFocusNode = FocusNode();
-  final phoneFocusNode = FocusNode();
+  FocusNode nameFocusNode = FocusNode();
+  FocusNode emailFocusNode = FocusNode();
+  FocusNode phoneFocusNode = FocusNode();
 
   SingingCharacter? _character = SingingCharacter.patient;
   late bool isChecked = true;
@@ -66,7 +65,7 @@ class _SignUpState extends State<SignUp> {
                     hintText: "اسم المستخدم",
                     labelText: "اسم المستخدم",
                     iconLead: Icons.person_outlined,
-                    textFormController: namecontroller,
+                    textFormController: nameController,
                     function: () {},
                     textType: TextInputType.name,
                     validatText: 'لا يمكن ترك هذا الحقل فارغ',
@@ -85,10 +84,8 @@ class _SignUpState extends State<SignUp> {
                     hintText: "01552629829",
                     labelText: "رقم الهاتف",
                     iconLead: Icons.smartphone_outlined,
-                    textFormController: phonecontroller,
-                    function: () {},
-                    needMax: true,
-                    maxLetters: 11,
+                    textFormController: phoneController,
+                    function: () {},                
                     textType: TextInputType.phone,
                     validatText: 'لا يمكن ترك هذا الحقل فارغ',
                   ),
@@ -105,7 +102,7 @@ class _SignUpState extends State<SignUp> {
                     focusNode: emailFocusNode,
                     hintText: "example@gmail.com",
                     labelText: "البريد الالكتروني",
-                    textFormController: emailcontroller,
+                    textFormController: emailController,
                     iconLead: Icons.email_rounded,
                     function: () {},
                     textType: TextInputType.emailAddress,
@@ -205,16 +202,23 @@ class _SignUpState extends State<SignUp> {
                                 context,
                                 PageTransition(
                                     type: PageTransitionType.fade,
-                                    child: const SignUpData(
-                                      'إنشاء حساب لمريض',
-                                    )),
+                                    child: SignUpData(
+                                        title: 'إنشاء حساب لمريض',
+                                        name: nameController.value.text,
+                                        phone: phoneController.value.text,
+                                        email: emailController.value.text,
+                                        type: "PATIENT")),
                               )
                             : Navigator.push(
                                 context,
                                 PageTransition(
                                     type: PageTransitionType.fade,
-                                    child: const SignUpData(
-                                        'إنشاء حساب لمقدم رعاية')),
+                                    child: SignUpData(
+                                        title: 'إنشاء حساب لمقدم رعاية',
+                                        name: nameController.value.text,
+                                        phone: phoneController.value.text,
+                                        email: emailController.value.text,
+                                        type: "CAREGIVER")),
                               );
                       } else {
                         ScaffoldMessenger.of(context).showSnackBar(

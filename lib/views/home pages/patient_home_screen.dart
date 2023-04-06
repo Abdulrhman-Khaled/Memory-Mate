@@ -1,11 +1,12 @@
 import 'dart:math';
 
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'package:memory_mate/constants/color_constatnts.dart';
+import 'package:memory_mate/views/profile/who_i_am_screen.dart';
 import 'package:page_transition/page_transition.dart';
+
 
 import '../camera and face detection/camera_and_face_detection.dart';
 
@@ -17,13 +18,14 @@ class PatientHomeScreen extends StatefulWidget {
 }
 
 class _PatientHomeScreenState extends State<PatientHomeScreen> {
-  
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
 
     String username = 'عبدالرحمن';
+
+
 
     final GlobalKey<ScaffoldState> key = GlobalKey();
 
@@ -409,7 +411,8 @@ class _PatientHomeScreenState extends State<PatientHomeScreen> {
                                     context,
                                     PageTransition(
                                         type: PageTransitionType.fade,
-                                        child:  const CameraAndFaceDetectionScreen()),
+                                        child:
+                                            const CameraAndFaceDetectionScreen()),
                                   );
                                 },
                                 child: Column(
@@ -623,7 +626,13 @@ class _PatientHomeScreenState extends State<PatientHomeScreen> {
                                   topRight: Radius.circular(30)),
                             ),
                           ),
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                PageTransition(
+                                    child: const WhoIAmScreen(),
+                                    type: PageTransitionType.fade));
+                          },
                           icon: Image.asset(
                             'assets/images/icons/who.png',
                             width: 60,

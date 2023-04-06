@@ -1,21 +1,59 @@
+import 'dart:convert';
+import 'dart:developer';
+import 'dart:io';
+import 'dart:typed_data';
+
+import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:memory_mate/views/home%20pages/patient_home_screen.dart';
 import 'package:page_transition/page_transition.dart';
 
 import '../../../components/buttons.dart';
 import '../../../components/text_fields.dart';
 import '../../../constants/color_constatnts.dart';
+import '../../../models/user.dart';
+import '../../../networking/dio/api/dio_client.dart';
+import '../../../networking/dio/models api/patient_user_api.dart';
+import '../../../networking/dio/repositories/authantication.dart';
 
+// ignore: must_be_immutable
 class CreatPasswordScreen extends StatefulWidget {
-  const CreatPasswordScreen({super.key});
+  String name;
+  String email;
+  String phone;
+  String type;
+  String image;
+  String date;
+  String address;
+
+  CreatPasswordScreen(
+      {required this.name,
+      required this.email,
+      required this.phone,
+      required this.type,
+      required this.image,
+      required this.date,
+      required this.address,
+      super.key});
 
   @override
   State<CreatPasswordScreen> createState() => _CreatPasswordScreenState();
 }
 
 class _CreatPasswordScreenState extends State<CreatPasswordScreen> {
-  final passwordController = TextEditingController();
-  final passwordConfirmController = TextEditingController();
+  late Dio dio;
+  late DioClient dioClient;
+  late PatientUserApi userApi;
+  late AuthRepository authRepository;
+
+  String? avatarImage64;
+  late String tempAvatarImage64;
+  String tempAvatar = "assets/images/pictures/avatar.png";
+
+  TextEditingController passwordController = TextEditingController();
+  TextEditingController passwordConfirmController = TextEditingController();
 
   final passwordFocusNode = FocusNode();
   final passwordConfirmFocusNode = FocusNode();
@@ -27,6 +65,35 @@ class _CreatPasswordScreenState extends State<CreatPasswordScreen> {
 
   bool obscured = false;
   bool obscured2 = false;
+
+  Future<String> fileOrAssetToBase64(String path, bool isAsset) async {
+    if (isAsset) {
+      final ByteData assetByteData = await rootBundle.load(path);
+      final Uint8List assetUint8List = assetByteData.buffer.asUint8List();
+      final base64 = base64Encode(assetUint8List);
+      return base64;
+    } else {
+      final file = File(path);
+      final bytes = await file.readAsBytes();
+      final base64 = base64Encode(bytes);
+      return base64;
+    }
+  }
+
+  void myAsyncFunction() async {
+    if (widget.image == tempAvatar) {
+      String temp =
+          await fileOrAssetToBase64("assets/images/pictures/avatar.png", true);
+      setState(() {
+        tempAvatarImage64 = temp;
+      });
+    } else {
+      String real = await fileOrAssetToBase64(widget.image, false);
+      setState(() {
+        tempAvatarImage64 = real;
+      });
+    }
+  }
 
   @override
   void initState() {
@@ -44,6 +111,12 @@ class _CreatPasswordScreenState extends State<CreatPasswordScreen> {
 
   @override
   Widget build(BuildContext context) {
+    myAsyncFunction();
+    dio = Dio();
+    dioClient = DioClient(dio);
+    userApi = PatientUserApi(dioClient: dioClient);
+    authRepository = AuthRepository(userApi);
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -133,12 +206,28 @@ class _CreatPasswordScreenState extends State<CreatPasswordScreen> {
                   height: 50,
                   buttonText: 'التالي',
                   buttonColor: AppColors.mintGreen,
-                  function: () {
+                  function: () async {
                     FocusManager.instance.primaryFocus?.unfocus();
 
                     if (formKey.currentState!.validate() &&
-                        passwordController.text ==
-                            passwordConfirmController.text) {
+                        passwordController.value.text ==
+                            passwordConfirmController.value.text) {
+                      User user = User.fromJson({
+                        "full_name": widget.name,
+                        "email": widget.email,
+                        "password": passwordController.value.text,
+                        "user_type": widget.type,
+                        "address": widget.address,
+                        "phone": widget.phone,
+                        "date_of_birth": widget.date,
+                        "photo_path":
+                            "data:image/jpeg;base64,$tempAvatarImage64",
+                      });
+                      log(user.toJson().toString());
+                      await authRepository.register(user);
+                      //log(res.toString());
+
+                      // ignore: use_build_context_synchronously
                       Navigator.pushAndRemoveUntil(
                           context,
                           PageTransition(

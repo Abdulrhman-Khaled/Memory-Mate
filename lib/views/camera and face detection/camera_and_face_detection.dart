@@ -380,8 +380,7 @@ class _CameraAndFaceDetectionScreenState
                                   );
                                   refreshAlreadyCapturedImages();
                                   allFileList.removeRange(
-                                      0, allFileList.length - 1);
-                                  print(directory);
+                                      0, allFileList.length - 1);                               
                                 },
                                 child: Stack(
                                   alignment: Alignment.center,

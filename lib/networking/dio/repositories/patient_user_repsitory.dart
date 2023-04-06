@@ -1,7 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:memory_mate/networking/dio/models%20api/patient_user_api.dart';
 
-import '../../../models/patient_user.dart';
+
+import '../../../models/user.dart';
 import '../api/dio_exception.dart';
 
 class PatientUserRepository {
@@ -10,51 +11,57 @@ class PatientUserRepository {
   
   PatientUserRepository(this.patientUserApi);
 
-  Future<List<PatientUser>> getPatientUserRequest() async {
+  Future<List<User>> getPatientUserRequest() async {
     try {
       final response = await patientUserApi.getPatientUser();
-      final patientUsers = (response.data['data'] as List)
-          .map((e) => PatientUser.fromJson(e))
+      final patientUser = (response.data['data'] as List)
+          .map((e) => User.fromJson(e))
           .toList();
-      return patientUsers;
+      return patientUser;
     } on DioError catch (e) {
       final errorMessage = DioExceptions.fromDioError(e).toString();
       throw errorMessage;
     }
   }
 
-  Future<PatientUser> postPatientUserRequest(
+  Future<User> postPatientUserRequest(
       String userName,
       String phoneNumber,
       String email,
       String address,
       String dateOfBirth,
-      String job,
-      String diseaseLevel,
       String password,
       String avatar,
-      int age) async {
+      String type
+      ) async {
     try {
       final response = await patientUserApi.postPatientUser(
           userName,
+           phoneNumber,
+       email,
+       address,
+       dateOfBirth,
+       password,
+       avatar,
+       type
           );
-      return PatientUser.fromJson(response.data);
+      return User.fromJson(response.data);
     } on DioError catch (e) {
       final errorMessage = DioExceptions.fromDioError(e).toString();
       throw errorMessage;
     }
   }
 
-  Future<PatientUser> updatePatientUserRequest(
+  Future<User> updatePatientUserRequest(
       int id,
       String userName,
       ) async {
     try {
-      final response = await patientUserApi.putPatientUser(
+      final response = await patientUserApi.updatePatientUser(
           id,
           userName,
           );
-      return PatientUser.fromJson(response.data);
+      return User.fromJson(response.data);
     } on DioError catch (e) {
       final errorMessage = DioExceptions.fromDioError(e).toString();
       throw errorMessage;
