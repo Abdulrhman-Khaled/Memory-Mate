@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:dio/dio.dart';
 
 import '../../../constants/endpoints_constants.dart';
@@ -57,7 +59,8 @@ class DioClient {
         url,
         data: data,
         queryParameters: queryParameters,
-        options: options,
+        options: Options(
+            headers: {HttpHeaders.contentTypeHeader: "application/json"}),
         cancelToken: cancelToken,
         onSendProgress: onSendProgress,
         onReceiveProgress: onReceiveProgress,
