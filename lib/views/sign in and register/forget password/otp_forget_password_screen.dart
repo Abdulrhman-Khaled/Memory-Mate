@@ -3,11 +3,11 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
-import 'package:page_transition/page_transition.dart';
+
 
 import '../../../components/buttons.dart';
 import '../../../constants/color_constatnts.dart';
-import '../sign up and register/creat_new_password_screen.dart';
+
 
 class OTPForgetPasswordScreen extends StatefulWidget {
   const OTPForgetPasswordScreen({super.key});

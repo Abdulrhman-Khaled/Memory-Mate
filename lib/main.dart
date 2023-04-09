@@ -4,10 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:memory_mate/constants/color_constatnts.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:memory_mate/views/sign%20in%20and%20register/sign%20in/sign_in_or_register_screen.dart';
+import 'package:memory_mate/views/splash%20and%20onboarding/splash_screen.dart';
+
 
 List<CameraDescription> cameras = [];
-void main() async {
+Future<void> main() async {
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
     systemNavigationBarColor: AppColors.mintGreen, // navigation bar color
     statusBarColor: AppColors.white, // status bar color
@@ -26,7 +27,7 @@ void main() async {
       print('Error in fetching the cameras: $e');
     }
   }
-  
+
   runApp(const MyApp());
 }
 
@@ -52,7 +53,7 @@ class MyApp extends StatelessWidget {
         fontFamily: 'Boutros',
         primarySwatch: mintGreenMaterial,
       ),
-      home: const SignInOrRegister(),
+      home: const SplashScreen(),
     );
   }
 }

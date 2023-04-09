@@ -34,12 +34,6 @@ class _SignInState extends State<SignIn> {
     obscured = true;
   }
 
-  @override
-  void dispose() {
-    emailController.dispose();
-    passwordController.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {

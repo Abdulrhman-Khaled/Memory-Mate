@@ -1,12 +1,9 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'dart:convert';
-import 'dart:developer';
-import 'dart:io';
-import 'dart:typed_data';
 
-import 'package:flutter/foundation.dart';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:page_transition/page_transition.dart';
@@ -46,10 +43,8 @@ class _SignUpDataState extends State<SignUpData> {
 
   File? avatarImageFile;
 
- 
-
   DateTime customDateOfBirth = DateTime(2001, 1, 1);
-  
+
   getImage() async {
     ImagePicker imagePicker = ImagePicker();
     XFile? pickedFile = await imagePicker
@@ -60,7 +55,7 @@ class _SignUpDataState extends State<SignUpData> {
     });
     File? image;
     if (pickedFile != null) {
-       image = File(pickedFile.path);
+      image = File(pickedFile.path);
     }
     if (image != null) {
       setState(() {
@@ -224,7 +219,9 @@ class _SignUpDataState extends State<SignUpData> {
                               email: widget.email,
                               phone: widget.phone,
                               type: widget.type,
-                              image: avatarImageFile == null ? "assets/images/pictures/avatar.png" : avatarImageFile!.path,
+                              image: avatarImageFile == null
+                                  ? "assets/images/pictures/avatar.png"
+                                  : avatarImageFile!.path,
                               date:
                                   customDateOfBirth.toString().substring(0, 10),
                               address: addressController.value.text,

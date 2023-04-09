@@ -5,8 +5,9 @@ import 'package:flutter/services.dart';
 
 import 'package:memory_mate/constants/color_constatnts.dart';
 import 'package:memory_mate/views/profile/who_i_am_screen.dart';
+import 'package:memory_mate/views/splash%20and%20onboarding/sign_in_or_register_screen.dart';
 import 'package:page_transition/page_transition.dart';
-
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../camera and face detection/camera_and_face_detection.dart';
 
@@ -24,8 +25,6 @@ class _PatientHomeScreenState extends State<PatientHomeScreen> {
     double width = MediaQuery.of(context).size.width;
 
     String username = 'عبدالرحمن';
-
-
 
     final GlobalKey<ScaffoldState> key = GlobalKey();
 
@@ -237,13 +236,16 @@ class _PatientHomeScreenState extends State<PatientHomeScreen> {
                         'تسجيل الخروج',
                         style: TextStyle(fontSize: 22, color: Colors.red),
                       ),
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          PageTransition(
-                              type: PageTransitionType.fade,
-                              child: const PatientHomeScreen()),
-                        );
+                      onTap: () async {
+                        SharedPreferences prefs =
+                            await SharedPreferences.getInstance();
+                        prefs.setBool('isLoggedIn', false).then((_) =>
+                            Navigator.pushAndRemoveUntil(
+                                context,
+                                PageTransition(
+                                    type: PageTransitionType.fade,
+                                    child: const SignInOrRegister()),
+                                (Route<dynamic> route) => false));
                       },
                     ),
                   ),

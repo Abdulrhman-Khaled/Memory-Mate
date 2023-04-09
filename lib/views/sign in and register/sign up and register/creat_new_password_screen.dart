@@ -1,10 +1,8 @@
 import 'dart:convert';
-import 'dart:developer';
+
 import 'dart:io';
-import 'dart:typed_data';
 
 import 'package:dio/dio.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:memory_mate/views/home%20pages/patient_home_screen.dart';
@@ -17,6 +15,7 @@ import '../../../models/user.dart';
 import '../../../networking/dio/api/dio_client.dart';
 import '../../../networking/dio/models api/patient_user_api.dart';
 import '../../../networking/dio/repositories/authantication.dart';
+import 'package:simple_fontellico_progress_dialog/simple_fontico_loading.dart';
 
 // ignore: must_be_immutable
 class CreatPasswordScreen extends StatefulWidget {
@@ -47,6 +46,8 @@ class _CreatPasswordScreenState extends State<CreatPasswordScreen> {
   late DioClient dioClient;
   late PatientUserApi userApi;
   late AuthRepository authRepository;
+
+  SimpleFontelicoProgressDialog? prograssDialog;
 
   String? avatarImage64;
   late String tempAvatarImage64;
@@ -98,15 +99,18 @@ class _CreatPasswordScreenState extends State<CreatPasswordScreen> {
   @override
   void initState() {
     super.initState();
+    prograssDialog = SimpleFontelicoProgressDialog(context: context);
     obscured = true;
     obscured2 = true;
   }
 
-  @override
-  void dispose() {
-    passwordController.dispose();
-    passwordConfirmController.dispose();
-    super.dispose();
+  Future<void> showPrograssDialog() async {
+    prograssDialog!
+        .show(message: "جاري التحميل...", indicatorColor: AppColors.mintGreen);
+  }
+
+  Future<void> hidePrograssDialog() async {
+    prograssDialog!.hide();
   }
 
   @override
@@ -183,6 +187,7 @@ class _CreatPasswordScreenState extends State<CreatPasswordScreen> {
                   labelText: 'تأكيد كلمة المرور',
                   helperText: 'أدخل كلمة المرور مرة اخري للتأكيد',
                   iconLead: Icons.lock_outline,
+                  textType: TextInputType.visiblePassword,
                   matchPassword: passwordController.text,
                   thisPasssword: passwordConfirmController.text,
                   validatText: validatText,
@@ -208,7 +213,6 @@ class _CreatPasswordScreenState extends State<CreatPasswordScreen> {
                   buttonColor: AppColors.mintGreen,
                   function: () async {
                     FocusManager.instance.primaryFocus?.unfocus();
-
                     if (formKey.currentState!.validate() &&
                         passwordController.value.text ==
                             passwordConfirmController.value.text) {
@@ -223,17 +227,27 @@ class _CreatPasswordScreenState extends State<CreatPasswordScreen> {
                         "photo_path":
                             "data:image/jpeg;base64,$tempAvatarImage64",
                       });
-                      log(user.toJson().toString());
-                      await authRepository.register(user);
-                      //log(res.toString());
-
-                      // ignore: use_build_context_synchronously
-                      Navigator.pushAndRemoveUntil(
-                          context,
-                          PageTransition(
-                              type: PageTransitionType.fade,
-                              child: const PatientHomeScreen()),
-                          (Route<dynamic> route) => false);
+                      //log(user.toJson().toString());
+                      try {
+                        showPrograssDialog()
+                            .then((_) => authRepository.register(user))
+                            .then((_) => hidePrograssDialog())
+                            .then((_) =>
+                                // ignore: use_build_context_synchronously
+                                Navigator.pushAndRemoveUntil(
+                                    context,
+                                    PageTransition(
+                                        type: PageTransitionType.fade,
+                                        child: const PatientHomeScreen()),
+                                    (Route<dynamic> route) => false));
+                      } catch (e) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                            backgroundColor: Colors.red,
+                            content: Text(
+                                'حدث خطأ غير متوقع يرجي إعادة المحاولة')),
+                      );
+                      }
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(

@@ -9,26 +9,28 @@ class OnBoardingScreen extends StatefulWidget {
   const OnBoardingScreen({super.key});
 
   @override
+
   // ignore: library_private_types_in_public_api
   _OnBoardingScreenState createState() => _OnBoardingScreenState();
 }
 
 class _OnBoardingScreenState extends State<OnBoardingScreen> {
+
   int currentIndex = 0;
   late PageController _pageController;
+  bool _showTutorial = true;
+
   List<OnboardModel> screens = <OnboardModel>[
     OnboardModel(
       img: 'assets/images/pictures/picone.png',
       text:
           "نهتم من خلال البرنامج بتنظيم الحالة الصحية لمريض الزهايمر كتنظيم مواعيد الادوية",
-      desc: "",
       bg: Colors.white,
       button: Colors.white30,
     ),
     OnboardModel(
       img: 'assets/images/pictures/pictwo.png',
       text: "ونهتم بالحالة النفسية كمشاركة الذكريات والمحادثات والألعاب",
-      desc: "",
       bg: Colors.white,
       button: Colors.white30,
     ),
@@ -38,6 +40,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
   void initState() {
     _pageController = PageController(initialPage: 0);
     super.initState();
+    _initPrefs();
   }
 
   @override
@@ -52,9 +55,18 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
     await prefs.setInt('onBoard', isViewed);
   }
 
+  Future<void> _initPrefs() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    _showTutorial = prefs.getBool('showTutorial') ?? true;
+    if (_showTutorial) {
+      prefs.setBool('showTutorial', false);
+    }
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return _showTutorial ? Scaffold(
       backgroundColor: AppColors.white,
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 40.0),
@@ -159,6 +171,6 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
               );
             }),
       ),
-    );
+    ) : const SignInOrRegister();
   }
 }
