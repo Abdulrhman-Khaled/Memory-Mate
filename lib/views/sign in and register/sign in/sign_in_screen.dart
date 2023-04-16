@@ -1,14 +1,23 @@
+import 'dart:developer';
+
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:memory_mate/components/buttons.dart';
 import 'package:memory_mate/components/text_fields.dart';
 import 'package:memory_mate/constants/color_constatnts.dart';
+import 'package:memory_mate/networking/dio/repositories/patient_user_repsitory.dart';
+import 'package:memory_mate/views/home%20pages/caregiver_home_screen.dart';
 import 'package:memory_mate/views/sign%20in%20and%20register/sign%20up%20and%20register/sign_up_screen.dart';
 
 import 'package:page_transition/page_transition.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:simple_fontellico_progress_dialog/simple_fontico_loading.dart';
 
+import '../../../networking/dio/api/dio_client.dart';
+import '../../../networking/dio/models api/patient_user_api.dart';
+import '../../../networking/dio/repositories/authantication.dart';
 import '../../home pages/patient_home_screen.dart';
 import '../forget password/forget_password_screen.dart';
-
 
 class SignIn extends StatefulWidget {
   const SignIn({super.key});
@@ -18,6 +27,14 @@ class SignIn extends StatefulWidget {
 }
 
 class _SignInState extends State<SignIn> {
+  late Dio dio;
+  late DioClient dioClient;
+  late PatientUserApi userApi;
+  late AuthRepository authRepository;
+  late PatientUserRepository patientUserRepository;
+
+  SimpleFontelicoProgressDialog? prograssDialog;
+
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
@@ -31,12 +48,32 @@ class _SignInState extends State<SignIn> {
   @override
   void initState() {
     super.initState();
+    prograssDialog = SimpleFontelicoProgressDialog(context: context);
     obscured = true;
   }
 
+  Future<void> showPrograssDialog() async {
+    prograssDialog!
+        .show(message: "جاري التحميل...", indicatorColor: AppColors.mintGreen);
+  }
+
+  Future<void> hidePrograssDialog() async {
+    prograssDialog!.hide();
+  }
+
+  erorrBuilder(String erorrMesseage) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(backgroundColor: Colors.red, content: Text(erorrMesseage)),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
+    dio = Dio();
+    dioClient = DioClient(dio);
+    userApi = PatientUserApi(dioClient: dioClient);
+    authRepository = AuthRepository(userApi);
+    patientUserRepository = PatientUserRepository(userApi);
     return Scaffold(
       backgroundColor: AppColors.white,
       appBar: AppBar(
@@ -129,20 +166,41 @@ class _SignInState extends State<SignIn> {
                 width: 300,
                 height: 50,
                 buttonText: 'تسجيل الدخول',
-                function: () {
+                function: () async {
+                  FocusManager.instance.primaryFocus?.unfocus();
                   if (formKey.currentState!.validate()) {
-                    Navigator.pushReplacement(
-                      context,
-                      PageTransition(
-                          type: PageTransitionType.fade,
-                          child: const PatientHomeScreen()),
-                    );
+                    try {
+                      showPrograssDialog();
+                      Response response = await authRepository.login(
+                          emailController.value.text,
+                          passwordController.value.text);
+                      String userToken = response.data['token'];
+                      final SharedPreferences prefs =
+                          await SharedPreferences.getInstance();
+                      await prefs.setString('currentUserToken', userToken);
+                      Map<String, dynamic> userTypeGetter =
+                          await patientUserRepository
+                              .getPatientUserRequest(userToken);
+                      String type = await userTypeGetter['userType'];
+                      hidePrograssDialog();
+                      // ignore: use_build_context_synchronously
+                      Navigator.pushAndRemoveUntil(
+                          context,
+                          PageTransition(
+                              type: PageTransitionType.fade,
+                              child: type == 'PATIENT' ? const PatientHomeScreen() : const CareGiverHomeScreen()),
+                          (Route<dynamic> route) => false);
+                    } catch (e) {
+                      log(e.toString());
+                      hidePrograssDialog();
+                      erorrBuilder('خطأ في البيانات يرجي إعادة المحاولة');
+                    }
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
                           backgroundColor: Colors.red,
                           content:
-                              Text('هناك خطأ في البيانات يرجي إعادة المحاولة')),
+                              Text('حدث خطأ غير متوقع يرجي إعادة المحاولة')),
                     );
                   }
                 },

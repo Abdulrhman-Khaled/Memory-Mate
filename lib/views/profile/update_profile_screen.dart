@@ -1,32 +1,49 @@
+import 'dart:convert';
 import 'dart:io';
 
-import 'package:flutter/material.dart';
-
 import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
+import 'package:page_transition/page_transition.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:memory_mate/views/profile/profile_screen.dart';
-import 'package:page_transition/page_transition.dart';
+import 'package:simple_fontellico_progress_dialog/simple_fontico_loading.dart';
 
 import '../../components/buttons.dart';
 import '../../constants/color_constatnts.dart';
+import '../../networking/dio/api/dio_client.dart';
+import '../../networking/dio/models api/patient_user_api.dart';
+import '../../networking/dio/repositories/patient_user_repsitory.dart';
 
+// ignore: must_be_immutable
 class UpdateProfileScreen extends StatefulWidget {
-  const UpdateProfileScreen({super.key});
+  String userName;
+  String imageLink;
+  String address;
+  String age;
+  String phone;
+  String email;
+  String type;
+
+  UpdateProfileScreen(
+      {required this.userName,
+      required this.address,
+      required this.phone,
+      required this.type,
+      required this.age,
+      required this.email,
+      required this.imageLink,
+      super.key});
 
   @override
   State<UpdateProfileScreen> createState() => _UpdateProfileScreenState();
 }
 
 class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
-  var userName = 'سهيل امجد فاضل';
-  var age = 39;
-  var phoneNumber = 01553734723;
-  var email = 'Sohailamged@gmail.com';
-  var address = 'شارع الرحاب ,وسط البلد';
-  var type = 'مريض';
-
   TextEditingController userNameController = TextEditingController();
   TextEditingController ageController = TextEditingController();
   TextEditingController phoneController = TextEditingController();
@@ -34,7 +51,15 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
   TextEditingController typeController = TextEditingController();
   TextEditingController emailController = TextEditingController();
 
+  late Dio dio;
+  late DioClient dioClient;
+  late PatientUserApi userApi;
+  late PatientUserRepository patientUserRepository;
+
   File? avatarImageFile;
+  String? image;
+
+  SimpleFontelicoProgressDialog? prograssDialog;
 
   getImage() async {
     ImagePicker imagePicker = ImagePicker();
@@ -59,17 +84,57 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
     } else {}
   }
 
+  Future<String> imageToBase64(dynamic image) async {
+    if (image is File) {
+      List<int> imageBytes = await image.readAsBytes();
+      return base64Encode(imageBytes);
+    } else if (image is String && image.startsWith('http')) {
+      final response = await http.get(Uri.parse(image));
+      final bytes = response.bodyBytes;
+      return base64Encode(bytes);
+    } else {
+      throw ArgumentError(
+          'Invalid argument: image must be a File or a network image URL');
+    }
+  }
+
+  Future updateUserInformation(String avatar) async {
+    dio = Dio();
+    dioClient = DioClient(dio);
+    userApi = PatientUserApi(dioClient: dioClient);
+    patientUserRepository = PatientUserRepository(userApi);
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? userToken = prefs.getString('currentUserToken');
+    await patientUserRepository.updatePatientUserAvatarRequest(
+        userToken!, "data:image/jpeg;base64,$avatar");
+    await patientUserRepository.updatePatientUserRequest(
+        userToken,
+        userNameController.value.text,
+        phoneController.value.text,
+        emailController.value.text,
+        addressController.value.text);
+  }
+
+  Future<void> showPrograssDialog() async {
+    prograssDialog!
+        .show(message: "جاري التحميل...", indicatorColor: AppColors.mintGreen);
+  }
+
+  Future<void> hidePrograssDialog() async {
+    prograssDialog!.hide();
+  }
+
   @override
   void initState() {
-  
-  super.initState();
-  userNameController.text = userName;
-  ageController.text = age.toString();
-  phoneController.text = phoneNumber.toString();
-  addressController.text = address;
-  typeController.text = type;
-  emailController.text = email;
-}
+    super.initState();
+    prograssDialog = SimpleFontelicoProgressDialog(context: context);
+    userNameController.text = widget.userName;
+    ageController.text = '${widget.age} عام';
+    phoneController.text = widget.phone;
+    addressController.text = widget.address;
+    typeController.text = widget.type;
+    emailController.text = widget.email;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -104,7 +169,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                   margin: const EdgeInsets.fromLTRB(0, 40, 0, 0),
                   alignment: Alignment.center,
                   child: const Text(
-                    'الملف الشخصي',
+                    'تعديل الملف الشخصي',
                     style: TextStyle(
                       fontSize: 24,
                       color: AppColors.white,
@@ -115,13 +180,14 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                     margin: const EdgeInsets.fromLTRB(0, 85, 0, 0),
                     alignment: Alignment.center,
                     child: avatarImageFile == null
-                        ? const Image(
-                            image:
-                                AssetImage('assets/images/pictures/avatar.png'),
-                            fit: BoxFit.cover,
-                            width: 150,
-                            height: 150,
-                          )
+                        ? ClipRRect(
+                            borderRadius: BorderRadius.circular(100),
+                            child: Image.network(
+                              widget.imageLink,
+                              fit: BoxFit.cover,
+                              width: 150,
+                              height: 150,
+                            ))
                         : ClipRRect(
                             borderRadius: BorderRadius.circular(100),
                             child: Image.file(
@@ -184,7 +250,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                               color: const Color.fromARGB(255, 250, 250, 250),
                               borderRadius: BorderRadius.circular(15.0)),
                           width: 340,
-                          child: TextFormField(                         
+                          child: TextFormField(
                             controller: userNameController,
                             keyboardType: TextInputType.text,
                             decoration: const InputDecoration(
@@ -212,7 +278,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                               borderRadius: BorderRadius.circular(15.0)),
                           width: 340.0,
                           child: TextFormField(
-                            
+                            enabled: false,
                             controller: ageController,
                             keyboardType: TextInputType.number,
                             decoration: const InputDecoration(
@@ -222,7 +288,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                               hintStyle:
                                   TextStyle(color: AppColors.lightmintGreen),
                               prefixIcon: Icon(
-                                Icons.person_outline,
+                                Icons.calendar_month_outlined,
                               ),
                             ),
                           ),
@@ -239,9 +305,10 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                               borderRadius: BorderRadius.circular(15.0)),
                           width: 340.0,
                           child: TextFormField(
-                            
                             controller: phoneController,
-                            keyboardType: TextInputType.emailAddress,
+                            keyboardType: TextInputType.phone,
+                            textAlign: TextAlign.right,
+                            textDirection: TextDirection.ltr,
                             decoration: const InputDecoration(
                               border: InputBorder.none,
                               labelText: "الهاتف",
@@ -266,7 +333,6 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                               borderRadius: BorderRadius.circular(15.0)),
                           width: 340.0,
                           child: TextFormField(
-                            
                             controller: addressController,
                             keyboardType: TextInputType.text,
                             decoration: const InputDecoration(
@@ -276,7 +342,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                               hintStyle:
                                   TextStyle(color: AppColors.lightmintGreen),
                               prefixIcon: Icon(
-                                Icons.manage_accounts_outlined,
+                                Icons.location_on_outlined,
                               ),
                             ),
                           ),
@@ -293,7 +359,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                               borderRadius: BorderRadius.circular(15.0)),
                           width: 340.0,
                           child: TextFormField(
-                            
+                            enabled: false,
                             controller: typeController,
                             keyboardType: TextInputType.emailAddress,
                             decoration: const InputDecoration(
@@ -320,7 +386,6 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                               borderRadius: BorderRadius.circular(15.0)),
                           width: 340.0,
                           child: TextFormField(
-                            
                             controller: emailController,
                             keyboardType: TextInputType.emailAddress,
                             decoration: const InputDecoration(
@@ -344,7 +409,18 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                         height: 50,
                         textSize: 20,
                         buttonText: 'تحديث البيانات',
-                        function: () {
+                        function: () async {
+                          await showPrograssDialog();
+                          if (avatarImageFile == null) {
+                            image = await imageToBase64(widget.imageLink);
+                          } else {
+                            image = await imageToBase64(avatarImageFile);
+                          }
+
+                          await updateUserInformation(image!);
+                          await hidePrograssDialog();
+
+                          // ignore: use_build_context_synchronously
                           AwesomeDialog(
                             context: context,
                             btnOkColor: AppColors.mintGreen,
@@ -352,7 +428,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                             animType: AnimType.rightSlide,
                             title: 'تم التحديث بنجاح',
                             btnOkOnPress: () {
-                              Navigator.push(
+                              Navigator.pushReplacement(
                                 context,
                                 PageTransition(
                                   type: PageTransitionType.fade,

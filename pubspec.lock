@@ -323,11 +323,35 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.9"
+  flutter_riverpod:
+    dependency: "direct main"
+    description:
+      name: flutter_riverpod
+      sha256: "812dfbb87af51e73e68ea038bcfd1c732078d6838d3388d03283db7dec0d1e5f"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.3.4"
+  flutter_swipe_detector:
+    dependency: "direct main"
+    description:
+      name: flutter_swipe_detector
+      sha256: ae6fe331de414632c0122a7047d64dfe2332c95b3f06a05118a7ea538ff19eda
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.0"
   flutter_test:
     dependency: "direct dev"
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_tts:
+    dependency: "direct main"
+    description:
+      name: flutter_tts
+      sha256: e91ad17793ad12cca9c3066accf99ceb353bf0355ad06b767176f178b5c428f6
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.6.3"
   flutter_web_plugins:
     dependency: transitive
     description: flutter
@@ -365,6 +389,38 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.1"
+  google_maps_flutter:
+    dependency: "direct main"
+    description:
+      name: google_maps_flutter
+      sha256: "24392ef192f3b00bcd93151375676805a9933574423a5bd5509a0ead2e8a4215"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.2.5"
+  google_maps_flutter_android:
+    dependency: transitive
+    description:
+      name: google_maps_flutter_android
+      sha256: ee3c1a63983b8ba17a9a7c1233c3542fbfbc0ebf540d3aa9b8fd5162681e0219
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.4.10"
+  google_maps_flutter_ios:
+    dependency: transitive
+    description:
+      name: google_maps_flutter_ios
+      sha256: e9ad74415a222573625a2c1717adc1e375b18e8ce660fc12db734d1bda1132d4
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.2.1"
+  google_maps_flutter_platform_interface:
+    dependency: transitive
+    description:
+      name: google_maps_flutter_platform_interface
+      sha256: a07811d2b82055815ede75e1fe4b7b76f71a0b4820b26f71bdaddd157d6a3e20
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.2.6"
   graphs:
     dependency: transitive
     description:
@@ -373,6 +429,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.2.0"
+  hive:
+    dependency: transitive
+    description:
+      name: hive
+      sha256: "8dcf6db979d7933da8217edcec84e9df1bdb4e4edc7fc77dbd5aa74356d6d941"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.2.3"
+  hive_flutter:
+    dependency: "direct main"
+    description:
+      name: hive_flutter
+      sha256: dca1da446b1d808a51689fb5d0c6c9510c0a2ba01e22805d492c73b68e33eecc
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.1.0"
   html:
     dependency: transitive
     description:
@@ -493,6 +565,30 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.1"
+  location:
+    dependency: "direct main"
+    description:
+      name: location
+      sha256: "9051959f6f2ccadd887b28b66e9cbbcc25b6838e37cf9e894c421ccc0ebf80b5"
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.4.0"
+  location_platform_interface:
+    dependency: transitive
+    description:
+      name: location_platform_interface
+      sha256: "62eeaf1658e92e4459b727f55a3c328eccbac8ba043fa6d262ac5286ad48384c"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.3.0"
+  location_web:
+    dependency: transitive
+    description:
+      name: location_web
+      sha256: "6c08c408a040534c0269c4ff9fe17eebb5a36dea16512fbaf116b9c8bc21545b"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.1.1"
   logging:
     dependency: transitive
     description:
@@ -709,6 +805,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.2.1"
+  pull_to_refresh:
+    dependency: "direct main"
+    description:
+      name: pull_to_refresh
+      sha256: bbadd5a931837b57739cf08736bea63167e284e71fb23b218c8c9a6e042aad12
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.0"
   quiver:
     dependency: transitive
     description:
@@ -725,6 +829,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.9.1"
+  riverpod:
+    dependency: transitive
+    description:
+      name: riverpod
+      sha256: "77ab3bcd084bb19fa8717a526217787c725d7f5be938404c7839cd760fdf6ae5"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.3.4"
   shared_preferences:
     dependency: "direct main"
     description:
@@ -858,6 +970,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.11.0"
+  state_notifier:
+    dependency: transitive
+    description:
+      name: state_notifier
+      sha256: "8fe42610f179b843b12371e40db58c9444f8757f8b69d181c97e50787caed289"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.7.2+1"
   stream_channel:
     dependency: transitive
     description:
@@ -882,6 +1002,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.2.0"
+  switcher:
+    dependency: "direct main"
+    description:
+      name: switcher
+      sha256: edbe9f80007116d7195d6b37cd8d401b97e2e894157e1bea98175f308102ab2b
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.0"
   syncfusion_flutter_core:
     dependency: transitive
     description:
@@ -938,6 +1066,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.3.1"
+  uuid:
+    dependency: "direct main"
+    description:
+      name: uuid
+      sha256: "648e103079f7c64a36dc7d39369cabb358d377078a051d6ae2ad3aa539519313"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.0.7"
   vector_math:
     dependency: transitive
     description:

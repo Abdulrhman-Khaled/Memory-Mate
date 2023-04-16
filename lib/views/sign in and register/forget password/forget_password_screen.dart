@@ -1,21 +1,64 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:memory_mate/constants/color_constatnts.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:simple_fontellico_progress_dialog/simple_fontico_loading.dart';
 
 import '../../../components/buttons.dart';
 import '../../../components/text_fields.dart';
+import '../../../networking/dio/api/dio_client.dart';
+import '../../../networking/dio/models api/patient_user_api.dart';
+import '../../../networking/dio/repositories/authantication.dart';
+import '../../../networking/dio/repositories/patient_user_repsitory.dart';
 import 'otp_forget_password_screen.dart';
 
-class ForgetPasswordScreen extends StatelessWidget {
-  ForgetPasswordScreen({Key? key}) : super(key: key);
+class ForgetPasswordScreen extends StatefulWidget {
+  const ForgetPasswordScreen({Key? key}) : super(key: key);
 
-  final phoneController = TextEditingController();
-  final phoneFocusNode = FocusNode();
+  @override
+  State<ForgetPasswordScreen> createState() => _ForgetPasswordScreenState();
+}
+
+class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
+  late Dio dio;
+
+  late DioClient dioClient;
+
+  late PatientUserApi userApi;
+
+  late PatientUserRepository patientUserRepository;
+
+  final emailController = TextEditingController();
+
+  final emailFocusNode = FocusNode();
 
   final formKey = GlobalKey<FormState>();
 
+  SimpleFontelicoProgressDialog? prograssDialog;
+
+  @override
+  void initState() {
+    super.initState();
+    prograssDialog = SimpleFontelicoProgressDialog(context: context);
+  }
+
+  Future<void> showPrograssDialog() async {
+    prograssDialog!
+        .show(message: "جاري التحميل...", indicatorColor: AppColors.mintGreen);
+  }
+
+  Future<void> hidePrograssDialog() async {
+    prograssDialog!.hide();
+  }
+
   @override
   Widget build(BuildContext context) {
+    dio = Dio();
+    dioClient = DioClient(dio);
+    userApi = PatientUserApi(dioClient: dioClient);
+    patientUserRepository = PatientUserRepository(userApi);
+
     return Scaffold(
       backgroundColor: AppColors.white,
       appBar: AppBar(
@@ -45,7 +88,7 @@ class ForgetPasswordScreen extends StatelessWidget {
               height: 20.0,
             ),
             const Text(
-              'أدخل رقم الهاتف',
+              'أدخل الإيميل الخاص بك ',
               textAlign: TextAlign.center,
               style: TextStyle(color: AppColors.mintGreen, fontSize: 25),
             ),
@@ -53,7 +96,7 @@ class ForgetPasswordScreen extends StatelessWidget {
               height: 20,
             ),
             const Text(
-              'سنقوم بارسال الكود الخاص بتغيير الرقم السري علي رقم هاتفك',
+              'سنقوم بارسال الكود الخاص بتغيير الرقم السري علي رقم هاتفك المربوط بحسابك',
               textAlign: TextAlign.center,
               style: TextStyle(fontSize: 15, color: AppColors.lightBlack),
             ),
@@ -64,16 +107,14 @@ class ForgetPasswordScreen extends StatelessWidget {
                 textDirection: TextDirection.rtl,
                 child: textField(
                   width: 300,
-                  helperText: 'أدخل رقم هاتفك الحالي',
-                  focusNode: phoneFocusNode,
-                  hintText: "01552629829",
-                  labelText: "رقم الهاتف",
-                  iconLead: Icons.smartphone_outlined,
-                  textFormController: phoneController,
+                  helperText: 'أدخل الإيميل المربوط بحسابك',
+                  focusNode: emailFocusNode,
+                  hintText: "example@gmail.com",
+                  labelText: "الإيميل",
+                  iconLead: Icons.email_outlined,
+                  textFormController: emailController,
                   function: () {},
-                  needMax: true,
-                  maxLetters: 11,
-                  textType: TextInputType.phone,
+                  textType: TextInputType.emailAddress,
                   validatText: 'لا يمكن ترك هذا الحقل فارغ',
                 ),
               ),
@@ -83,20 +124,43 @@ class ForgetPasswordScreen extends StatelessWidget {
               width: 300,
               height: 50,
               buttonText: 'إرسال الكود',
-              function: () {
+              function: () async {
                 FocusManager.instance.primaryFocus?.unfocus();
                 if (formKey.currentState!.validate()) {
-                  Navigator.push(
-                    context,
-                    PageTransition(
-                        type: PageTransitionType.fade,
-                        child: const OTPForgetPasswordScreen()),
-                  );
+                  try {
+                    showPrograssDialog();
+                    final SharedPreferences prefs =
+                        await SharedPreferences.getInstance();
+                    String? userToken = prefs.getString('currentUserToken');
+                    await patientUserRepository.postOtpRequest(
+                        emailController.value.text, userToken!);
+                    hidePrograssDialog();
+                    // ignore: use_build_context_synchronously
+                    Navigator.push(
+                        context,
+                        PageTransition(
+                            type: PageTransitionType.fade,
+                            child: OTPForgetPasswordScreen(
+                              email: emailController.value.text,
+                              token: userToken,
+                            )));
+                    hidePrograssDialog();
+                  } catch (e) {
+                    hidePrograssDialog();
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                          backgroundColor: Colors.red,
+                          content:
+                              Text('هناك خطأ في البيانات يرجي إعادة المحاولة')),
+                    );
+                  }
                 } else {
+                  hidePrograssDialog();
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
                         backgroundColor: Colors.red,
-                        content: Text('حدث خطأ غير متوقع يرجي إعادة المحاولة')),
+                        content:
+                            Text('هناك خطأ في البيانات يرجي إعادة المحاولة')),
                   );
                 }
               },

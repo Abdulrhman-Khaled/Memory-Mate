@@ -33,9 +33,12 @@ Widget textField(
         dynamic focusNode,
         bool readOnly = false,
         bool isLength = false,
+        bool isRegex = false,
         bool isMatch = false,
         String passwordNotBigText = 'كلمة المرور يجب ان تساوي 8 رموز علي الأقل',
         String passwordNotMatchText = 'كلمة المرور غير متطابقة',
+        String passwordRegexText =
+            'يجب ان تحتوي كلمة المرور علي حرف كبير ورمز ورقم علي الاقل',
         String matchPassword = '',
         String thisPasssword = '',
         String validatText = '',
@@ -43,7 +46,7 @@ Widget textField(
     SizedBox(
       width: width,
       height: height,
-      child: TextFormField(      
+      child: TextFormField(
         readOnly: readOnly,
         onTap: onTapFunction,
         onChanged: onChangeFunction,
@@ -52,6 +55,8 @@ Widget textField(
             return validatText;
           } else if (isLength == true && value.length < inputLength) {
             return passwordNotBigText;
+          } else if (isRegex == true && !validatePassword(value)) {
+            return passwordRegexText;
           } else if (isMatch == true && thisPasssword != matchPassword) {
             return passwordNotMatchText;
           }
@@ -127,3 +132,9 @@ Widget textField(
         ),
       ),
     );
+
+bool validatePassword(String password) {
+  String pattern = r'^(?=.*?[A-Z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$';
+  RegExp regExp = RegExp(pattern);
+  return regExp.hasMatch(password);
+}

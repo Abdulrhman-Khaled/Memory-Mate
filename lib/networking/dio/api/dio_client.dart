@@ -6,6 +6,7 @@ import '../../../constants/endpoints_constants.dart';
 
 class DioClient {
   final Dio _dio;
+  
 
   DioClient(this._dio) {
     _dio
@@ -29,12 +30,14 @@ class DioClient {
     Options? options,
     CancelToken? cancelToken,
     ProgressCallback? onReceiveProgress,
+    String? userToken
   }) async {
     try {
       final Response response = await _dio.get(
         url,
         queryParameters: queryParameters,
-        options: options,
+        options: Options(headers: {HttpHeaders.contentTypeHeader: "application/json",
+            'x-access-token': userToken}),
         cancelToken: cancelToken,
         onReceiveProgress: onReceiveProgress,
       );
@@ -53,6 +56,7 @@ class DioClient {
     CancelToken? cancelToken,
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
+    String? userToken
   }) async {
     try {
       final Response response = await _dio.post(
@@ -60,7 +64,8 @@ class DioClient {
         data: data,
         queryParameters: queryParameters,
         options: Options(
-            headers: {HttpHeaders.contentTypeHeader: "application/json"}),
+            headers: {HttpHeaders.contentTypeHeader: "application/json",
+            'x-access-token': userToken}),
         cancelToken: cancelToken,
         onSendProgress: onSendProgress,
         onReceiveProgress: onReceiveProgress,
@@ -72,7 +77,7 @@ class DioClient {
   }
 
 // Put
-  Future<Response> put(
+  Future<Response> patch(
     String url, {
     data,
     Map<String, dynamic>? queryParameters,
@@ -80,13 +85,15 @@ class DioClient {
     CancelToken? cancelToken,
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
+    String? userToken 
   }) async {
     try {
-      final Response response = await _dio.put(
+      final Response response = await _dio.patch(
         url,
         data: data,
         queryParameters: queryParameters,
-        options: options,
+        options: Options( headers: {HttpHeaders.contentTypeHeader: "application/json",
+            'x-access-token': userToken}),
         cancelToken: cancelToken,
         onSendProgress: onSendProgress,
         onReceiveProgress: onReceiveProgress,
@@ -106,13 +113,15 @@ class DioClient {
     CancelToken? cancelToken,
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
+    String? userToken 
   }) async {
     try {
       final Response response = await _dio.delete(
         url,
         data: data,
         queryParameters: queryParameters,
-        options: options,
+        options: Options( headers: {HttpHeaders.contentTypeHeader: "application/json",
+            'x-access-token': userToken}),
         cancelToken: cancelToken,
       );
       return response.data;

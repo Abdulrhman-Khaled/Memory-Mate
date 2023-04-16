@@ -31,6 +31,7 @@ class _SignUpState extends State<SignUp> {
 
   @override
   Widget build(BuildContext context) {
+    phoneController = TextEditingController(text: "+2");
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -85,7 +86,7 @@ class _SignUpState extends State<SignUp> {
                     labelText: "رقم الهاتف",
                     iconLead: Icons.smartphone_outlined,
                     textFormController: phoneController,
-                    function: () {},                
+                    function: () {},
                     textType: TextInputType.phone,
                     validatText: 'لا يمكن ترك هذا الحقل فارغ',
                   ),

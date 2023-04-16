@@ -1,16 +1,29 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:async';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
-
+import 'package:memory_mate/views/sign%20in%20and%20register/forget%20password/set_new_password_screen.dart';
+import 'package:page_transition/page_transition.dart';
+import 'package:simple_fontellico_progress_dialog/simple_fontico_loading.dart';
 
 import '../../../components/buttons.dart';
 import '../../../constants/color_constatnts.dart';
+import '../../../networking/dio/api/dio_client.dart';
+import '../../../networking/dio/models api/patient_user_api.dart';
+import '../../../networking/dio/repositories/patient_user_repsitory.dart';
 
-
+// ignore: must_be_immutable
 class OTPForgetPasswordScreen extends StatefulWidget {
-  const OTPForgetPasswordScreen({super.key});
+  String email;
+  String token;
+  OTPForgetPasswordScreen({
+    Key? key,
+    required this.email,
+    required this.token,
+  }) : super(key: key);
 
   @override
   State<OTPForgetPasswordScreen> createState() =>
@@ -18,6 +31,16 @@ class OTPForgetPasswordScreen extends StatefulWidget {
 }
 
 class _OTPForgetPasswordScreenState extends State<OTPForgetPasswordScreen> {
+  late Dio dio;
+
+  late DioClient dioClient;
+
+  late PatientUserApi userApi;
+
+  late PatientUserRepository patientUserRepository;
+
+  String enteredCode = '';
+
   int secondsRemaining = 30;
   bool enableOnTap = true;
   final oneSec = const Duration(seconds: 1);
@@ -25,6 +48,23 @@ class _OTPForgetPasswordScreenState extends State<OTPForgetPasswordScreen> {
   int _start = 30;
   bool isVisiable = false;
   Color sendAgain = AppColors.lightBlack;
+
+  SimpleFontelicoProgressDialog? prograssDialog;
+
+  @override
+  void initState() {
+    super.initState();
+    prograssDialog = SimpleFontelicoProgressDialog(context: context);
+  }
+
+  Future<void> showPrograssDialog() async {
+    prograssDialog!
+        .show(message: "جاري التحميل...", indicatorColor: AppColors.mintGreen);
+  }
+
+  Future<void> hidePrograssDialog() async {
+    prograssDialog!.hide();
+  }
 
   void startTimer() {
     isVisiable = true;
@@ -59,6 +99,11 @@ class _OTPForgetPasswordScreenState extends State<OTPForgetPasswordScreen> {
 
   @override
   Widget build(BuildContext context) {
+    dio = Dio();
+    dioClient = DioClient(dio);
+    userApi = PatientUserApi(dioClient: dioClient);
+    patientUserRepository = PatientUserRepository(userApi);
+
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: const SystemUiOverlayStyle(
         statusBarColor: AppColors.mintGreen,
@@ -116,18 +161,10 @@ class _OTPForgetPasswordScreenState extends State<OTPForgetPasswordScreen> {
                 textStyle:
                     const TextStyle(fontSize: 20, color: AppColors.white),
                 cursorColor: AppColors.white,
-                //runs when a code is typed in
-                onCodeChanged: (String code) {},
-                //runs when every textfield is filled
-                onSubmit: (String verificationCode) {                
-                  showDialog(
-                      context: context,
-                      builder: (context) {
-                        return AlertDialog(
-                          title: const Text("Verification Code"),
-                          content: Text('Code entered is $verificationCode'),
-                        );
-                      });
+                onSubmit: (String verificationCode) {
+                  setState(() {
+                    enteredCode = verificationCode;
+                  });
                 },
               ),
               const SizedBox(
@@ -136,16 +173,43 @@ class _OTPForgetPasswordScreenState extends State<OTPForgetPasswordScreen> {
               filledButton(
                 width: 300,
                 height: 50,
-                function: () {
-                  /*Navigator.push(
-                    context,
-                    PageTransition(
-                        type: PageTransitionType.fade,
-                        child:  CreatPasswordScreen()),
-                  );*/
+                function: () async {
+                  try {
+                    showPrograssDialog();
+
+                    Response response = await patientUserRepository
+                        .postVerifyOtpRequest(enteredCode, widget.token);
+                    String userToken = await response.data['token'];
+                    hidePrograssDialog();
+                    if (userToken == widget.token) {
+                      // ignore: use_build_context_synchronously
+                      Navigator.push(
+                          context,
+                          PageTransition(
+                              type: PageTransitionType.fade,
+                              child: SetNewPasswordScreen(token: widget.token,)));
+                    } else {
+                      hidePrograssDialog();
+                      // ignore: use_build_context_synchronously
+                      ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                          backgroundColor: Colors.red,
+                          content:
+                              Text('هناك خطأ في البيانات يرجي إعادة المحاولة')),
+                    );
+                    }
+                  } catch (e) {
+                    hidePrograssDialog();
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                          backgroundColor: Colors.red,
+                          content:
+                              Text('هناك خطأ في البيانات يرجي إعادة المحاولة')),
+                    );
+                  }
                 },
                 buttonColor: AppColors.white,
-                buttonText: 'تفعيل',
+                buttonText: 'تأكيد',
                 buttonTextColor: AppColors.mintGreen,
               ),
               const SizedBox(
@@ -156,8 +220,12 @@ class _OTPForgetPasswordScreenState extends State<OTPForgetPasswordScreen> {
                 children: <Widget>[
                   InkWell(
                     onTap: enableOnTap
-                        ? () {
+                        ? () async {
                             startTimer();
+                            showPrograssDialog();
+                            await patientUserRepository.postOtpRequest(
+                                widget.email, widget.token);
+                            hidePrograssDialog();
                           }
                         : null,
                     child: Text(

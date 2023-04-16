@@ -9,26 +9,24 @@ class AuthRepository {
   
   final PatientUserApi userApi;
   AuthRepository(this.userApi);
-  Future<String> login(email, password) async {
+  Future<Response> login(email, password) async {
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
-      final response = await userApi.login(email, password);
+      Response response = await userApi.login(email, password);
       prefs.setBool('isLoggedIn', true);
-      final token = response.data['data'];
-      return token;
+      return response;
     } on DioError catch (e) {
       final errorMessage = DioExceptions.fromDioError(e).toString();
       throw errorMessage;
     }
   }
 
-  Future<String> register(User user) async {
+  Future<Response> register(User user) async {
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
-      final response = await userApi.register(user);
-      final token = response.data['data'];
+      Response response = await userApi.register(user);
       prefs.setBool('isLoggedIn', true);
-      return "xx$token";
+      return response;
     } on DioError catch (e) {
       final errorMessage = DioExceptions.fromDioError(e).toString();
       throw errorMessage;

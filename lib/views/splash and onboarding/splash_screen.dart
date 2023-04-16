@@ -14,7 +14,6 @@ class SplashScreen extends StatefulWidget {
   _SplashScreenState createState() => _SplashScreenState();
 }
 
-
 class _SplashScreenState extends State<SplashScreen> {
   bool _isLoggedIn = false;
 
@@ -24,20 +23,20 @@ class _SplashScreenState extends State<SplashScreen> {
     checkLoginStatus();
     Timer(
         const Duration(milliseconds: 1500),
-        () => _isLoggedIn ? Navigator.pushReplacement(
-            context,
-            PageTransition(
-                type: PageTransitionType.fade,
-                child: const OnBoardingScreen()))
-                : Navigator.pushReplacement(
-            context,
-            PageTransition(
-                type: PageTransitionType.fade,
-                child: const PatientHomeScreen())));
-                
+        () => _isLoggedIn == true
+            ? Navigator.pushReplacement(
+                context,
+                PageTransition(
+                    type: PageTransitionType.fade,
+                    child: const PatientHomeScreen()))
+            : Navigator.pushReplacement(
+                context,
+                PageTransition(
+                    type: PageTransitionType.fade,
+                    child: const OnBoardingScreen())));
   }
 
-   Future<void> checkLoginStatus() async {
+  Future<void> checkLoginStatus() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     bool isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
     setState(() {
@@ -47,6 +46,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
+    checkLoginStatus();
     return Container(
       color: AppColors.lightmintGreen,
       child: Image.asset(

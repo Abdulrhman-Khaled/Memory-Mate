@@ -13,4 +13,8 @@ class Endpoints {
   static const String usersRegister = '/users/register';
 
   static const String users = '/users';
+
+  static const String getUsers = '/users/getuser';
+
+  static const String memories = '/memories';
 }

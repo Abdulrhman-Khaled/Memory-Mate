@@ -5,8 +5,10 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:memory_mate/networking/dio/repositories/patient_user_repsitory.dart';
 import 'package:memory_mate/views/home%20pages/patient_home_screen.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../components/buttons.dart';
 import '../../../components/text_fields.dart';
@@ -16,6 +18,8 @@ import '../../../networking/dio/api/dio_client.dart';
 import '../../../networking/dio/models api/patient_user_api.dart';
 import '../../../networking/dio/repositories/authantication.dart';
 import 'package:simple_fontellico_progress_dialog/simple_fontico_loading.dart';
+
+import '../../home pages/caregiver_home_screen.dart';
 
 // ignore: must_be_immutable
 class CreatPasswordScreen extends StatefulWidget {
@@ -46,6 +50,7 @@ class _CreatPasswordScreenState extends State<CreatPasswordScreen> {
   late DioClient dioClient;
   late PatientUserApi userApi;
   late AuthRepository authRepository;
+  late PatientUserRepository patientUserRepository;
 
   SimpleFontelicoProgressDialog? prograssDialog;
 
@@ -85,14 +90,10 @@ class _CreatPasswordScreenState extends State<CreatPasswordScreen> {
     if (widget.image == tempAvatar) {
       String temp =
           await fileOrAssetToBase64("assets/images/pictures/avatar.png", true);
-      setState(() {
-        tempAvatarImage64 = temp;
-      });
+      setStateIfMounted(tempAvatarImage64 = temp);
     } else {
       String real = await fileOrAssetToBase64(widget.image, false);
-      setState(() {
-        tempAvatarImage64 = real;
-      });
+      setStateIfMounted(tempAvatarImage64 = real);
     }
   }
 
@@ -113,6 +114,10 @@ class _CreatPasswordScreenState extends State<CreatPasswordScreen> {
     prograssDialog!.hide();
   }
 
+  void setStateIfMounted(f) {
+    if (mounted) setState(f);
+  }
+
   @override
   Widget build(BuildContext context) {
     myAsyncFunction();
@@ -120,6 +125,7 @@ class _CreatPasswordScreenState extends State<CreatPasswordScreen> {
     dioClient = DioClient(dio);
     userApi = PatientUserApi(dioClient: dioClient);
     authRepository = AuthRepository(userApi);
+    patientUserRepository = PatientUserRepository(userApi);
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -149,6 +155,7 @@ class _CreatPasswordScreenState extends State<CreatPasswordScreen> {
                 child: textField(
                   isMatch: true,
                   isLength: true,
+                  isRegex: true,
                   width: 300,
                   hintText: '•••••••••••••••••',
                   labelText: 'كلمة المرور',
@@ -166,9 +173,7 @@ class _CreatPasswordScreenState extends State<CreatPasswordScreen> {
                       ? Icons.visibility_rounded
                       : Icons.visibility_off_rounded,
                   function: () {
-                    setState(() {
-                      obscured = !obscured;
-                    });
+                    setStateIfMounted(obscured = !obscured);
                   },
                 ),
               ),
@@ -180,6 +185,7 @@ class _CreatPasswordScreenState extends State<CreatPasswordScreen> {
                 child: textField(
                   isMatch: true,
                   isLength: true,
+                  isRegex: true,
                   width: 300,
                   textFormController: passwordConfirmController,
                   focusNode: passwordConfirmFocusNode,
@@ -197,9 +203,7 @@ class _CreatPasswordScreenState extends State<CreatPasswordScreen> {
                       ? Icons.visibility_rounded
                       : Icons.visibility_off_rounded,
                   function: () {
-                    setState(() {
-                      obscured2 = !obscured2;
-                    });
+                    setStateIfMounted(obscured2 = !obscured2);
                   },
                 ),
               ),
@@ -227,26 +231,36 @@ class _CreatPasswordScreenState extends State<CreatPasswordScreen> {
                         "photo_path":
                             "data:image/jpeg;base64,$tempAvatarImage64",
                       });
-                      //log(user.toJson().toString());
+
                       try {
-                        showPrograssDialog()
-                            .then((_) => authRepository.register(user))
-                            .then((_) => hidePrograssDialog())
-                            .then((_) =>
-                                // ignore: use_build_context_synchronously
-                                Navigator.pushAndRemoveUntil(
-                                    context,
-                                    PageTransition(
-                                        type: PageTransitionType.fade,
-                                        child: const PatientHomeScreen()),
-                                    (Route<dynamic> route) => false));
+                        showPrograssDialog();
+                        Response response = await authRepository.register(user);
+                        String userToken = response.data['token'];
+                        final SharedPreferences prefs =
+                            await SharedPreferences.getInstance();
+                        await prefs.setString('currentUserToken', userToken);
+                        Map<String, dynamic> userTypeGetter =
+                            await patientUserRepository
+                                .getPatientUserRequest(userToken);
+                        String type = await userTypeGetter['userType'];
+                        hidePrograssDialog();
+
+                        // ignore: use_build_context_synchronously
+                        Navigator.pushAndRemoveUntil(
+                            context,
+                            PageTransition(
+                                type: PageTransitionType.fade,
+                                child: type == 'PATIENT'
+                                    ? const PatientHomeScreen()
+                                    : const CareGiverHomeScreen()),
+                            (Route<dynamic> route) => false);
                       } catch (e) {
                         ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                            backgroundColor: Colors.red,
-                            content: Text(
-                                'حدث خطأ غير متوقع يرجي إعادة المحاولة')),
-                      );
+                          const SnackBar(
+                              backgroundColor: Colors.red,
+                              content: Text(
+                                  'حدث خطأ غير متوقع يرجي إعادة المحاولة')),
+                        );
                       }
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(

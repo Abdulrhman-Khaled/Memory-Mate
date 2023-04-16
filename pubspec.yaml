@@ -56,6 +56,15 @@ dependencies:
   syncfusion_flutter_datepicker: ^20.4.53
   text_scroll: ^0.1.2
   simple_fontellico_progress_dialog: ^0.3.0
+  pull_to_refresh:
+  google_maps_flutter: 
+  location: 
+  flutter_riverpod: ^2.3.4
+  hive_flutter: ^1.1.0
+  flutter_swipe_detector: ^2.0.0
+  uuid: ^3.0.7
+  flutter_tts: ^3.6.3
+  switcher: ^1.0.0
 
   
   

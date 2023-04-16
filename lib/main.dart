@@ -2,9 +2,13 @@ import 'package:camera/camera.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:memory_mate/constants/color_constatnts.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:memory_mate/views/splash%20and%20onboarding/splash_screen.dart';
+
+import 'models/board_adapter.dart';
 
 
 List<CameraDescription> cameras = [];
@@ -18,9 +22,16 @@ Future<void> main() async {
         AppColors.mintGreen, //Navigation bar divider color
     systemNavigationBarIconBrightness: Brightness.light, //navigation bar icon
   ));
+  WidgetsFlutterBinding.ensureInitialized();
+  // mariem edit
+  await SystemChrome.setPreferredOrientations(
+      [DeviceOrientation.portraitUp],
+     );
+  
+  await Hive.initFlutter();
+  Hive.registerAdapter(BoardAdapter());
 
   try {
-    WidgetsFlutterBinding.ensureInitialized();
     cameras = await availableCameras();
   } on CameraException catch (e) {
     if (kDebugMode) {
@@ -36,24 +47,26 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Memory Mate',
-      localizationsDelegates: const [
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-      ],
-      supportedLocales: const [
-        Locale('ar', 'AE'),
-        Locale("en", "US"),
-        Locale("en", "UK"),
-      ],
-      theme: ThemeData(
-        fontFamily: 'Boutros',
-        primarySwatch: mintGreenMaterial,
+    return ProviderScope(
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'Memory Mate',
+        localizationsDelegates: const [
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        supportedLocales: const [
+          Locale('ar', 'AE'),
+          Locale("en", "US"),
+          Locale("en", "UK"),
+        ],
+        theme: ThemeData(
+          fontFamily: 'Boutros',
+          primarySwatch: mintGreenMaterial,
+        ),
+        home: const SplashScreen(),
       ),
-      home: const SplashScreen(),
     );
   }
 }
