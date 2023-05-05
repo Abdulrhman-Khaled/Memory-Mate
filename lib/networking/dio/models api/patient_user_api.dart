@@ -171,7 +171,7 @@ class PatientUserApi {
     }
   }
 
-  Future<void> deleteUserMemory(int id, String token) async {
+  Future<void> deleteUserMemory(String id, String token) async {
     try {
       await dioClient.delete('${Endpoints.memories}/memodel/$id',
           userToken: token);
@@ -189,7 +189,7 @@ class PatientUserApi {
   ) async {
     try {
       final Response response = await dioClient.post(
-        "${Endpoints.users}/memoadd",
+        "${Endpoints.memories}/memoadd",
         userToken: token,
         data: {
           'title': location,

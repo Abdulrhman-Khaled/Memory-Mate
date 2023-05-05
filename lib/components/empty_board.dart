@@ -41,7 +41,7 @@ class EmptyBoardWidget extends StatelessWidget {
               width: tileSize,
               height: tileSize,
               decoration: BoxDecoration(
-                  color: Color.fromARGB(255, 223, 221, 221),
+                  color: const Color.fromARGB(255, 223, 221, 221),
                   borderRadius: BorderRadius.circular(6.0)),
             ),
           );

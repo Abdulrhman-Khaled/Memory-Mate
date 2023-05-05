@@ -1,3 +1,4 @@
+
 import 'package:dio/dio.dart';
 import 'package:memory_mate/networking/dio/models%20api/patient_user_api.dart';
 
@@ -126,7 +127,8 @@ class PatientUserRepository {
     String token,
   ) async {
     try {
-      final response = await patientUserApi.setNewPasswordRequest(password, token);
+      final response =
+          await patientUserApi.setNewPasswordRequest(password, token);
       return response;
     } on DioError catch (e) {
       final errorMessage = DioExceptions.fromDioError(e).toString();
@@ -152,7 +154,7 @@ class PatientUserRepository {
     }
   }
 
-  Future<void> deleteMemoryUserRequest(int id, String token) async {
+  Future<void> deleteMemoryUserRequest(String id, String token) async {
     try {
       await patientUserApi.deleteUserMemory(id, token);
     } on DioError catch (e) {
@@ -161,23 +163,10 @@ class PatientUserRepository {
     }
   }
 
-  Future<Map<String, dynamic>> getUserMemoryRequest(String userToken) async {
+  Future<List> getUserMemoryRequest(String userToken) async {
     try {
       final response = await patientUserApi.getUserMemories(userToken);
-      String location = (response.data['location']);
-      String date = (response.data['date']);
-      String content = (response.data['content']);
-      String avatar = (response.data['avatar']);
-      int id = (response.data['id']);
-
-      Map<String, dynamic> userMemories = {
-        'location': location,
-        'date': date,
-        'content': content,
-        'avatar': avatar,
-        'id': id,
-      };
-
+      List userMemories = (response.data['memories']);
       return userMemories;
     } on DioError catch (e) {
       final errorMessage = DioExceptions.fromDioError(e).toString();

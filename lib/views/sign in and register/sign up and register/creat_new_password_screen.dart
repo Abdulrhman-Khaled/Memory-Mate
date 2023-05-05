@@ -90,10 +90,14 @@ class _CreatPasswordScreenState extends State<CreatPasswordScreen> {
     if (widget.image == tempAvatar) {
       String temp =
           await fileOrAssetToBase64("assets/images/pictures/avatar.png", true);
-      setStateIfMounted(tempAvatarImage64 = temp);
+      setState(() {
+        tempAvatarImage64 = temp;
+      });
     } else {
       String real = await fileOrAssetToBase64(widget.image, false);
-      setStateIfMounted(tempAvatarImage64 = real);
+      setState(() {
+        tempAvatarImage64 = real;
+      });
     }
   }
 
@@ -112,10 +116,6 @@ class _CreatPasswordScreenState extends State<CreatPasswordScreen> {
 
   Future<void> hidePrograssDialog() async {
     prograssDialog!.hide();
-  }
-
-  void setStateIfMounted(f) {
-    if (mounted) setState(f);
   }
 
   @override
@@ -173,7 +173,9 @@ class _CreatPasswordScreenState extends State<CreatPasswordScreen> {
                       ? Icons.visibility_rounded
                       : Icons.visibility_off_rounded,
                   function: () {
-                    setStateIfMounted(obscured = !obscured);
+                    setState(() {
+                      obscured = !obscured;
+                    });
                   },
                 ),
               ),
@@ -203,7 +205,9 @@ class _CreatPasswordScreenState extends State<CreatPasswordScreen> {
                       ? Icons.visibility_rounded
                       : Icons.visibility_off_rounded,
                   function: () {
-                    setStateIfMounted(obscured2 = !obscured2);
+                    setState(() {
+                      obscured2 = !obscured2;
+                    });
                   },
                 ),
               ),
@@ -255,6 +259,7 @@ class _CreatPasswordScreenState extends State<CreatPasswordScreen> {
                                     : const CareGiverHomeScreen()),
                             (Route<dynamic> route) => false);
                       } catch (e) {
+                        hidePrograssDialog();
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
                               backgroundColor: Colors.red,
@@ -263,7 +268,9 @@ class _CreatPasswordScreenState extends State<CreatPasswordScreen> {
                         );
                       }
                     } else {
+                      hidePrograssDialog();
                       ScaffoldMessenger.of(context).showSnackBar(
+                        
                         const SnackBar(
                             backgroundColor: Colors.red,
                             content: Text(

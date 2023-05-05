@@ -66,7 +66,7 @@ class TileBoardWidget extends ConsumerWidget {
           if (board.over)
             Positioned.fill(
                 child: Container(
-              color: Color.fromARGB(255, 209, 236, 235),
+              color: const Color.fromARGB(255, 209, 236, 235),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [

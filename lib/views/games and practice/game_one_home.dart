@@ -11,14 +11,15 @@ class GameOne extends StatefulWidget {
   const GameOne({Key? key}) : super(key: key);
 
   @override
+  // ignore: library_private_types_in_public_api
   _GameOneState createState() => _GameOneState();
 }
 
 class _GameOneState extends State<GameOne> {
   //setting text style
-  TextStyle whiteText = TextStyle(color: AppColors.white);
+  TextStyle whiteText = const TextStyle(color: AppColors.white);
   bool hideTest = false;
-  Game _game = Game();
+  final Game _game = Game();
 
   //game stats
   int tries = 0;
@@ -38,7 +39,7 @@ class _GameOneState extends State<GameOne> {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Center(
+          const Center(
             child: Text(
               " لعبة الذاكرة",
               style: TextStyle(
@@ -69,7 +70,7 @@ class _GameOneState extends State<GameOne> {
                     crossAxisSpacing: 16.0,
                     mainAxisSpacing: 16.0,
                   ),
-                  padding: EdgeInsets.all(16.0),
+                  padding: const EdgeInsets.all(16.0),
                   itemBuilder: (context, index) {
                     return GestureDetector(
                       onTap: () {
@@ -92,7 +93,7 @@ class _GameOneState extends State<GameOne> {
                           } else {
                             print("false");
 
-                            Future.delayed(Duration(milliseconds: 500), () {
+                            Future.delayed(const Duration(milliseconds: 500), () {
                               print(_game.gameColors);
                               setState(() {
                                 _game.gameImg![_game.matchCheck[0].keys.first] =
@@ -107,7 +108,7 @@ class _GameOneState extends State<GameOne> {
                         }
                       },
                       child: Container(
-                        padding: EdgeInsets.all(16.0),
+                        padding: const EdgeInsets.all(16.0),
                         decoration: BoxDecoration(
                           color: AppColors.lightmintGreenOp,
                           borderRadius: BorderRadius.circular(8.0),
@@ -127,7 +128,7 @@ class _GameOneState extends State<GameOne> {
                             ElevatedButton(
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: AppColors.mintGreen,
-                                textStyle: TextStyle(
+                                textStyle: const TextStyle(
                                   fontFamily: 'Boutros',
                                   fontSize: 18.0
                                 )
@@ -135,56 +136,54 @@ class _GameOneState extends State<GameOne> {
                               onPressed: (){
                                 if(score >= 800){
                                   showDialog(context: context, builder: (context){
-                                   return Container(
-                                    child:  AlertDialog(
-                                    backgroundColor: AppColors.white,
+                                   return AlertDialog(
+                                   backgroundColor: AppColors.white,
                                    content: 
-                                  Container(
-                                    height: 280.0,
-                                    width: 150.0,
-                                    child: Column(
-                                      children: [  
-                                        SizedBox(height: 10.0,),
-                                        Image.asset("assets/images/icons/trophy.png",
-                                        width: 170.0,
-                                        height: 170.0,),
-                                        SizedBox(height: 15.0,), 
-                                        Text("لقد فزت",
-                                         style: TextStyle(
-                                        color:AppColors.mintGreen ,
-                                        fontFamily: 'Boutros',
-                                        fontSize: 22.0
-                                         )
-                                        ),                                
-                                        SizedBox(height: 5.0,),
+                                  SizedBox(
+                                   height: 280.0,
+                                   width: 150.0,
+                                   child: Column(
+                                     children: [  
+                                       const SizedBox(height: 10.0,),
+                                       Image.asset("assets/images/icons/trophy.png",
+                                       width: 170.0,
+                                       height: 170.0,),
+                                       const SizedBox(height: 15.0,), 
+                                       const Text("لقد فزت",
+                                        style: TextStyle(
+                                       color:AppColors.mintGreen ,
+                                       fontFamily: 'Boutros',
+                                       fontSize: 22.0
+                                        )
+                                       ),                                
+                                       const SizedBox(height: 5.0,),
 
-                                        ElevatedButton(
-                                        style: ElevatedButton.styleFrom(
-                                        backgroundColor: AppColors.mintGreen,
-                                        textStyle: TextStyle(
-                                        fontFamily: 'Boutros',
-                                        fontSize: 18.0
-                                           )
-                                         ) ,
-                                         onPressed: (){
-                                        Navigator.pop(context);},
-                                      child: Icon(Icons.check)),                                                                       
-                                      ],  
-                                    ),
+                                       ElevatedButton(
+                                       style: ElevatedButton.styleFrom(
+                                       backgroundColor: AppColors.mintGreen,
+                                       textStyle: const TextStyle(
+                                       fontFamily: 'Boutros',
+                                       fontSize: 18.0
+                                          )
+                                        ) ,
+                                        onPressed: (){
+                                       Navigator.pop(context);},
+                                     child: const Icon(Icons.check)),                                                                       
+                                     ],  
+                                   ),
                                   ),  
-                          ),
-                        );
+                          );
                       });
                 }
                               },
-                                child: Icon(Icons.check)),
+                                child: const Icon(Icons.check)),
 
 
 
                             ElevatedButton(
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: AppColors.mintGreen,
-                                textStyle: TextStyle(
+                                textStyle: const TextStyle(
                                   fontFamily: 'Boutros',
                                   fontSize: 18.0
                                 )
@@ -194,9 +193,9 @@ class _GameOneState extends State<GameOne> {
                                 context,  
                                 PageTransition(
                                 type: PageTransitionType.fade,
-                                child:  gameshome()),);
+                                child:  const gameshome()),);
                               },
-                                child: Text("عودة")),
+                                child: const Text("عودة")),
                           ],
                         )  
         ],

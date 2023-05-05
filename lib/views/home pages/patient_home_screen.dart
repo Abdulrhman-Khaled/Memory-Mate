@@ -10,6 +10,7 @@ import 'package:memory_mate/views/family%20and%20friends/family_and_friends_scre
 import 'package:memory_mate/views/maps%20and%20locations/map_view_screen.dart';
 import 'package:memory_mate/views/profile/who_i_am_screen.dart';
 import 'package:memory_mate/views/splash%20and%20onboarding/sign_in_or_register_screen.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:simple_fontellico_progress_dialog/simple_fontico_loading.dart';
@@ -20,7 +21,7 @@ import '../../networking/dio/repositories/patient_user_repsitory.dart';
 import '../camera and face detection/camera_and_face_detection.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
-import '../games and practice/games_home.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../games and practice/onbord.dart';
 import '../medicines and alarms/medical_appointment.dart';
 
@@ -86,6 +87,36 @@ class _PatientHomeScreenState extends State<PatientHomeScreen> {
     dev.log(userInformation.toString());
 
     return userInformation;
+  }
+
+  void showAppInfoDialog(PackageInfo packageInfo) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text(
+            'عن التطبيق',
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 22, color: AppColors.mintGreen),
+          ),
+          content: Directionality(
+            textDirection: TextDirection.rtl,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Text('اسم التطبيق: ${packageInfo.appName}'),
+                Text('اسم الحزمة: ${packageInfo.packageName}'),
+                Text(
+                    'الأصدار: ${packageInfo.version}+${packageInfo.buildNumber}'),
+                Text('رمز التوقيع: ${packageInfo.buildSignature}'),
+              ],
+            ),
+          ),
+        );
+      },
+    );
   }
 
   @override
@@ -154,12 +185,12 @@ class _PatientHomeScreenState extends State<PatientHomeScreen> {
                   horizontalTitleGap: 0,
                   minLeadingWidth: 35,
                   leading: const Icon(
-                    Icons.settings_outlined,
+                    Icons.link_outlined,
                     color: AppColors.mintGreen,
                     size: 27,
                   ),
                   title: const Text(
-                    'الاعدادات',
+                    'الربط مع مقدم رعاية',
                     style: TextStyle(fontSize: 22, color: AppColors.lightBlack),
                   ),
                   onTap: () {
@@ -183,21 +214,17 @@ class _PatientHomeScreenState extends State<PatientHomeScreen> {
                   horizontalTitleGap: 0,
                   minLeadingWidth: 35,
                   leading: const Icon(
-                    Icons.settings_outlined,
+                    Icons.info_outline,
                     color: AppColors.mintGreen,
                     size: 27,
                   ),
                   title: const Text(
-                    'الاعدادات',
+                    'عن التطبيق',
                     style: TextStyle(fontSize: 22, color: AppColors.lightBlack),
                   ),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      PageTransition(
-                          type: PageTransitionType.fade,
-                          child: const PatientHomeScreen()),
-                    );
+                  onTap: () async {
+                    PackageInfo packageInfo = await PackageInfo.fromPlatform();
+                    showAppInfoDialog(packageInfo);
                   },
                 ),
               ),
@@ -212,81 +239,30 @@ class _PatientHomeScreenState extends State<PatientHomeScreen> {
                   horizontalTitleGap: 0,
                   minLeadingWidth: 35,
                   leading: const Icon(
-                    Icons.settings_outlined,
+                    Icons.contact_mail_outlined,
                     color: AppColors.mintGreen,
                     size: 27,
                   ),
                   title: const Text(
-                    'الاعدادات',
+                    'التواصل مع المطورين',
                     style: TextStyle(fontSize: 22, color: AppColors.lightBlack),
                   ),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      PageTransition(
-                          type: PageTransitionType.fade,
-                          child: const PatientHomeScreen()),
-                    );
+                  onTap: () async{
+                    String email = Uri.encodeComponent("bodyono3@gmail.com");
+                      String subject = Uri.encodeComponent("رسالة الي الدعم الفني الخاص بتطبيق Memory Mate");
+                      String body = Uri.encodeComponent("قم باستبدال هذا النص برسالتك وسنقوم بالرد عليك في اسرع وقت");                   
+                      Uri mail = Uri.parse("mailto:$email?subject=$subject&body=$body");
+                      if (await launchUrl(mail)) {
+                          //email app opened
+                      }else{
+                          //email app is not opened
+                      }
                   },
                 ),
               ),
               const Divider(
                 height: 0.5,
                 thickness: 0.5,
-              ),
-              Directionality(
-                textDirection: TextDirection.rtl,
-                child: ListTile(
-                  contentPadding: const EdgeInsets.fromLTRB(0, 7, 20, 7),
-                  horizontalTitleGap: 0,
-                  minLeadingWidth: 35,
-                  leading: const Icon(
-                    Icons.settings_outlined,
-                    color: AppColors.mintGreen,
-                    size: 27,
-                  ),
-                  title: const Text(
-                    'الاعدادات',
-                    style: TextStyle(fontSize: 22, color: AppColors.lightBlack),
-                  ),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      PageTransition(
-                          type: PageTransitionType.fade,
-                          child: const PatientHomeScreen()),
-                    );
-                  },
-                ),
-              ),
-              const Divider(
-                height: 0.5,
-                thickness: 0.5,
-              ),
-              Directionality(
-                textDirection: TextDirection.rtl,
-                child: ListTile(
-                  contentPadding: const EdgeInsets.fromLTRB(0, 7, 20, 7),
-                  horizontalTitleGap: 0,
-                  minLeadingWidth: 35,
-                  leading: const Icon(
-                    Icons.settings_outlined,
-                    color: AppColors.mintGreen,
-                    size: 27,
-                  ),
-                  title: const Text(
-                    'الاعدادات',
-                    style: TextStyle(fontSize: 22, color: AppColors.lightBlack),
-                  ),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      PageTransition(
-                          type: PageTransitionType.fade,
-                          child: const PatientHomeScreen()),
-                    );
-                  },
-                ),
               ),
               Expanded(
                 child: Align(
@@ -451,7 +427,7 @@ class _PatientHomeScreenState extends State<PatientHomeScreen> {
                                           ),
                                         ),
                                         onPressed: () {
-                                          Navigator.push(
+                                           Navigator.push(
                                             context,
                                             PageTransition(
                                                 type: PageTransitionType.fade,
@@ -659,12 +635,11 @@ class _PatientHomeScreenState extends State<PatientHomeScreen> {
                                           ),
                                         ),
                                         onPressed: () {
-                                           Navigator.push(
+                                          Navigator.push(
                                             context,
                                             PageTransition(
                                                 type: PageTransitionType.fade,
-                                                child:
-                                                    const OnBoard()),
+                                                child: const OnBoard()),
                                           );
                                         },
                                         child: Column(

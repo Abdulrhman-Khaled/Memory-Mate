@@ -65,6 +65,9 @@ dependencies:
   uuid: ^3.0.7
   flutter_tts: ^3.6.3
   switcher: ^1.0.0
+  package_info_plus:
+  url_launcher:
+  geolocator:
 
   
   
@@ -98,6 +101,7 @@ flutter:
     - assets/videos/
     - assets/htmls/
     - assets/fonts/
+    - assets/map/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

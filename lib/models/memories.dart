@@ -1,19 +1,18 @@
-
-import 'package:flutter/material.dart';
-
 class Memories {
   String? address;
   String? date;
   String? content;
-  ImageProvider? image;  
+  String? image;
+  int? id;
 
-  Memories({this.address, this.date, this.content, this.image});
+  Memories({this.address, this.date, this.content, this.image,this.id});
 
   Memories.fromJson(Map<String, dynamic> json) {
     address = json['address'];
     date = json['date'];
     content = json['content'];
     image = json['image'];
+    id = json['id'];
   }
 
   Map<String, dynamic> toJson() {
@@ -22,6 +21,7 @@ class Memories {
     data['date'] = date;
     data['content'] = content;
     data['image'] = image;
+    data['id'] = id;
     return data;
   }
 }

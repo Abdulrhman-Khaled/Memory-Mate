@@ -2,7 +2,7 @@ class Endpoints {
   Endpoints._();
 
   // base url
-  static const String baseUrl = "http://139.162.143.85:5000";
+  static const String baseUrl = "https://memorymate.herokuapp.com";
 
   // receiveTimeout
   static const Duration receiveTimeout = Duration(seconds: 20);

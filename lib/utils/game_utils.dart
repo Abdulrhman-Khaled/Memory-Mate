@@ -6,6 +6,7 @@ class Game {
   List<String>? gameImg;
   
   final String hiddenCardpath = "assets/images/icons/question-mark.png";
+  // ignore: non_constant_identifier_names
   List<String> cards_list = [
     "assets/images/icons/record.png",
     "assets/images/icons/traingle.png",

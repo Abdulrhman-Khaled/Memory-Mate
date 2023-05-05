@@ -1,8 +1,11 @@
+import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:memory_mate/networking/dio/repositories/patient_user_repsitory.dart';
 import 'package:page_transition/page_transition.dart';
 
@@ -54,7 +57,7 @@ class _WhoIAmScreenState extends State<WhoIAmScreen>
   FileImage? memoryImageFile;
   ImageProvider memoryAddImage =
       const AssetImage('assets/images/pictures/add_memory.png');
-  ImageProvider memoryTempImage =
+  AssetImage memoryTempImage =
       const AssetImage('assets/images/pictures/memory.png');
 
   File? avatarImageFile;
@@ -67,9 +70,21 @@ class _WhoIAmScreenState extends State<WhoIAmScreen>
 
   String age = '';
 
+  String memoContent = '';
+
+  String memoImageLink = '';
+
+  String memoLocation = '';
+
+  String memoDate = '';
+
+  String memoId = '';
+
   bool isLoading = true;
 
-  List<Memories> memoriesList = [];
+  Response? response;
+
+  List<dynamic> userAllMemories = [];
 
   SimpleFontelicoProgressDialog? prograssDialog;
 
@@ -115,13 +130,6 @@ class _WhoIAmScreenState extends State<WhoIAmScreen>
     prograssDialog!.hide();
   }
 
-  void addNewMemory(Memories memory) {
-    setState(() {
-      // Update state
-      memoriesList.add(memory);
-    });
-  }
-
   String ageCalculator(String date) {
     String dateString = date;
     DateTime birthDate = DateTime.parse(dateString);
@@ -133,6 +141,27 @@ class _WhoIAmScreenState extends State<WhoIAmScreen>
       age--;
     }
     return age.toString();
+  }
+
+  void addNewMemeo(Memories memories) {
+    setState(() {
+      // Update state
+      //memoriesList.add(memories);
+    });
+  }
+
+  Future<String> assetToBase64(String path) async {
+    final ByteData assetByteData = await rootBundle.load(path);
+    final Uint8List assetUint8List = assetByteData.buffer.asUint8List();
+    final base64 = base64Encode(assetUint8List);
+    return base64;
+  }
+
+  Future<String> fileToBase64(String path) async {
+    final file = File(path);
+    final bytes = await file.readAsBytes();
+    final base64 = base64Encode(bytes);
+    return base64;
   }
 
   Future<Map<String, dynamic>> getUserInfo() async {
@@ -158,10 +187,28 @@ class _WhoIAmScreenState extends State<WhoIAmScreen>
     return userInformation;
   }
 
+  Future<void> getUserMemories() async {
+    dio = Dio();
+    dioClient = DioClient(dio);
+    userApi = PatientUserApi(dioClient: dioClient);
+    patientUserRepository = PatientUserRepository(userApi);
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? userToken = prefs.getString('currentUserToken');
+    List<dynamic> userMemories =
+        await patientUserRepository.getUserMemoryRequest(userToken!);
+
+    log(userMemories.toString());
+    setState(() {
+      userAllMemories = userMemories;
+      isLoading = false;
+    });
+  }
+
   @override
   void initState() {
     super.initState();
     getUserInfo();
+    getUserMemories();
     prograssDialog = SimpleFontelicoProgressDialog(context: context);
     _controller = AnimationController(
       duration: const Duration(seconds: 1),
@@ -478,28 +525,48 @@ class _WhoIAmScreenState extends State<WhoIAmScreen>
                                             onTap: () async {
                                               if (formKey.currentState!
                                                   .validate()) {
-                                                memoryImageFile == null
-                                                    ? addNewMemory(Memories(
-                                                        address:
-                                                            addressController
-                                                                .text,
-                                                        date:
-                                                            dateController.text,
-                                                        content:
-                                                            contentController
-                                                                .text,
-                                                        image: memoryTempImage))
-                                                    : addNewMemory(Memories(
-                                                        address:
-                                                            addressController
-                                                                .text,
-                                                        date:
-                                                            dateController.text,
-                                                        content:
-                                                            contentController
-                                                                .text,
-                                                        image:
-                                                            memoryImageFile));
+                                                String memoImage =
+                                                    await fileToBase64(
+                                                        memoryImageFile!
+                                                            .file.path);
+                                                String memoTempImage =
+                                                    await assetToBase64(
+                                                        'assets/images/pictures/memory.png');
+                                                final SharedPreferences prefs =
+                                                    await SharedPreferences
+                                                        .getInstance();
+                                                String? userToken =
+                                                    prefs.getString(
+                                                        'currentUserToken');
+
+                                                if (memoryImageFile == null) {
+                                                  response = await patientUserRepository
+                                                      .postUserMemoryRequest(
+                                                          addressController
+                                                              .value.text,
+                                                          customDateOfBirth
+                                                              .toString()
+                                                              .substring(0, 10),
+                                                          contentController
+                                                              .value.text,
+                                                          "data:image/jpeg;base64,$memoTempImage",
+                                                          userToken!);
+                                                } else {
+                                                  response = await patientUserRepository
+                                                      .postUserMemoryRequest(
+                                                          addressController
+                                                              .value.text,
+                                                          customDateOfBirth
+                                                              .toString()
+                                                              .substring(0, 10),
+                                                          contentController
+                                                              .value.text,
+                                                          "data:image/jpeg;base64,$memoImage",
+                                                          userToken!);
+                                                }
+                                                await getUserMemories();
+
+                                                // ignore: use_build_context_synchronously
                                                 Navigator.of(context).pop();
                                               }
                                             },
@@ -543,7 +610,7 @@ class _WhoIAmScreenState extends State<WhoIAmScreen>
                                 ),
                               ),
                               const Divider(),
-                              memoriesList.isEmpty
+                              userAllMemories.isEmpty
                                   ? const Expanded(
                                       child: Center(
                                         child: Text(
@@ -556,7 +623,7 @@ class _WhoIAmScreenState extends State<WhoIAmScreen>
                                     )
                                   : Flexible(
                                       child: ListView.builder(
-                                          itemCount: memoriesList.length,
+                                          itemCount: userAllMemories.length,
                                           itemBuilder: (context, index) {
                                             return Dismissible(
                                                 key: UniqueKey(),
@@ -587,11 +654,23 @@ class _WhoIAmScreenState extends State<WhoIAmScreen>
                                                         ),
                                                       ]),
                                                 ),
-                                                onDismissed: (direction) {
-                                                  setState(() {
-                                                    memoriesList
-                                                        .removeAt(index);
-                                                  });
+                                                onDismissed: (direction) async {
+                                                  final SharedPreferences
+                                                      prefs =
+                                                      await SharedPreferences
+                                                          .getInstance();
+                                                  String? userToken =
+                                                      prefs.getString(
+                                                          'currentUserToken');
+
+                                                  await patientUserRepository
+                                                      .deleteMemoryUserRequest(
+                                                          userAllMemories[index]
+                                                                  ['id']
+                                                              .toString(),
+                                                          userToken!);
+                                                  userAllMemories
+                                                      .removeAt(index);
                                                 },
                                                 confirmDismiss:
                                                     (DismissDirection
@@ -651,28 +730,50 @@ class _WhoIAmScreenState extends State<WhoIAmScreen>
                                                       Expanded(
                                                           flex: 1,
                                                           child: Image(
-                                                              image:
-                                                                  memoriesList[
+                                                              image: NetworkImage(
+                                                                  userAllMemories[
                                                                           index]
-                                                                      .image!)),
+                                                                      [
+                                                                      'thumbnail']))),
                                                       Expanded(
                                                         flex: 3,
                                                         child: ListTile(
                                                           title: Text(
-                                                              memoriesList[
-                                                                      index]
-                                                                  .address!),
+                                                            userAllMemories[
+                                                                index]['title'],
+                                                            style: const TextStyle(
+                                                                fontSize: 16,
+                                                                color: AppColors
+                                                                    .lightBlack,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold),
+                                                          ),
                                                           subtitle: Column(
                                                             crossAxisAlignment:
                                                                 CrossAxisAlignment
                                                                     .start,
                                                             children: [
-                                                              Text(memoriesList[
-                                                                      index]
-                                                                  .date!),
-                                                              Text(memoriesList[
-                                                                      index]
-                                                                  .content!),
+                                                              Text(
+                                                                userAllMemories[
+                                                                        index][
+                                                                    'memo_date'],
+                                                                style: const TextStyle(
+                                                                    fontSize:
+                                                                        16,
+                                                                    color: AppColors
+                                                                        .mintGreen),
+                                                              ),
+                                                              Text(
+                                                                userAllMemories[
+                                                                        index][
+                                                                    'memo_body'],
+                                                                style: const TextStyle(
+                                                                    fontSize:
+                                                                        14,
+                                                                    color: AppColors
+                                                                        .lightBlack),
+                                                              ),
                                                             ],
                                                           ),
                                                         ),

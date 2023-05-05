@@ -28,10 +28,15 @@ class _SignUpState extends State<SignUp> {
 
   SingingCharacter? _character = SingingCharacter.patient;
   late bool isChecked = true;
+  
+  @override
+  void initState() {
+    super.initState();
+    phoneController = TextEditingController(text: "+2");
+  }
 
   @override
   Widget build(BuildContext context) {
-    phoneController = TextEditingController(text: "+2");
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
