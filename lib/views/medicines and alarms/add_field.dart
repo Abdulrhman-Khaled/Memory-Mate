@@ -1,4 +1,4 @@
-import 'package:flutter/cupertino.dart';
+
 import 'package:flutter/material.dart';
 import 'package:switcher/core/switcher_size.dart';
 import 'package:switcher/switcher.dart';
@@ -12,15 +12,22 @@ Widget addfield({
   String assest = 'assets/images/pictures/medicine.png',
   double height = 83,
   double iconSize = 35,
+  String text = "يرجي ملأ هذا الفراغ",
 }) =>
-    Container(
+    SizedBox(
       height: 70,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          Container(
+          SizedBox(
             width: 100,
-            child: TextField(
+            child: TextFormField(
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return text;
+                }
+                return null;
+              },
               cursorHeight: 25,
               textDirection: TextDirection.rtl,
               decoration: InputDecoration(
@@ -31,7 +38,7 @@ Widget addfield({
               ),
             ),
           ),
-          SizedBox(
+          const SizedBox(
             width: 10,
           ),
           Container(
@@ -39,12 +46,12 @@ Widget addfield({
             color: AppColors.mintGreen,
             height: 50,
           ),
-          SizedBox(
+          const SizedBox(
             width: 10,
           ),
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Container(
+            child: SizedBox(
               width: 30,
               height: 30,
               child: Image.asset(assest),
@@ -53,19 +60,25 @@ Widget addfield({
         ],
       ),
     );
-Widget add_date(
-        {required String name, double height = 83, double iconSize = 35}) =>
+// ignore: non_constant_identifier_names
+Widget add_date({
+  required String name,
+  double height = 83,
+  double iconSize = 35,
+  required TextEditingController hourcontroller,
+  required TextEditingController mincontroller,
+}) =>
     Padding(
       padding: const EdgeInsets.all(8.0),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Container(
-            height: 80,
-            width: 150,
+            height: 90,
+            width: 200,
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(25),
-                color: Color.fromARGB(221, 245, 244, 244)),
+                color: const Color.fromARGB(221, 245, 244, 244)),
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 8),
               child: Row(
@@ -74,32 +87,33 @@ Widget add_date(
                   Expanded(
                     child: Column(
                       children: [
-                        Container(
+                        const SizedBox(
                           width: 150,
-                          child: Padding(
-                            padding: const EdgeInsets.only(top: 15),
-                            child: Container(
-                              child: Text(
-                                'ميعاد الدواء',
-                                textDirection: TextDirection.rtl,
-                                style: TextStyle(
-                                    fontSize: 15,
-                                    color: Color.fromARGB(255, 121, 121, 121)),
-                              ),
+                          height: 25,
+                          child: Center(
+                            child: Text(
+                              'ميعاد الدواء',
+                              textDirection: TextDirection.rtl,
+                              style: TextStyle(
+                                  fontSize: 15,
+                                  color: Color.fromARGB(255, 121, 121, 121)),
                             ),
                           ),
                         ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
+                            Expanded(child: Container()),
                             Row(
                               children: [
-                                Container(
+                                SizedBox(
                                   width: 20,
                                   child: TextField(
+                                    keyboardType: TextInputType.number,
+                                    controller: hourcontroller,
                                     textDirection: TextDirection.rtl,
                                     cursorHeight: 25,
-                                    decoration: InputDecoration(
+                                    decoration: const InputDecoration(
                                       hintText: '00',
                                       hintTextDirection: TextDirection.rtl,
                                       hintStyle: TextStyle(
@@ -108,22 +122,22 @@ Widget add_date(
                                     ),
                                   ),
                                 ),
-                                Container(
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(
-                                        bottom: 7, left: 8, right: 8),
-                                    child: Text(
-                                      ':',
-                                      style: TextStyle(fontSize: 30),
-                                    ),
+                                const Padding(
+                                  padding: EdgeInsets.only(
+                                      bottom: 7, left: 8, right: 8),
+                                  child: Text(
+                                    ':',
+                                    style: TextStyle(fontSize: 30),
                                   ),
                                 ),
-                                Container(
+                                SizedBox(
                                   width: 20,
                                   child: TextField(
+                                    keyboardType: TextInputType.number,
+                                    controller: mincontroller,
                                     textDirection: TextDirection.rtl,
                                     cursorHeight: 25,
-                                    decoration: InputDecoration(
+                                    decoration: const InputDecoration(
                                       hintText: '00',
                                       hintTextDirection: TextDirection.rtl,
                                       hintStyle: TextStyle(
@@ -134,6 +148,7 @@ Widget add_date(
                                 ),
                               ],
                             ),
+                            Expanded(child: Container())
                           ],
                         ),
                       ],
@@ -147,9 +162,9 @@ Widget add_date(
                       color: AppColors.mintGreen,
                     ),
                   ),
-                  Container(
-                    width: 25,
-                    height: 25,
+                  SizedBox(
+                    width: 37,
+                    height: 37,
                     child: Image.asset('assets/images/pictures/medicine.png'),
                   ),
                 ],
@@ -160,10 +175,14 @@ Widget add_date(
       ),
     );
 Widget editfield(
+        // ignore: non_constant_identifier_names
         {required String MedicineName,
+        // ignore: non_constant_identifier_names
         required String MedicineDesc,
+        // ignore: non_constant_identifier_names
         String AssestImage = 'اي شيء',
-        double height = 83,
+        double height = 105,
+        var namecontroller,
         double iconSize = 35}) =>
     Column(
       children: [
@@ -172,7 +191,7 @@ Widget editfield(
           height: height,
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(25),
-              color: Color.fromARGB(221, 245, 244, 244)),
+              color: const Color.fromARGB(221, 245, 244, 244)),
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8),
             child: Row(
@@ -182,7 +201,7 @@ Widget editfield(
                   children: [
                     Column(
                       children: [
-                        Container(
+                        SizedBox(
                           width: 250,
                           child: Padding(
                             padding: const EdgeInsets.only(top: 15),
@@ -194,30 +213,29 @@ Widget editfield(
                                   ),
                                 ),
                                 Expanded(
-                                  child: Container(
-                                    child: Text(
-                                      MedicineName,
-                                      textDirection: TextDirection.rtl,
-                                      style: TextStyle(
-                                          fontSize: 18,
-                                          color: Color.fromARGB(
-                                              255, 121, 121, 121)),
-                                    ),
+                                  child: Text(
+                                    MedicineName,
+                                    textDirection: TextDirection.rtl,
+                                    style: const TextStyle(
+                                        fontSize: 18,
+                                        color: Color.fromARGB(
+                                            255, 121, 121, 121)),
                                   ),
                                 ),
                               ],
                             ),
                           ),
                         ),
-                        Container(
+                        SizedBox(
                           width: 250,
-                          child: TextField(
+                          child: TextFormField(
+                            controller: namecontroller,
                             textDirection: TextDirection.rtl,
                             cursorHeight: 25,
                             decoration: InputDecoration(
                               hintText: MedicineDesc,
                               hintTextDirection: TextDirection.rtl,
-                              hintStyle: TextStyle(
+                              hintStyle: const TextStyle(
                                   color: AppColors.lightBlack, fontSize: 19),
                               border: InputBorder.none,
                             ),
@@ -235,7 +253,7 @@ Widget editfield(
                     color: AppColors.mintGreen,
                   ),
                 ),
-                Container(
+                SizedBox(
                   width: iconSize,
                   height: iconSize,
                   child: Image.asset('assets/images/pictures/medicine.png'),
@@ -247,38 +265,38 @@ Widget editfield(
       ],
     );
 Widget search() => Padding(
-      padding: EdgeInsets.all(8.0),
+      padding: const EdgeInsets.all(8.0),
       child: SizedBox(
         height: 37,
         child: TextField(
           textDirection: TextDirection.rtl,
           decoration: InputDecoration(
               enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(
+                  borderSide: const BorderSide(
                     color: AppColors.mintGreen,
                     width: 1,
                   ),
                   borderRadius: BorderRadius.circular(50)),
               focusedBorder: OutlineInputBorder(
                   gapPadding: 4,
-                  borderSide: BorderSide(
+                  borderSide: const BorderSide(
                     color: AppColors.mintGreen,
                     width: 1,
                   ),
                   borderRadius: BorderRadius.circular(50)),
-              suffixIcon: Icon(Icons.search),
+              suffixIcon: const Icon(Icons.search),
               prefixIcon: IconButton(
                 onPressed: () {},
-                icon: Icon(Icons.sort_sharp),
+                icon: const Icon(Icons.sort_sharp),
               ),
-              contentPadding: EdgeInsets.only(top: 15),
+              contentPadding: const EdgeInsets.only(top: 15),
               hintText: 'ابحث عن ميعاد معين',
               hintTextDirection: TextDirection.rtl,
-              hintStyle: TextStyle(
+              hintStyle: const TextStyle(
                 fontSize: 20,
               )),
           cursorHeight: 20,
-          cursorRadius: Radius.circular(50),
+          cursorRadius: const Radius.circular(50),
         ),
       ),
     );
@@ -289,8 +307,8 @@ Widget appointment(
         Color contcolor = const Color.fromARGB(255, 238, 236, 236),
         double textSize = 17,
         required String medicineName,
-        String medicineDate = 'صباحا 12:00 - السبت والاحد والاتنين ',
-        String medicinetime = 'ينطلق المنبه خلال  :6 ساعات و 30 دقيقه',
+        required String medicineDate,
+        required String medicinetime,
         String medicinerebeat = 'يتكرر لمده ثلاث ايام في الاسبوع'}) =>
     Padding(
       padding: const EdgeInsets.only(left: 8, right: 8),
@@ -312,7 +330,7 @@ Widget appointment(
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                          Container(
+                          SizedBox(
                             width: 50,
                             child: Switcher(
                               value: false,
@@ -335,14 +353,14 @@ Widget appointment(
                         children: [
                           Text(
                             medicineName,
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontSize: 20,
                             ),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             width: 10,
                           ),
-                          Container(
+                          SizedBox(
                             width: 25,
                             height: 25,
                             child: Image.asset(
@@ -371,21 +389,13 @@ Widget appointment(
                               fontSize: textSize,
                             ),
                           ),
-                          Text(
-                            medicinetime,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                              fontSize: textSize,
-                            ),
-                          )
                         ],
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       width: 10,
                     ),
-                    Container(
+                    const SizedBox(
                       width: 25,
                       height: 25,
                       child: Icon(
@@ -402,18 +412,18 @@ Widget appointment(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     Text(
-                      medicinerebeat,
+                      medicinetime,
                       style: TextStyle(
                         fontSize: textSize,
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       width: 10,
                     ),
-                    Container(
+                    const SizedBox(
                       width: 25,
                       height: 25,
-                      child: Container(
+                      child: SizedBox(
                         width: 30,
                         height: 30,
                         child: Icon(

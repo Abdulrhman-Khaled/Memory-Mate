@@ -149,7 +149,7 @@ class _SignInState extends State<SignIn> {
                       context,
                       PageTransition(
                           type: PageTransitionType.fade,
-                          child: ForgetPasswordScreen()),
+                          child: const ForgetPasswordScreen()),
                     );
                   },
                   child: const Text(
@@ -182,6 +182,7 @@ class _SignInState extends State<SignIn> {
                           await patientUserRepository
                               .getPatientUserRequest(userToken);
                       String type = await userTypeGetter['userType'];
+                      await prefs.setString('currentUserType', type);
                       hidePrograssDialog();
                       // ignore: use_build_context_synchronously
                       Navigator.pushAndRemoveUntil(

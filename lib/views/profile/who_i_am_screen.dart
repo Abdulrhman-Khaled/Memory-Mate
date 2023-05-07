@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
-import 'dart:typed_data';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -11,8 +10,6 @@ import 'package:page_transition/page_transition.dart';
 
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
-
-import 'package:memory_mate/models/memories.dart';
 
 import 'package:memory_mate/views/profile/profile_screen.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
@@ -141,13 +138,6 @@ class _WhoIAmScreenState extends State<WhoIAmScreen>
       age--;
     }
     return age.toString();
-  }
-
-  void addNewMemeo(Memories memories) {
-    setState(() {
-      // Update state
-      //memoriesList.add(memories);
-    });
   }
 
   Future<String> assetToBase64(String path) async {
@@ -669,8 +659,10 @@ class _WhoIAmScreenState extends State<WhoIAmScreen>
                                                                   ['id']
                                                               .toString(),
                                                           userToken!);
-                                                  userAllMemories
-                                                      .removeAt(index);
+                                                  setState(() {
+                                                    userAllMemories
+                                                        .removeAt(index);
+                                                  });
                                                 },
                                                 confirmDismiss:
                                                     (DismissDirection

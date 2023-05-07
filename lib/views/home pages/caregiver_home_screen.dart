@@ -1,17 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:memory_mate/views/family%20and%20friends/my_patients_screen.dart';
+import 'package:memory_mate/views/profile/profile_screen.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:simple_fontellico_progress_dialog/simple_fontico_loading.dart';
 
 import '../../constants/color_constatnts.dart';
-import '../camera and face detection/camera_and_face_detection.dart';
-import '../family and friends/family_and_friends_screen.dart';
-import '../games and practice/onbord.dart';
 import '../maps and locations/map_view_screen.dart';
-import '../medicines and alarms/medical_appointment.dart';
-import '../profile/who_i_am_screen.dart';
 import '../splash and onboarding/sign_in_or_register_screen.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'dart:developer' as dev;
@@ -170,36 +167,6 @@ class _CareGiverHomeScreenState extends State<CareGiverHomeScreen> {
                       ),
                     ],
                   ),
-                ),
-              ),
-              const Divider(
-                height: 1,
-                thickness: 1,
-                color: AppColors.mintGreen,
-              ),
-              Directionality(
-                textDirection: TextDirection.rtl,
-                child: ListTile(
-                  contentPadding: const EdgeInsets.fromLTRB(0, 7, 20, 7),
-                  horizontalTitleGap: 0,
-                  minLeadingWidth: 35,
-                  leading: const Icon(
-                    Icons.link_outlined,
-                    color: AppColors.mintGreen,
-                    size: 27,
-                  ),
-                  title: const Text(
-                    'الربط مع مقدم رعاية',
-                    style: TextStyle(fontSize: 22, color: AppColors.lightBlack),
-                  ),
-                  onTap: () {
-                    /*Navigator.push(
-                        context,
-                        PageTransition(
-                            type: PageTransitionType.fade,
-                            child: const PatientHomeScreen()),
-                      );*/
-                  },
                 ),
               ),
               const Divider(
@@ -382,18 +349,18 @@ class _CareGiverHomeScreenState extends State<CareGiverHomeScreen> {
                           ],
                         )),
                     const SizedBox(
-                      height: 15,
+                      height: 10,
                     ),
                     Expanded(
                       child: Stack(
                         children: [
                           Container(
                             width: width,
-                            margin: const EdgeInsets.fromLTRB(0, 50, 0, 0),
                             decoration: const BoxDecoration(
                                 color: AppColors.lightmintGreen,
                                 borderRadius: BorderRadius.only(
-                                    topRight: Radius.circular(60))),
+                                    topRight: Radius.circular(60),
+                                    topLeft: Radius.circular(60))),
                           ),
                           const Align(
                             alignment: Alignment.centerLeft,
@@ -404,312 +371,158 @@ class _CareGiverHomeScreenState extends State<CareGiverHomeScreen> {
                                 )),
                           ),
                           Container(
-                            margin: const EdgeInsets.fromLTRB(0, 20, 0, 0),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    SizedBox(
-                                      height: 130,
-                                      width: 150,
-                                      child: ElevatedButton(
-                                        style: ElevatedButton.styleFrom(
-                                          side: const BorderSide(
-                                              color: AppColors.mintGreen,
-                                              width: 2,
-                                              style: BorderStyle.solid),
-                                          backgroundColor: AppColors.white,
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(25.0),
-                                          ),
-                                        ),
-                                        onPressed: () {
-                                           Navigator.push(
-                                            context,
-                                            PageTransition(
-                                                type: PageTransitionType.fade,
-                                                child:
-                                                    const MapViewScreen()),
-                                          );
-                                        },
-                                        child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: <Widget>[
-                                            Image.asset(
-                                              'assets/images/icons/gps.png',
-                                              width: 60,
-                                              height: 60,
-                                            ),
-                                            const SizedBox(
-                                              height: 10,
-                                            ),
-                                            const Text(
-                                              "الأماكن وتحديد\nالمواقع",
-                                              textAlign: TextAlign.center,
-                                              style: TextStyle(
-                                                  fontSize: 17,
-                                                  color: AppColors.lightBlack),
-                                            ),
-                                          ],
+                            margin: const EdgeInsets.fromLTRB(0, 60, 0, 0),
+                            child: Center(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  SizedBox(
+                                    height: 150,
+                                    width: 250,
+                                    child: ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        side: const BorderSide(
+                                            color: AppColors.mintGreen,
+                                            width: 2,
+                                            style: BorderStyle.solid),
+                                        backgroundColor: AppColors.white,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(25.0),
                                         ),
                                       ),
-                                    ),
-                                    const SizedBox(width: 20),
-                                    SizedBox(
-                                      height: 130,
-                                      width: 150,
-                                      child: ElevatedButton(
-                                        style: ElevatedButton.styleFrom(
-                                          side: const BorderSide(
-                                              color: AppColors.mintGreen,
-                                              width: 2,
-                                              style: BorderStyle.solid),
-                                          backgroundColor: AppColors.white,
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(25.0),
+                                      onPressed: () {
+                                        Navigator.push(
+                                          context,
+                                          PageTransition(
+                                              type: PageTransitionType.fade,
+                                              child: const MapViewScreen()),
+                                        );
+                                      },
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: <Widget>[
+                                          Image.asset(
+                                            'assets/images/icons/gps.png',
+                                            width: 80,
+                                            height: 80,
                                           ),
-                                        ),
-                                        onPressed: () {
-                                          Navigator.push(
-                                            context,
-                                            PageTransition(
-                                                type: PageTransitionType.fade,
-                                                child:
-                                                    const CameraAndFaceDetectionScreen()),
-                                          );
-                                        },
-                                        child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: <Widget>[
-                                            Image.asset(
-                                              'assets/images/icons/camera.png',
-                                              width: 60,
-                                              height: 60,
-                                            ),
-                                            const SizedBox(
-                                              height: 10,
-                                            ),
-                                            const Text(
-                                              "الكاميرا",
-                                              textAlign: TextAlign.center,
-                                              style: TextStyle(
-                                                  fontSize: 17,
-                                                  color: AppColors.lightBlack),
-                                            ),
-                                          ],
-                                        ),
+                                          const SizedBox(
+                                            height: 10,
+                                          ),
+                                          const Text(
+                                            "الأماكن وتحديدالمواقع",
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                                fontSize: 20,
+                                                color: AppColors.lightBlack),
+                                          ),
+                                        ],
                                       ),
                                     ),
-                                  ],
-                                ),
-                                const SizedBox(
-                                  height: 20,
-                                ),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    SizedBox(
-                                      height: 130,
-                                      width: 150,
-                                      child: ElevatedButton(
-                                        style: ElevatedButton.styleFrom(
-                                          side: const BorderSide(
-                                              color: AppColors.mintGreen,
-                                              width: 2,
-                                              style: BorderStyle.solid),
-                                          backgroundColor: AppColors.white,
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(25.0),
-                                          ),
-                                        ),
-                                        onPressed: () {
-                                          Navigator.push(
-                                            context,
-                                            PageTransition(
-                                                type: PageTransitionType.fade,
-                                                child:
-                                                    const medical_appointment()),
-                                          );
-                                        },
-                                        child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: <Widget>[
-                                            Image.asset(
-                                              'assets/images/icons/syringe.png',
-                                              width: 60,
-                                              height: 60,
-                                            ),
-                                            const SizedBox(
-                                              height: 10,
-                                            ),
-                                            const Text(
-                                              "الأدوية",
-                                              textAlign: TextAlign.center,
-                                              style: TextStyle(
-                                                  fontSize: 17,
-                                                  color: AppColors.lightBlack),
-                                            ),
-                                          ],
+                                  ),
+                                  const SizedBox(
+                                    height: 20,
+                                  ),
+                                  SizedBox(
+                                    height: 150,
+                                    width: 250,
+                                    child: ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        side: const BorderSide(
+                                            color: AppColors.mintGreen,
+                                            width: 2,
+                                            style: BorderStyle.solid),
+                                        backgroundColor: AppColors.white,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(25.0),
                                         ),
                                       ),
-                                    ),
-                                    const SizedBox(width: 20),
-                                    SizedBox(
-                                      height: 130,
-                                      width: 150,
-                                      child: ElevatedButton(
-                                        style: ElevatedButton.styleFrom(
-                                          side: const BorderSide(
-                                              color: AppColors.mintGreen,
-                                              width: 2,
-                                              style: BorderStyle.solid),
-                                          backgroundColor: AppColors.white,
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(25.0),
+                                      onPressed: () {
+                                        /*Navigator.push(
+                                          context,
+                                          PageTransition(
+                                              type: PageTransitionType.fade,
+                                              child: const OnBoard()),
+                                        );*/
+                                      },
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: <Widget>[
+                                          Image.asset(
+                                            'assets/images/icons/xray.png',
+                                            width: 80,
+                                            height: 80,
                                           ),
-                                        ),
-                                        onPressed: () {
-                                          Navigator.push(
-                                            context,
-                                            PageTransition(
-                                                type: PageTransitionType.fade,
-                                                child:
-                                                    const FamilyAndFriendsScreen()),
-                                          );
-                                        },
-                                        child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: <Widget>[
-                                            Image.asset(
-                                              'assets/images/icons/family.png',
-                                              width: 60,
-                                              height: 60,
-                                            ),
-                                            const SizedBox(
-                                              height: 10,
-                                            ),
-                                            const Text(
-                                              "العائلة والاصدقاء",
-                                              textAlign: TextAlign.center,
-                                              style: TextStyle(
-                                                  fontSize: 17,
-                                                  color: AppColors.lightBlack),
-                                            ),
-                                          ],
-                                        ),
+                                          const SizedBox(
+                                            height: 10,
+                                          ),
+                                          const Text(
+                                            "التشخيص من خلال الأشعة",
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                                fontSize: 20,
+                                                color: AppColors.lightBlack),
+                                          ),
+                                        ],
                                       ),
                                     ),
-                                  ],
-                                ),
-                                const SizedBox(
-                                  height: 20,
-                                ),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    SizedBox(
-                                      height: 130,
-                                      width: 150,
-                                      child: ElevatedButton(
-                                        style: ElevatedButton.styleFrom(
-                                          side: const BorderSide(
-                                              color: AppColors.mintGreen,
-                                              width: 2,
-                                              style: BorderStyle.solid),
-                                          backgroundColor: AppColors.white,
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(25.0),
-                                          ),
-                                        ),
-                                        onPressed: () {
-                                          Navigator.push(
-                                            context,
-                                            PageTransition(
-                                                type: PageTransitionType.fade,
-                                                child: const OnBoard()),
-                                          );
-                                        },
-                                        child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: <Widget>[
-                                            Image.asset(
-                                              'assets/images/icons/mental_health.png',
-                                              width: 60,
-                                              height: 60,
-                                            ),
-                                            const SizedBox(
-                                              height: 10,
-                                            ),
-                                            const Text(
-                                              "الألعاب والممارسات",
-                                              textAlign: TextAlign.center,
-                                              style: TextStyle(
-                                                  fontSize: 17,
-                                                  color: AppColors.lightBlack),
-                                            ),
-                                          ],
+                                  ),
+                                  const SizedBox(
+                                    height: 20,
+                                  ),
+                                  SizedBox(
+                                    height: 150,
+                                    width: 250,
+                                    child: ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        side: const BorderSide(
+                                            color: AppColors.mintGreen,
+                                            width: 2,
+                                            style: BorderStyle.solid),
+                                        backgroundColor: AppColors.white,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(25.0),
                                         ),
                                       ),
-                                    ),
-                                    const SizedBox(width: 20),
-                                    SizedBox(
-                                      height: 130,
-                                      width: 150,
-                                      child: ElevatedButton(
-                                        style: ElevatedButton.styleFrom(
-                                          side: const BorderSide(
-                                              color: AppColors.mintGreen,
-                                              width: 2,
-                                              style: BorderStyle.solid),
-                                          backgroundColor: AppColors.white,
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(25.0),
+                                      onPressed: () {
+                                        Navigator.push(
+                                          context,
+                                          PageTransition(
+                                              type: PageTransitionType.fade,
+                                              child: const MyPatientsScreen()),
+                                        );
+                                      },
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: <Widget>[
+                                          Image.asset(
+                                            'assets/images/pictures/linkedpatient.png',
+                                            width: 100,
+                                            height: 80,
                                           ),
-                                        ),
-                                        onPressed: () {},
-                                        child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: <Widget>[
-                                            Image.asset(
-                                              'assets/images/icons/todo.png',
-                                              width: 60,
-                                              height: 60,
-                                            ),
-                                            const SizedBox(
-                                              height: 10,
-                                            ),
-                                            const Text(
-                                              "المهام اليومية",
-                                              textAlign: TextAlign.center,
-                                              style: TextStyle(
-                                                  fontSize: 17,
-                                                  color: AppColors.lightBlack),
-                                            ),
-                                          ],
-                                        ),
+                                          const SizedBox(
+                                            height: 10,
+                                          ),
+                                          const Text(
+                                            "المرضي المتصلين بك",
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                                fontSize: 20,
+                                                color: AppColors.lightBlack),
+                                          ),
+                                        ],
                                       ),
                                     ),
-                                  ],
-                                ),
-                              ],
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                           Align(
@@ -732,23 +545,23 @@ class _CareGiverHomeScreenState extends State<CareGiverHomeScreen> {
                                     Navigator.push(
                                         context,
                                         PageTransition(
-                                            child: const WhoIAmScreen(),
+                                            child: const ProfileScreen(),
                                             type: PageTransitionType.fade));
                                   },
                                   icon: Image.asset(
-                                    'assets/images/icons/who.png',
+                                    'assets/images/icons/caregiver.png',
                                     width: 60,
                                     height: 60,
                                   ),
                                   label: const Text(
-                                    'من تكون ؟',
+                                    'الحساب الشخصي',
                                     style: TextStyle(
                                         color: AppColors.white, fontSize: 25),
                                   ),
                                 ),
                               ),
                             ),
-                          ),                       
+                          ),
                         ],
                       ),
                     ),

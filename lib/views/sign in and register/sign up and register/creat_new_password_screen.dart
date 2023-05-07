@@ -247,6 +247,7 @@ class _CreatPasswordScreenState extends State<CreatPasswordScreen> {
                             await patientUserRepository
                                 .getPatientUserRequest(userToken);
                         String type = await userTypeGetter['userType'];
+                        await prefs.setString('currentUserType', type);
                         hidePrograssDialog();
 
                         // ignore: use_build_context_synchronously

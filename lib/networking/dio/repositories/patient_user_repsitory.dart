@@ -10,6 +10,7 @@ class PatientUserRepository {
 
   PatientUserRepository(this.patientUserApi);
 
+// Pateint User
   Future<Map<String, dynamic>> getPatientUserRequest(String userToken) async {
     try {
       final response = await patientUserApi.getPatientUser(userToken);
@@ -136,7 +137,7 @@ class PatientUserRepository {
     }
   }
 
-// memories
+// Memories
   Future<Response> postUserMemoryRequest(
     String location,
     String date,
@@ -173,4 +174,54 @@ class PatientUserRepository {
       throw errorMessage;
     }
   }
+
+// Link with Caregiver
+  Future<Map<String,dynamic>> linkWithCaregiverRequest(
+    String bio,
+    String relation,
+    String email,
+    String token,
+  ) async {
+    try {
+      final response =
+          await patientUserApi.linkWithCaregiver(bio, relation, email, token);
+      Map<String,dynamic> caregiverInfoList = response.data;
+      return caregiverInfoList;
+    } on DioError catch (e) {
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      throw errorMessage;
+    }
+  }
+
+Future<List> getPatientCaregiversRequest(String userToken) async {
+    try {
+      final response = await patientUserApi.getPatientCaregivers(userToken);
+      List userCaregivers = (response.data);
+      return userCaregivers;   
+    } on DioError catch (e) {
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      throw errorMessage;
+    }
+  }
+
+Future<void> deleteCaregiverRequest(String id, String token) async {
+    try {
+      await patientUserApi.deleteCaregiver(id, token);
+    } on DioError catch (e) {
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      throw errorMessage;
+    }
+  }
+
+Future<List> getCaregiverPatientsRequest(String userToken) async {
+    try {
+      final response = await patientUserApi.getCaregiverPatients(userToken);
+      List userPatients = (response.data);
+      return userPatients;   
+    } on DioError catch (e) {
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      throw errorMessage;
+    }
+  }
+
 }

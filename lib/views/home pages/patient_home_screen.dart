@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 
 import 'package:memory_mate/constants/color_constatnts.dart';
 import 'package:memory_mate/views/family%20and%20friends/family_and_friends_screen.dart';
+import 'package:memory_mate/views/home%20pages/drawer%20pages/link_with_casregiver_screen.dart';
 import 'package:memory_mate/views/maps%20and%20locations/map_view_screen.dart';
 import 'package:memory_mate/views/profile/who_i_am_screen.dart';
 import 'package:memory_mate/views/splash%20and%20onboarding/sign_in_or_register_screen.dart';
@@ -20,6 +21,7 @@ import '../../networking/dio/models api/patient_user_api.dart';
 import '../../networking/dio/repositories/patient_user_repsitory.dart';
 import '../camera and face detection/camera_and_face_detection.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:animated_text_kit/animated_text_kit.dart';
 
 import 'package:url_launcher/url_launcher.dart';
 import '../games and practice/onbord.dart';
@@ -198,7 +200,7 @@ class _PatientHomeScreenState extends State<PatientHomeScreen> {
                       context,
                       PageTransition(
                           type: PageTransitionType.fade,
-                          child: const PatientHomeScreen()),
+                          child: const LinkWithCaregiverScreen()),
                     );
                   },
                 ),
@@ -247,16 +249,19 @@ class _PatientHomeScreenState extends State<PatientHomeScreen> {
                     'التواصل مع المطورين',
                     style: TextStyle(fontSize: 22, color: AppColors.lightBlack),
                   ),
-                  onTap: () async{
+                  onTap: () async {
                     String email = Uri.encodeComponent("bodyono3@gmail.com");
-                      String subject = Uri.encodeComponent("رسالة الي الدعم الفني الخاص بتطبيق Memory Mate");
-                      String body = Uri.encodeComponent("قم باستبدال هذا النص برسالتك وسنقوم بالرد عليك في اسرع وقت");                   
-                      Uri mail = Uri.parse("mailto:$email?subject=$subject&body=$body");
-                      if (await launchUrl(mail)) {
-                          //email app opened
-                      }else{
-                          //email app is not opened
-                      }
+                    String subject = Uri.encodeComponent(
+                        "رسالة الي الدعم الفني الخاص بتطبيق Memory Mate");
+                    String body = Uri.encodeComponent(
+                        "قم باستبدال هذا النص برسالتك وسنقوم بالرد عليك في اسرع وقت");
+                    Uri mail =
+                        Uri.parse("mailto:$email?subject=$subject&body=$body");
+                    if (await launchUrl(mail)) {
+                      //email app opened
+                    } else {
+                      //email app is not opened
+                    }
                   },
                 ),
               ),
@@ -427,12 +432,11 @@ class _PatientHomeScreenState extends State<PatientHomeScreen> {
                                           ),
                                         ),
                                         onPressed: () {
-                                           Navigator.push(
+                                          Navigator.push(
                                             context,
                                             PageTransition(
                                                 type: PageTransitionType.fade,
-                                                child:
-                                                    const MapViewScreen()),
+                                                child: const MapViewScreen()),
                                           );
                                         },
                                         child: Column(
@@ -752,6 +756,7 @@ class _PatientHomeScreenState extends State<PatientHomeScreen> {
                             child: Container(
                                 height: 100,
                                 width: width - 65,
+                                padding: const EdgeInsets.all(10),
                                 decoration: const BoxDecoration(
                                     boxShadow: [
                                       BoxShadow(
@@ -767,49 +772,25 @@ class _PatientHomeScreenState extends State<PatientHomeScreen> {
                                     borderRadius: BorderRadius.only(
                                         bottomRight: Radius.circular(15),
                                         topRight: Radius.circular(15))),
-                                child: Row(
-                                  children: [
-                                    SizedBox(
-                                      width: 130,
-                                      height: 50,
-                                      child: Directionality(
-                                        textDirection: TextDirection.rtl,
-                                        child: ElevatedButton.icon(
-                                          style: ElevatedButton.styleFrom(
-                                            backgroundColor: AppColors.white,
-                                            shape: const RoundedRectangleBorder(
-                                              borderRadius: BorderRadius.only(
-                                                  bottomRight:
-                                                      Radius.circular(20),
-                                                  topRight:
-                                                      Radius.circular(20)),
-                                            ),
-                                          ),
-                                          onPressed: () {},
-                                          icon: const Icon(
-                                            Icons.chat_outlined,
-                                            size: 20,
-                                            color: AppColors.mintGreen,
-                                          ),
-                                          label: const Text(
-                                            'الدردشة',
-                                            style: TextStyle(
-                                                color: AppColors.mintGreen,
-                                                fontSize: 20),
-                                          ),
+                                child: Center(
+                                  child: Directionality(
+                                    textDirection: TextDirection.rtl,
+                                    child: AnimatedTextKit(
+                                      animatedTexts: [
+                                        TypewriterAnimatedText(
+                                          'داوم علي انشطتك اليومية، تناول ادويتك في مواعيدها، تواصل مع عائلتك؛ هذا قد يجعل حياتك افضل بكثير 😊',
+                                          textStyle: const TextStyle(
+                                              fontSize: 18,
+                                              color: AppColors.white),
+                                          speed:
+                                              const Duration(milliseconds: 70),
                                         ),
-                                      ),
+                                      ],
+                                      totalRepeatCount: 1,
+                                      displayFullTextOnTap: false,
+                                      stopPauseOnTap: false,
                                     ),
-                                    const SizedBox(
-                                      width: 30,
-                                    ),
-                                    const Text(
-                                      "داوم علي انشطتك اليومية\nتناول ادويتك في مواعيدها\nتواصل مع عائلتك, هذا قد\n😊يجعل حياتك افضل",
-                                      textAlign: TextAlign.right,
-                                      style: TextStyle(
-                                          fontSize: 15, color: AppColors.white),
-                                    ),
-                                  ],
+                                  ),
                                 )),
                           ),
                         ],

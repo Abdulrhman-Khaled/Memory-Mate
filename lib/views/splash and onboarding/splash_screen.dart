@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:memory_mate/constants/color_constatnts.dart';
+import 'package:memory_mate/views/home%20pages/caregiver_home_screen.dart';
 import 'package:memory_mate/views/home%20pages/patient_home_screen.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -21,19 +22,28 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
     checkLoginStatus();
-    Timer(
-        const Duration(milliseconds: 1500),
-        () => _isLoggedIn == true
-            ? Navigator.pushReplacement(
-                context,
-                PageTransition(
-                    type: PageTransitionType.fade,
-                    child: const PatientHomeScreen()))
-            : Navigator.pushReplacement(
-                context,
-                PageTransition(
-                    type: PageTransitionType.fade,
-                    child: const OnBoardingScreen())));
+    Timer(const Duration(milliseconds: 1500), () async {
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? userType = prefs.getString('currentUserType');
+
+      if (_isLoggedIn == true) {
+        // ignore: use_build_context_synchronously
+        Navigator.pushReplacement(
+            context,
+            PageTransition(
+                type: PageTransitionType.fade,
+                child: userType == 'PATIENT'
+                    ? const PatientHomeScreen()
+                    : const CareGiverHomeScreen()));
+      } else {
+        // ignore: use_build_context_synchronously
+        Navigator.pushReplacement(
+            context,
+            PageTransition(
+                type: PageTransitionType.fade,
+                child: const OnBoardingScreen()));
+      }
+    });
   }
 
   Future<void> checkLoginStatus() async {

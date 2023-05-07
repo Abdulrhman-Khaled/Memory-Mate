@@ -1,12 +1,20 @@
+import 'dart:developer';
 import 'dart:io';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:memory_mate/models/add_care_giver.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:simple_fontellico_progress_dialog/simple_fontico_loading.dart';
 
 import '../../components/text_fields.dart';
 import '../../constants/color_constatnts.dart';
+import '../../networking/dio/api/dio_client.dart';
+import '../../networking/dio/models api/patient_user_api.dart';
+import '../../networking/dio/repositories/patient_user_repsitory.dart';
 
 class FamilyAndFriendsScreen extends StatefulWidget {
   const FamilyAndFriendsScreen({super.key});
@@ -18,7 +26,7 @@ class FamilyAndFriendsScreen extends StatefulWidget {
 class _FamilyAndFriendsScreenState extends State<FamilyAndFriendsScreen>
     with TickerProviderStateMixin {
   AnimationController? _controller;
-  List<AddCareGiver> careGiversList = [];
+  List<dynamic> careGiversList = [];
 
   var careNameController = TextEditingController();
   var careRelationController = TextEditingController();
@@ -27,6 +35,23 @@ class _FamilyAndFriendsScreenState extends State<FamilyAndFriendsScreen>
 
   final careNameFocusNode = FocusNode();
   final careRelationFocusNode = FocusNode();
+
+  late Dio dio;
+  late DioClient dioClient;
+  late PatientUserApi userApi;
+  late PatientUserRepository patientUserRepository;
+
+  String imageLink =
+      'https://res.cloudinary.com/dpxzn12st/image/upload/v1682936932/users/o68ka20a9ud9caijqqwe.jpg';
+
+  SimpleFontelicoProgressDialog? prograssDialog;
+
+  bool isLoading = true;
+
+  Response? response;
+
+  RefreshController refreshController =
+      RefreshController(initialRefresh: false);
 
   FileImage? careGiverImageFile;
   ImageProvider tempAvatarImage =
@@ -56,17 +81,50 @@ class _FamilyAndFriendsScreenState extends State<FamilyAndFriendsScreen>
     } else {}
   }
 
-  void addNewCareGiver(AddCareGiver careGiver) {
+  Future<void> refresh() async {
+    getUserCaregivers();
+    setState(() {});
+    refreshController.refreshCompleted();
+  }
+
+  Future<void> getUserCaregivers() async {
+    dio = Dio();
+    dioClient = DioClient(dio);
+    userApi = PatientUserApi(dioClient: dioClient);
+    patientUserRepository = PatientUserRepository(userApi);
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? userToken = prefs.getString('currentUserToken');
+    List<dynamic> userCaregivers =
+        await patientUserRepository.getPatientCaregiversRequest(userToken!);
+
+    log(userCaregivers.toString());
     setState(() {
-      // Update state
-      careGiversList.add(careGiver);
+      careGiversList = userCaregivers;
+      isLoading = false;
+    });
+  }
+
+  void addCareGiverStater(String name, String bio) {
+    setState(() {
+      careGiversList.add(
+        {
+          "address": "-",
+          "bio": bio,
+          "contact_id": '-',
+          "email": "-",
+          "full_name": name,
+          "phone": "-",
+          "relation": "-"
+        },
+      );
     });
   }
 
   @override
   void initState() {
     super.initState();
-
+    getUserCaregivers();
+    prograssDialog = SimpleFontelicoProgressDialog(context: context);
     _controller = AnimationController(
       duration: const Duration(seconds: 1),
       vsync: this,
@@ -85,8 +143,21 @@ class _FamilyAndFriendsScreenState extends State<FamilyAndFriendsScreen>
     }
   }
 
+  Future<void> showPrograssDialog() async {
+    prograssDialog!
+        .show(message: "جاري التحميل...", indicatorColor: AppColors.mintGreen);
+  }
+
+  Future<void> hidePrograssDialog() async {
+    prograssDialog!.hide();
+  }
+
   @override
   Widget build(BuildContext context) {
+    dio = Dio();
+    dioClient = DioClient(dio);
+    userApi = PatientUserApi(dioClient: dioClient);
+    patientUserRepository = PatientUserRepository(userApi);
     return Scaffold(
         floatingActionButton: FloatingActionButton(
             backgroundColor: AppColors.mintGreen,
@@ -242,11 +313,15 @@ class _FamilyAndFriendsScreenState extends State<FamilyAndFriendsScreen>
                             onTap: () async {
                               if (formKey.currentState!.validate()) {
                                 if (careGiverImageFile != null) {
-                                  addNewCareGiver(AddCareGiver(
+                                  AddCareGiver(
                                       careName: careNameController.value.text,
                                       careRelation:
                                           careRelationController.value.text,
-                                      careImage: careGiverImageFile));
+                                      careImage: careGiverImageFile);
+                                  addCareGiverStater(
+                                      careNameController.value.text,
+                                      careRelationController.value.text);
+
                                   Navigator.of(context).pop();
                                 } else {
                                   Fluttertoast.showToast(
@@ -273,109 +348,135 @@ class _FamilyAndFriendsScreenState extends State<FamilyAndFriendsScreen>
             style: TextStyle(fontSize: 25, color: AppColors.mintGreen),
           ),
         ),
-        body: careGiversList.isEmpty
+        body: isLoading
             ? const Center(
-                child: Text(
-                  'لم يتم إضافة اي اشخاص بعد',
-                  style: TextStyle(fontSize: 22, color: AppColors.mintGreen),
-                ),
-              )
-            : ListView.builder(
-                itemCount: careGiversList.length,
-                itemBuilder: (context, index) {
-                  return Dismissible(
-                      key: UniqueKey(),
-                      direction: DismissDirection.startToEnd,
-                      background: Container(
-                        color: Colors.red,
-                        child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: const [
-                              Text(
-                                'حذف',
-                                style: TextStyle(
-                                    fontSize: 20, color: AppColors.white),
+                child: CircularProgressIndicator(
+                color: AppColors.mintGreen,
+                backgroundColor: AppColors.white,
+              ))
+            : careGiversList.isEmpty
+                ? const Center(
+                    child: Text(
+                      'لم يتم إضافة اي اشخاص بعد',
+                      style:
+                          TextStyle(fontSize: 22, color: AppColors.mintGreen),
+                    ),
+                  )
+                : SmartRefresher(
+                    controller: refreshController,
+                    enablePullDown: true,
+                    onRefresh: refresh,
+                    child: ListView.builder(
+                        itemCount: careGiversList.length,
+                        itemBuilder: (context, index) {
+                          return Dismissible(
+                              key: UniqueKey(),
+                              direction: DismissDirection.startToEnd,
+                              background: Container(
+                                color: Colors.red,
+                                child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: const [
+                                      Text(
+                                        'حذف',
+                                        style: TextStyle(
+                                            fontSize: 20,
+                                            color: AppColors.white),
+                                      ),
+                                      Icon(
+                                        Icons.delete_outline,
+                                        color: AppColors.white,
+                                        size: 35,
+                                      ),
+                                    ]),
                               ),
-                              Icon(
-                                Icons.delete_outline,
-                                color: AppColors.white,
-                                size: 35,
-                              ),
-                            ]),
-                      ),
-                      onDismissed: (direction) {
-                        setState(() {
-                          careGiversList.removeAt(index);
-                        });
-                      },
-                      confirmDismiss: (DismissDirection direction) async {
-                        return await showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return AlertDialog(
-                              title: const Text(
-                                'تأكيد حذف الشخص',
-                                textAlign: TextAlign.center,
-                              ),
-                              content: const Text(
-                                'هل تريد حذف هذا الشخص بالفعل؟',
-                                textAlign: TextAlign.center,
-                              ),
-                              actions: <Widget>[
-                                TextButton(
-                                  onPressed: () =>
-                                      Navigator.of(context).pop(false),
-                                  child: const Text('إلغاء'),
+                              onDismissed: (direction) async {
+                                final SharedPreferences prefs =
+                                    await SharedPreferences.getInstance();
+                                String? userToken =
+                                    prefs.getString('currentUserToken');
+
+                                await patientUserRepository
+                                    .deleteMemoryUserRequest(
+                                        careGiversList[index]['id'].toString(),
+                                        userToken!);
+                                setState(() {
+                                  careGiversList.removeAt(index);
+                                });
+                              },
+                              confirmDismiss:
+                                  (DismissDirection direction) async {
+                                return await showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                      title: const Text(
+                                        'تأكيد حذف مقدم الرعاية',
+                                        textAlign: TextAlign.center,
+                                      ),
+                                      content: const Text(
+                                        'هل تريد حذف هذا الشخص بالفعل؟',
+                                        textAlign: TextAlign.center,
+                                      ),
+                                      actions: <Widget>[
+                                        TextButton(
+                                          onPressed: () =>
+                                              Navigator.of(context).pop(false),
+                                          child: const Text('إلغاء'),
+                                        ),
+                                        TextButton(
+                                          onPressed: () {
+                                            Navigator.of(context).pop(true);
+                                          },
+                                          child: const Text('حذف'),
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
+                              },
+                              child: Card(
+                                shadowColor: Colors.transparent,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20.0),
                                 ),
-                                TextButton(
-                                  onPressed: () =>
-                                      Navigator.of(context).pop(true),
-                                  child: const Text('حذف'),
-                                ),
-                              ],
-                            );
-                          },
-                        );
-                      },
-                      child: Card(
-                        shadowColor: Colors.transparent,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20.0),
-                        ),
-                        color: const Color.fromARGB(255, 244, 244, 244),
-                        child: Directionality(
-                          textDirection: TextDirection.rtl,
-                          child: Row(
-                            children: [
-                              Container(
-                                padding:
-                                    const EdgeInsets.fromLTRB(5, 10, 10, 10),
-                                child: Image(
-                                    width: 100,
-                                    height: 100,
-                                    image: careGiversList[index].careImage!),
-                              ),
-                              Expanded(
-                                child: ListTile(
-                                  title: Text(
-                                    careGiversList[index].careName!,
-                                    style: const TextStyle(
-                                        fontSize: 22,
-                                        fontWeight: FontWeight.bold),
+                                color: const Color.fromARGB(255, 244, 244, 244),
+                                child: Directionality(
+                                  textDirection: TextDirection.rtl,
+                                  child: Row(
+                                    children: [
+                                      Container(
+                                        padding: const EdgeInsets.fromLTRB(
+                                            5, 10, 10, 10),
+                                        child: Image(
+                                            width: 100,
+                                            height: 100,
+                                            image: NetworkImage(imageLink)),
+                                      ),
+                                      Expanded(
+                                        child: ListTile(
+                                          title: Text(
+                                            careGiversList[index]['full_name'],
+                                            style: const TextStyle(
+                                                fontSize: 22,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                          subtitle: Text(
+                                            careGiversList[index]['bio'],
+                                            style: const TextStyle(
+                                                fontSize: 18,
+                                                color: AppColors.mintGreen,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                  subtitle: Text(
-                                    careGiversList[index].careRelation!,
-                                    style: const TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.bold),
-                                  ),
                                 ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ));
-                }));
+                              ));
+                        }),
+                  ));
   }
 }

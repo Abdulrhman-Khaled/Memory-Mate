@@ -25,12 +25,12 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   // mariem edit
   await SystemChrome.setPreferredOrientations(
-      [DeviceOrientation.portraitUp],
-     );
-  
+    [DeviceOrientation.portraitUp],
+  );
+
   await Hive.initFlutter();
   Hive.registerAdapter(BoardAdapter());
-
+ 
   try {
     cameras = await availableCameras();
   } on CameraException catch (e) {

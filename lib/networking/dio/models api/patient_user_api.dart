@@ -203,4 +203,56 @@ class PatientUserApi {
       rethrow;
     }
   }
+
+// Link with Caregiver
+Future<Response> linkWithCaregiver(
+    String bio,
+    String relation,
+    String email,
+    String token,
+  ) async {
+    try {
+      final Response response = await dioClient.post(
+        Endpoints.contacts,
+        userToken: token,
+        data: {"relation": relation,
+        "bio": bio,
+        "email": email},
+      );
+      return response;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+Future<Response> getPatientCaregivers(String userToken) async {
+    try {
+      final Response response = await dioClient
+          .get('${Endpoints.contacts}/caregivers', userToken: userToken);
+      return response;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+Future<void> deleteCaregiver(String id, String token) async {
+    try {
+      await dioClient.delete('${Endpoints.contacts}/$id',
+          userToken: token);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+// fetch patients to caregiver
+Future<Response> getCaregiverPatients(String userToken) async {
+    try {
+      final Response response = await dioClient
+          .get('${Endpoints.contacts}/patients', userToken: userToken);
+      return response;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
 }

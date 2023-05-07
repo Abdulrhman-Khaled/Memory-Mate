@@ -9,7 +9,6 @@ import '../../../components/buttons.dart';
 import '../../../components/text_fields.dart';
 import '../../../networking/dio/api/dio_client.dart';
 import '../../../networking/dio/models api/patient_user_api.dart';
-import '../../../networking/dio/repositories/authantication.dart';
 import '../../../networking/dio/repositories/patient_user_repsitory.dart';
 import 'otp_forget_password_screen.dart';
 

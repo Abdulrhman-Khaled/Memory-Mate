@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_swipe_detector/flutter_swipe_detector.dart';
 
-import 'package:page_transition/page_transition.dart';
 
 import '../../components/button.dart';
 import '../../components/empty_board.dart';
@@ -10,8 +9,6 @@ import '../../components/score_board.dart';
 import '../../components/tile_board.dart';
 import '../../constants/color_constatnts.dart';
 import '../../managers/board.dart';
-import 'games_home.dart';
-
 
 class GameTwo extends ConsumerStatefulWidget {
   const GameTwo({super.key});
@@ -85,85 +82,76 @@ class _GameState extends ConsumerState<GameTwo>
         },
         child: Scaffold(
           backgroundColor: AppColors.white,
-          body: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          appBar: AppBar(
+            elevation: 0,
+            backgroundColor: AppColors.white,
+            iconTheme: const IconThemeData(
+              color: AppColors.mintGreen,
+            ),
+            centerTitle: true,
+            title: const Text(
+              "تسلسل الأرقام 2048",
+              style: TextStyle(fontSize: 25, color: AppColors.mintGreen),
+            ),
+          ),
+          body: Container(
+            margin: const EdgeInsets.fromLTRB(0, 40, 0, 0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          const ScoreBoard(),
+                          const SizedBox(
+                            height: 32.0,
+                          ),
+                          Row(
+                            children: [
+                              ButtonWidget(
+                                icon: Icons.undo,
+                                onPressed: () {
+                                  //Undo the round.
+                                  ref.read(boardManager.notifier).undo();
+                                },
+                              ),
+                              const SizedBox(
+                                width: 15,
+                              ),
+                              ButtonWidget(
+                                icon: Icons.refresh,
+                                onPressed: () {
+                                  //Restart the game
+                                  ref.read(boardManager.notifier).newGame();
+                                },
+                              )
+                            ],
+                          )
+                        ],
+                      )
+                    ],
+                  ),
+                ),
+                const SizedBox(
+                  height: 30,
+                ),
+                Stack(
                   children: [
-                    const Text(
-                      '2048',
-                      style: TextStyle(
-                          color: AppColors.mintGreen,
-                          fontFamily: 'Boutros',
-                          fontWeight: FontWeight.bold,
-                          fontSize: 52.0),
-                    ),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        const ScoreBoard(),
-                        const SizedBox(
-                          height: 32.0,
-                        ),
-                        Row(
-                          children: [
-                            ButtonWidget(
-                              icon: Icons.undo,
-                              onPressed: () {
-                                //Undo the round.
-                                ref.read(boardManager.notifier).undo();
-                              },
-                            ),
-                            const SizedBox(
-                              width: 16.0,
-                            ),
-                            ButtonWidget(
-                              icon: Icons.refresh,
-                              onPressed: () {
-                                //Restart the game
-                                ref.read(boardManager.notifier).newGame();
-                              },
-                            )
-                          ],
-                        )
-                      ],
-                    )
+                    const EmptyBoardWidget(),
+                    TileBoardWidget(
+                        moveAnimation: _moveAnimation,
+                        scaleAnimation: _scaleAnimation)
                   ],
                 ),
-              ),
-              const SizedBox(height: 32.0,),
-              Stack(
-                children: [
-                  const EmptyBoardWidget(),
-                  TileBoardWidget(
-                      moveAnimation: _moveAnimation,
-                      scaleAnimation: _scaleAnimation)
-                ],
-              ),
-              const SizedBox(height: 20.0,),
-              ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                minimumSize: Size(130.0, 40.0),
-                                backgroundColor: AppColors.mintGreen,
-                                textStyle: TextStyle(
-                                  fontFamily: 'Boutros',
-                                  fontSize: 22.0
-                                )
-                              ) ,
-                              onPressed: (){
-                                Navigator.push(
-                                context,  
-                                PageTransition(
-                                type: PageTransitionType.fade,
-                                child:  gameshome()),);
-                              },
-                                child: Text("عودة")),
-            ],
+              ],
+            ),
           ),
         ),
       ),

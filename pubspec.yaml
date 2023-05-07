@@ -36,38 +36,43 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
-  provider: ^6.0.5
-  page_transition: ^2.0.9
-  dio: ^5.0.0
-  json_annotation: ^4.8.0
-  socket_io_client: ^2.0.1
-  shared_preferences: ^2.0.18
-  flutter_otp_text_field: ^1.1.1
+  provider: 
+  page_transition: 
+  dio: 
+  json_annotation: 
+  socket_io_client: 
+  shared_preferences: 
+  flutter_otp_text_field: 
   image_picker:
-  fluttertoast: ^8.0.8
-  full_screen_image_null_safe: ^2.0.0
-  camera: ^0.10.3+2
+  fluttertoast: 
+  full_screen_image_null_safe: 
+  camera: 
   video_player:
   path_provider:
   path:
-  permission_handler: ^10.2.0
-  awesome_dialog: ^3.0.2
-  flutter_datetime_picker: ^1.5.1
-  syncfusion_flutter_datepicker: ^20.4.53
-  text_scroll: ^0.1.2
-  simple_fontellico_progress_dialog: ^0.3.0
+  permission_handler: 
+  awesome_dialog: 
+  flutter_datetime_picker: 
+  syncfusion_flutter_datepicker: 
+  text_scroll: 
+  simple_fontellico_progress_dialog: 
   pull_to_refresh:
   google_maps_flutter: 
   location: 
-  flutter_riverpod: ^2.3.4
-  hive_flutter: ^1.1.0
-  flutter_swipe_detector: ^2.0.0
-  uuid: ^3.0.7
-  flutter_tts: ^3.6.3
-  switcher: ^1.0.0
+  flutter_riverpod: 
+  hive_flutter: 
+  flutter_swipe_detector: 
+  uuid:
+  flutter_tts: 
+  switcher: 
   package_info_plus:
   url_launcher:
   geolocator:
+  flutter_alarm_clock:
+  textfield_search:
+  geocoding:
+  flutter_polyline_points:
+  animated_text_kit: 
 
   
   

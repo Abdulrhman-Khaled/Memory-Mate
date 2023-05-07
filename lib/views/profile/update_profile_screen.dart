@@ -5,13 +5,14 @@ import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+// ignore: depend_on_referenced_packages
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:simple_fontellico_progress_dialog/simple_fontico_loading.dart';
 
 import 'package:memory_mate/views/profile/profile_screen.dart';
-import 'package:simple_fontellico_progress_dialog/simple_fontico_loading.dart';
 
 import '../../components/buttons.dart';
 import '../../constants/color_constatnts.dart';

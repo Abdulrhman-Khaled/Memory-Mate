@@ -17,4 +17,6 @@ class Endpoints {
   static const String getUsers = '/users/getuser';
 
   static const String memories = '/memories';
+
+  static const String contacts = '/usercontacts';
 }
