@@ -1,17 +1,17 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 
 import 'package:flutter_alarm_clock/flutter_alarm_clock.dart';
 import 'package:flutter_tts/flutter_tts.dart';
-import 'package:page_transition/page_transition.dart';
-
+import 'package:fluttertoast/fluttertoast.dart';
 
 import '../../components/buttons.dart';
 import '../../constants/color_constatnts.dart';
+import '../../providers/medicine_provider.dart';
 import 'add_field.dart';
 
-import 'medical_appointment.dart';
-
-// ignore: camel_case_types
+// ignore: camel_case_types, must_be_immutable
 class createAppointment extends StatefulWidget {
   const createAppointment({super.key});
 
@@ -21,385 +21,527 @@ class createAppointment extends StatefulWidget {
 
 // ignore: camel_case_types
 class _createAppointmentState extends State<createAppointment> {
-  String medicineName = 'ketofan';
+  final nameController = TextEditingController();
+  final timeController = TextEditingController();
+
+  String _selectedOptionRebeat = 'تكرار الدواء ';
+
+  MedicineListModel medAdder = MedicineListModel();
+
+  DateTime? alarmDate;
+  int? hourPicker;
+  int? minPicker;
+
+  int _selectedOptionIndex = 0;
+
+  int count = 1;
+
   FlutterTts flutterTts = FlutterTts();
+
+  bool _isDailySelected = true;
+
+  List<String> _selectedOptions = ['يومياً'];
+
+  List<String> medDaysList = [];
+
   List<String> week = [
     "السبت",
-    "الاحد",
-    "الاثنين",
+    "الأحد",
+    "الأثنين",
     "الثلاثاء",
-    "الاربعاء",
+    "الأربعاء",
     "الخميس",
-    "الجمعه",
+    "الجمعة",
   ];
-  List<String> rebeat = [
-    "مره",
+  final List<String> rebeat = [
+    "مرة",
     "مرتين",
     "ثلاث مرات",
     "اربع مرات",
-    "خمس مرات",
   ];
+
   final _formKey = GlobalKey<FormState>();
-  var hourcontroller = TextEditingController();
-  int hour() {
-    String hourString = hourcontroller.text;
-    int hour = int.parse(hourString);
 
-    return hour;
+  @override
+  void initState() {
+    super.initState();
+
+    _selectedOptions = List<String>.from(week);
   }
 
-  var mincontroller = TextEditingController();
-  int min() {
-    String minString = mincontroller.text;
-    int min = int.parse(minString);
-
-    return min;
+  dynamic _speak() async {
+    if (nameController.value.text.isNotEmpty) {
+      await flutterTts.speak(nameController.value.text);
+    } else {
+      Fluttertoast.showToast(
+          msg: 'رجا ء ادخال اسم دواء صالح',
+          backgroundColor: AppColors.mintGreen);
+    }
   }
 
-  Color weekcolor = AppColors.lightmintGreenOp;
+  Future<void> _selectTime(BuildContext context) async {
+    final TimeOfDay? pickedTime = await showTimePicker(
+      confirmText: "تعيين",
+      cancelText: "إلغاء",
+      initialEntryMode: TimePickerEntryMode.dialOnly,
+      context: context,
+      initialTime: TimeOfDay.now(),
+    );
+    if (pickedTime != null) {
+      DateTime now = DateTime.now();
+      DateTime date = DateTime(
+          now.year, now.month, now.day, pickedTime.hour, pickedTime.minute);
+      setState(() {
+        FocusManager.instance.primaryFocus?.unfocus();
+        hourPicker = pickedTime.hour;
+        minPicker = pickedTime.minute;
+        timeController.text = pickedTime.format(context).toString();
+        alarmDate = date;
+      });
+    }
+  }
+
+  List<String> removeValue(List<String> daysList) {
+    String valueToRemove = 'يومياً';
+    daysList.removeWhere((element) => element == valueToRemove);
+    return daysList;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: AppColors.white,
+        backgroundColor: AppColors.mintGreen,
         appBar: AppBar(
-          leading: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              IconButton(
-                onPressed: () {
-                  setState(() {
-                    Navigator.push(
-                      context,
-                      PageTransition(
-                          type: PageTransitionType.fade,
-                          child: const medical_appointment()),
-                    );
-                  });
-                },
-                icon: const Icon(
-                  Icons.arrow_left,
-                  size: 45,
-                ),
-              ),
-            ],
-          ),
-          toolbarHeight: 233,
           backgroundColor: AppColors.mintGreen,
           elevation: 0.0,
-          actions: [
-            Expanded(child: Container()),
-            Center(
-              child: Column(
-                children: [
-                  const Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: Text(
-                      ' انشاء ميعاد دواء جديد',
-                      style: TextStyle(
-                        fontSize: 25,
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    child: Image.asset('assets/images/pictures/todo.png'),
-                  ),
-                ],
-              ),
-            ),
-            Expanded(child: Container())
-          ],
+          centerTitle: true,
+          title: const Text(
+            'إنشاء ميعاد دواء جديد',
+            style: TextStyle(fontSize: 25, color: AppColors.white),
+          ),
         ),
         body: Column(children: [
-          Container(
-            width: double.infinity,
-            height: 30,
-            color: AppColors.mintGreen,
-            child: Column(
-              children: [
-                Container(
-                  width: double.infinity,
-                  height: 30,
-                  decoration: const BoxDecoration(
-                    borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(40),
-                        topRight: Radius.circular(40)),
-                    color: Colors.white,
-                  ),
-                ),
-              ],
-            ),
+          const SizedBox(
+            height: 5,
+          ),
+          Center(
+            child: Image.asset('assets/images/pictures/todo.png'),
+          ),
+          const SizedBox(
+            height: 15,
           ),
           Expanded(
-            child: SingleChildScrollView(
-              child: Form(
-                key: _formKey,
-                child: Column(children: [
-                  Padding(
+            child: Container(
+              width: double.infinity,
+              decoration: const BoxDecoration(
+                borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(30),
+                    topRight: Radius.circular(30)),
+                color: AppColors.white,
+              ),
+              child: SingleChildScrollView(
+                child: Form(
+                  key: _formKey,
+                  child: Column(children: [
+                    Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Container(
-                          height: 72,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(25),
-                              color: const Color.fromARGB(221, 245, 244, 244)),
-                          child: addfield(hint: 'اسم الدواء'))),
-                  Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Container(
-                          height: 72,
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(25),
                               color: const Color.fromARGB(221, 245, 244, 244)),
                           child: addfield(
-                              hint: 'وصف الدواء',
-                              assest: 'assets/images/pictures/Path 106.png'))),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      add_date(
-                          name: 'name',
-                          hourcontroller: hourcontroller,
-                          mincontroller: mincontroller)
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 15,
-                  ),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: ElevatedButton(
-                          onPressed: () {
-                            showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                bool isSelected = false;
-                                return AlertDialog(
-                                  title: const Text('اختر عدد تكرار الدواء'),
-                                  content: ListView.separated(
-                                    itemBuilder: (context, index) {
-                                      return StatefulBuilder(
+                              hint: 'اسم الدواء',
+                              icon: Icons.medication_outlined,
+                              controller: nameController)),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Container(
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(25),
+                              color: const Color.fromARGB(221, 245, 244, 244)),
+                          child: InkWell(
+                            onTap: () => _speak(),
+                            child: addfield(
+                                hint: 'نطق الدواء تلقائياً',
+                                enableEdit: false,
+                                icon: Icons.volume_up_outlined,
+                                sufIcon: Icons.play_circle_outline),
+                          )),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: InkWell(
+                        onTap: () {
+                          _selectTime(context);
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(25),
+                              color: const Color.fromARGB(221, 245, 244, 244)),
+                          child: addfield(
+                              hint: "تحديد الميعاد",
+                              icon: Icons.alarm_add_outlined,
+                              controller: timeController,
+                              enableEdit: false),
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: ElevatedButton(
+                              onPressed: () {
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                      title: const Center(
+                                        child:
+                                            Text('اختر عدد مرات تكرار الدواء'),
+                                      ),
+                                      content: StatefulBuilder(
                                         builder: (BuildContext context,
                                             StateSetter setState) {
-                                          return CheckboxListTile(
-                                            title: Text(
-                                              rebeat[index],
+                                          return SingleChildScrollView(
+                                            child: Directionality(
                                               textDirection: TextDirection.rtl,
+                                              child: Column(
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: List<Widget>.generate(
+                                                  rebeat.length,
+                                                  (index) => RadioListTile(
+                                                      title:
+                                                          Text(rebeat[index]),
+                                                      value: index,
+                                                      groupValue:
+                                                          _selectedOptionIndex,
+                                                      onChanged: (int? value) {
+                                                        setState(() =>
+                                                            _selectedOptionIndex =
+                                                                value!);
+                                                      }),
+                                                ),
+                                              ),
                                             ),
-                                            value: isSelected,
-                                            // ignore: non_constant_identifier_names
-                                            onChanged: (Newvalue) {
-                                              setState(() {
-                                                isSelected = Newvalue!;
-                                              });
-                                            },
-                                            controlAffinity:
-                                                ListTileControlAffinity.leading,
                                           );
                                         },
-                                      );
-                                    },
-                                    separatorBuilder: (context, value) =>
-                                        const SizedBox(
-                                      height: 8,
-                                    ),
-                                    itemCount: 5,
-                                  ),
-                                  actions: [
-                                    TextButton(
-                                      onPressed: () {
-                                        Navigator.of(context).pop();
-                                      },
-                                      child: const Text('الغاء'),
-                                    ),
-                                    TextButton(
-                                      onPressed: () {
-                                        // Perform action with selected option
-                                        Navigator.of(context).pop();
-                                      },
-                                      child: const Text('حسنا'),
-                                    ),
-                                  ],
+                                      ),
+                                      actions: [
+                                        TextButton(
+                                          onPressed: () {
+                                            FocusManager.instance.primaryFocus
+                                                ?.unfocus();
+                                            Navigator.of(context).pop();
+                                          },
+                                          child: const Text('الغاء'),
+                                        ),
+                                        TextButton(
+                                          onPressed: () {
+                                            FocusManager.instance.primaryFocus
+                                                ?.unfocus();
+                                            setState(() {
+                                              _selectedOptionRebeat =
+                                                  rebeat[_selectedOptionIndex];
+                                            });
+                                            Navigator.of(context).pop();
+                                          },
+                                          child: const Text('حسناً'),
+                                        ),
+                                      ],
+                                    );
+                                  },
                                 );
                               },
-                            );
-                          },
-                          style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all<Color>(
-                              AppColors.lightmintGreen,
-                            ),
-                            shape: MaterialStateProperty.all<
-                                RoundedRectangleBorder>(
-                              RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(18.0),
-                              ),
-                            ),
-                            elevation: MaterialStateProperty.all<double>(
-                              0.0,
-                            ),
-                          ),
-                          child: SizedBox(
-                            height: 70,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                const Text(
-                                  'تكرار الدواء ',
-                                  style: TextStyle(fontSize: 18),
+                              style: ButtonStyle(
+                                backgroundColor:
+                                    MaterialStateProperty.all<Color>(
+                                  AppColors.mintGreen,
                                 ),
-                                Padding(
-                                  padding:
-                                      const EdgeInsets.symmetric(horizontal: 4),
-                                  child: Container(
-                                    height: 30,
-                                    width: 1,
-                                    color: AppColors.white,
+                                shape: MaterialStateProperty.all<
+                                    RoundedRectangleBorder>(
+                                  RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(25),
                                   ),
                                 ),
-                                const Icon(Icons.access_time),
-                              ],
+                                elevation: MaterialStateProperty.all<double>(
+                                  0.0,
+                                ),
+                              ),
+                              child: SizedBox(
+                                height: 75,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      _selectedOptionRebeat,
+                                      style: const TextStyle(fontSize: 18),
+                                    ),
+                                    const SizedBox(
+                                      width: 10,
+                                    ),
+                                    Container(
+                                      height: 30,
+                                      width: 1.5,
+                                      color: AppColors.white,
+                                    ),
+                                    const SizedBox(
+                                      width: 10,
+                                    ),
+                                    const Icon(
+                                      Icons.repeat_outlined,
+                                      size: 30,
+                                    ),
+                                  ],
+                                ),
+                              ),
                             ),
                           ),
-                        ),
-                      ),
-                      const SizedBox(
-                        width: 10,
-                      ),
-                      Expanded(
-                        child: ElevatedButton(
-                          onPressed: () {
-                            showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                bool isSelected = false;
-                                return AlertDialog(
-                                  title: const Text('اختر عدد الايام '),
-                                  content: ListView.separated(
-                                    itemBuilder: (context, index) {
-                                      return StatefulBuilder(
+                          const SizedBox(
+                            width: 10,
+                          ),
+                          Expanded(
+                            child: ElevatedButton(
+                              onPressed: () {
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                      title: const Center(
+                                          child:
+                                              Text('اختر ايام تكرار الدواء')),
+                                      content: StatefulBuilder(
                                         builder: (BuildContext context,
                                             StateSetter setState) {
-                                          return CheckboxListTile(
-                                            title: Text(
-                                              week[index],
-                                              textDirection: TextDirection.rtl,
+                                          return SingleChildScrollView(
+                                            child: Column(
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                CheckboxListTile(
+                                                  contentPadding:
+                                                      const EdgeInsets
+                                                              .symmetric(
+                                                          horizontal: 50),
+                                                  title: const Text(
+                                                    'يومياً',
+                                                    textAlign: TextAlign.right,
+                                                  ),
+                                                  value: _isDailySelected,
+                                                  onChanged: (bool? value) {
+                                                    setState(() {
+                                                      _isDailySelected = value!;
+                                                      _selectedOptions =
+                                                          _isDailySelected
+                                                              ? ['يومياً']
+                                                              : List<String>.from(
+                                                                  week);
+                                                    });
+                                                  },
+                                                ),
+                                                const Divider(),
+                                                ...week.map((option) =>
+                                                    CheckboxListTile(
+                                                      contentPadding:
+                                                          const EdgeInsets
+                                                                  .symmetric(
+                                                              horizontal: 50),
+                                                      title: Text(
+                                                        option,
+                                                        textAlign:
+                                                            TextAlign.right,
+                                                      ),
+                                                      value: _selectedOptions
+                                                          .contains(option),
+                                                      onChanged: (bool? value) {
+                                                        setState(() {
+                                                          if (value!) {
+                                                            _selectedOptions
+                                                                .add(option);
+                                                          } else {
+                                                            _selectedOptions
+                                                                .remove(option);
+                                                          }
+                                                          _isDailySelected =
+                                                              _selectedOptions
+                                                                          .length ==
+                                                                      1 &&
+                                                                  _selectedOptions[
+                                                                          0] ==
+                                                                      'يومياً';
+                                                        });
+                                                      },
+                                                    )),
+                                              ],
                                             ),
-                                            value: isSelected,
-                                            // ignore: non_constant_identifier_names
-                                            onChanged: (Newvalue) {
-                                              setState(() {
-                                                isSelected = Newvalue!;
-                                              });
-                                            },
-                                            controlAffinity:
-                                                ListTileControlAffinity.leading,
                                           );
                                         },
-                                      );
-                                    },
-                                    separatorBuilder: (context, value) =>
-                                        const SizedBox(
-                                      height: 8,
-                                    ),
-                                    itemCount: week.length,
-                                  ),
-                                  actions: [
-                                    TextButton(
-                                      onPressed: () {
-                                        Navigator.of(context).pop();
-                                      },
-                                      child: const Text('الغاء'),
-                                    ),
-                                    TextButton(
-                                      onPressed: () {
-                                        // Perform action with selected option
-                                        Navigator.of(context).pop();
-                                      },
-                                      child: const Text('حسنا'),
-                                    ),
-                                  ],
+                                      ),
+                                      actions: [
+                                        TextButton(
+                                          onPressed: () {
+                                            FocusManager.instance.primaryFocus
+                                                ?.unfocus();
+                                            Navigator.of(context).pop();
+                                          },
+                                          child: const Text('الغاء'),
+                                        ),
+                                        TextButton(
+                                          onPressed: () {
+                                            FocusManager.instance.primaryFocus
+                                                ?.unfocus();
+                                            if (_isDailySelected == false) {
+                                              setState(() {
+                                                _selectedOptions = removeValue(
+                                                    _selectedOptions);
+                                                setState(() {
+                                                  medDaysList =
+                                                      _selectedOptions;
+                                                });
+                                              });
+                                            }
+                                            Navigator.of(context).pop();
+                                          },
+                                          child: const Text('حسناً'),
+                                        ),
+                                      ],
+                                    );
+                                  },
                                 );
                               },
-                            );
-                          },
-                          style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all<Color>(
-                              AppColors.lightmintGreen,
-                            ),
-                            shape: MaterialStateProperty.all<
-                                RoundedRectangleBorder>(
-                              RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(18.0),
-                              ),
-                            ),
-                            elevation: MaterialStateProperty.all<double>(
-                              0.0,
-                            ),
-                          ),
-                          child: SizedBox(
-                            height: 70,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                const Text(
-                                  'تحديد الايام ',
-                                  style: TextStyle(fontSize: 18),
+                              style: ButtonStyle(
+                                backgroundColor:
+                                    MaterialStateProperty.all<Color>(
+                                  AppColors.mintGreen,
                                 ),
-                                Padding(
-                                  padding:
-                                      const EdgeInsets.symmetric(horizontal: 4),
-                                  child: Container(
-                                    height: 30,
-                                    width: 1,
-                                    color: AppColors.white,
+                                shape: MaterialStateProperty.all<
+                                    RoundedRectangleBorder>(
+                                  RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(25),
                                   ),
                                 ),
-                                const Icon(Icons.calendar_month),
-                              ],
+                                elevation: MaterialStateProperty.all<double>(
+                                  0.0,
+                                ),
+                              ),
+                              child: SizedBox(
+                                height: 75,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    const Text(
+                                      'ايام الدواء',
+                                      style: TextStyle(fontSize: 18),
+                                    ),
+                                    const SizedBox(
+                                      width: 10,
+                                    ),
+                                    Container(
+                                      height: 30,
+                                      width: 1.5,
+                                      color: AppColors.white,
+                                    ),
+                                    const SizedBox(
+                                      width: 10,
+                                    ),
+                                    const Icon(
+                                      Icons.edit_calendar_outlined,
+                                      size: 30,
+                                    ),
+                                  ],
+                                ),
+                              ),
                             ),
                           ),
-                        ),
+                        ],
                       ),
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Expanded(
-                        child: outlineButton(
-                          buttonText: 'الغاء',
-                          buttonColor: Colors.red,
-                          buttonTextColor: Colors.red,
-                        ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: outlineButton(
+                              height: 50,
+                              hoverColor: Colors.red,
+                              buttonText: 'الغاء',
+                              buttonColor: Colors.red,
+                              buttonTextColor: Colors.red,
+                              function: () {
+                                Navigator.pop(context);
+                              },
+                            ),
+                          ),
+                          const SizedBox(
+                            width: 10,
+                          ),
+                          Expanded(
+                            child: outlineButton(
+                                height: 50,
+                                buttonText: 'إنشاء',
+                                function: () async {
+                                  if (nameController.value.text.isNotEmpty &&
+                                      timeController.value.text.isNotEmpty) {
+                                    FlutterAlarmClock.createAlarm(
+                                        hourPicker!, minPicker!);
+
+                                    String rebeatCounts =
+                                        rebeat[_selectedOptionIndex];
+                                    if (rebeatCounts == 'مرة') {
+                                      setState(() {
+                                        count = 1;
+                                      });
+                                    } else if (rebeatCounts == 'مرتين') {
+                                      setState(() {
+                                        count = 2;
+                                      });
+                                    } else if (rebeatCounts == 'ثلاث مرات') {
+                                      setState(() {
+                                        count = 3;
+                                      });
+                                    } else if (rebeatCounts == 'اربع مرات') {
+                                      setState(() {
+                                        count = 4;
+                                      });
+                                    }
+
+                                    if (_isDailySelected) {
+                                      setState(() {
+                                        medDaysList = ['يومياً'];
+                                      });
+                                    } else {
+                                      setState(() {
+                                        medDaysList = medDaysList;
+                                      });
+                                    }
+                                    String daysList = medDaysList.join('، ');
+
+                                    final medItems = MedItems(
+                                        nameController.value.text,
+                                        daysList,
+                                        timeController.value.text,
+                                        count.toString());
+                                    log(medItems.toString());
+
+                                    Navigator.pop(context, medItems);
+                                  } else {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                          backgroundColor: Colors.red,
+                                          content: Text(
+                                              'هناك خطأ في البيانات يرجي ملء جميع الحقول')),
+                                    );
+                                  }
+                                }),
+                          ),
+                        ],
                       ),
-                      const SizedBox(
-                        width: 10,
-                      ),
-                      Expanded(
-                        child: outlineButton(
-                            buttonText: 'تعديل',
-                            function: () {
-                              if (_formKey.currentState!.validate()) {
-                                Navigator.push(
-                                    context,
-                                    PageTransition(
-                                        type: PageTransitionType.fade,
-                                        child: const medical_appointment()));
-                                FlutterAlarmClock.createAlarm(hour(), min());
-                              }
-                            }),
-                      ),
-                    ],
-                  ),
-                  Container(
-                    height: 20,
-                  )
-                ]),
+                    ),
+                  ]),
+                ),
               ),
             ),
           ),

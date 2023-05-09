@@ -1,4 +1,3 @@
-
 import 'package:dio/dio.dart';
 import 'package:memory_mate/networking/dio/models%20api/patient_user_api.dart';
 
@@ -164,11 +163,10 @@ class PatientUserRepository {
     }
   }
 
-  Future<List> getUserMemoryRequest(String userToken) async {
+  Future<Response> getUserMemoryRequest(String userToken) async {
     try {
-      final response = await patientUserApi.getUserMemories(userToken);
-      List userMemories = (response.data['memories']);
-      return userMemories;
+      final response = await patientUserApi.getUserMemories(userToken);   
+      return response;
     } on DioError catch (e) {
       final errorMessage = DioExceptions.fromDioError(e).toString();
       throw errorMessage;
@@ -176,7 +174,7 @@ class PatientUserRepository {
   }
 
 // Link with Caregiver
-  Future<Map<String,dynamic>> linkWithCaregiverRequest(
+  Future<Map<String, dynamic>> linkWithCaregiverRequest(
     String bio,
     String relation,
     String email,
@@ -185,7 +183,7 @@ class PatientUserRepository {
     try {
       final response =
           await patientUserApi.linkWithCaregiver(bio, relation, email, token);
-      Map<String,dynamic> caregiverInfoList = response.data;
+      Map<String, dynamic> caregiverInfoList = response.data;
       return caregiverInfoList;
     } on DioError catch (e) {
       final errorMessage = DioExceptions.fromDioError(e).toString();
@@ -193,18 +191,18 @@ class PatientUserRepository {
     }
   }
 
-Future<List> getPatientCaregiversRequest(String userToken) async {
+  Future<List> getPatientCaregiversRequest(String userToken) async {
     try {
       final response = await patientUserApi.getPatientCaregivers(userToken);
       List userCaregivers = (response.data);
-      return userCaregivers;   
+      return userCaregivers;
     } on DioError catch (e) {
       final errorMessage = DioExceptions.fromDioError(e).toString();
       throw errorMessage;
     }
   }
 
-Future<void> deleteCaregiverRequest(String id, String token) async {
+  Future<void> deleteCaregiverRequest(String id, String token) async {
     try {
       await patientUserApi.deleteCaregiver(id, token);
     } on DioError catch (e) {
@@ -213,15 +211,18 @@ Future<void> deleteCaregiverRequest(String id, String token) async {
     }
   }
 
-Future<List> getCaregiverPatientsRequest(String userToken) async {
+  Future<List> getCaregiverPatientsRequest(String userToken) async {
     try {
       final response = await patientUserApi.getCaregiverPatients(userToken);
       List userPatients = (response.data);
-      return userPatients;   
+      return userPatients;
     } on DioError catch (e) {
       final errorMessage = DioExceptions.fromDioError(e).toString();
       throw errorMessage;
     }
   }
+
+// Fcaes add and Detection with AI
+
 
 }

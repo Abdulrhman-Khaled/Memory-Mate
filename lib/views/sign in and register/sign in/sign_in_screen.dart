@@ -189,7 +189,9 @@ class _SignInState extends State<SignIn> {
                           context,
                           PageTransition(
                               type: PageTransitionType.fade,
-                              child: type == 'PATIENT' ? const PatientHomeScreen() : const CareGiverHomeScreen()),
+                              child: type == 'PATIENT'
+                                  ? const PatientHomeScreen()
+                                  : const CareGiverHomeScreen()),
                           (Route<dynamic> route) => false);
                     } catch (e) {
                       log(e.toString());

@@ -6,10 +6,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:memory_mate/constants/color_constatnts.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:memory_mate/providers/medicine_provider.dart';
 import 'package:memory_mate/views/splash%20and%20onboarding/splash_screen.dart';
-
 import 'models/board_adapter.dart';
-
+import 'package:provider/provider.dart' as provider;
 
 List<CameraDescription> cameras = [];
 Future<void> main() async {
@@ -30,7 +30,7 @@ Future<void> main() async {
 
   await Hive.initFlutter();
   Hive.registerAdapter(BoardAdapter());
- 
+
   try {
     cameras = await availableCameras();
   } on CameraException catch (e) {
@@ -39,33 +39,37 @@ Future<void> main() async {
     }
   }
 
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final MedicineListModel medicineListModel = MedicineListModel();
+  MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return ProviderScope(
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: 'Memory Mate',
-        localizationsDelegates: const [
-          GlobalMaterialLocalizations.delegate,
-          GlobalWidgetsLocalizations.delegate,
-          GlobalCupertinoLocalizations.delegate,
-        ],
-        supportedLocales: const [
-          Locale('ar', 'AE'),
-          Locale("en", "US"),
-          Locale("en", "UK"),
-        ],
-        theme: ThemeData(
-          fontFamily: 'Boutros',
-          primarySwatch: mintGreenMaterial,
+    return provider.ChangeNotifierProvider.value(
+      value: medicineListModel,
+      child: ProviderScope(
+        child: MaterialApp(
+          debugShowCheckedModeBanner: false,
+          title: 'Memory Mate',
+          localizationsDelegates: const [
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+          ],
+          supportedLocales: const [
+            Locale('ar', 'AE'),
+            Locale("en", "US"),
+            Locale("en", "UK"),
+          ],
+          theme: ThemeData(
+            fontFamily: 'Boutros',
+            primarySwatch: mintGreenMaterial,
+          ),
+          home: const SplashScreen(),
         ),
-        home: const SplashScreen(),
       ),
     );
   }

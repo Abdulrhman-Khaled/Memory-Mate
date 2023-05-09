@@ -68,6 +68,7 @@ Widget filledIconButton(
 Widget outlineButton(
         {double width = 200.0,
         double height = 40.0,
+        Color hoverColor = AppColors.mintGreen,
         Color buttonColor = AppColors.mintGreen,
         Color buttonTextColor = AppColors.mintGreen,
         double textSize = 20.0,
@@ -78,6 +79,7 @@ Widget outlineButton(
       height: height,
       child: OutlinedButton(
         style: OutlinedButton.styleFrom(
+            foregroundColor: hoverColor,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(20.0),
             ),

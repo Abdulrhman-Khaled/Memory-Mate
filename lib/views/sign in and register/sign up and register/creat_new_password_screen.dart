@@ -271,7 +271,7 @@ class _CreatPasswordScreenState extends State<CreatPasswordScreen> {
                     } else {
                       hidePrograssDialog();
                       ScaffoldMessenger.of(context).showSnackBar(
-                        
+                       
                         const SnackBar(
                             backgroundColor: Colors.red,
                             content: Text(

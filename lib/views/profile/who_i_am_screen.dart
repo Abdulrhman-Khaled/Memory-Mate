@@ -184,14 +184,20 @@ class _WhoIAmScreenState extends State<WhoIAmScreen>
     patientUserRepository = PatientUserRepository(userApi);
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     String? userToken = prefs.getString('currentUserToken');
-    List<dynamic> userMemories =
+    Response response =
         await patientUserRepository.getUserMemoryRequest(userToken!);
+    List<dynamic>? userMemories = (response.data['memories']);
 
-    log(userMemories.toString());
-    setState(() {
-      userAllMemories = userMemories;
-      isLoading = false;
-    });
+    if (userMemories.toString().isEmpty) {
+      setState(() {
+        isLoading = false;
+      });
+    } else {
+      setState(() {
+        userAllMemories = userMemories!;
+        isLoading = false;
+      });
+    }
   }
 
   @override
