@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 
@@ -5,7 +6,6 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:memory_mate/models/add_care_giver.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:simple_fontellico_progress_dialog/simple_fontico_loading.dart';
@@ -40,9 +40,6 @@ class _FamilyAndFriendsScreenState extends State<FamilyAndFriendsScreen>
   late DioClient dioClient;
   late PatientUserApi userApi;
   late PatientUserRepository patientUserRepository;
-
-  String imageLink =
-      'https://res.cloudinary.com/dpxzn12st/image/upload/v1682936932/users/o68ka20a9ud9caijqqwe.jpg';
 
   SimpleFontelicoProgressDialog? prograssDialog;
 
@@ -81,25 +78,32 @@ class _FamilyAndFriendsScreenState extends State<FamilyAndFriendsScreen>
     } else {}
   }
 
+  Future<String> fileToBase64(String path) async {
+    final file = File(path);
+    final bytes = await file.readAsBytes();
+    final base64 = base64Encode(bytes);
+    return base64;
+  }
+
   Future<void> refresh() async {
-    getUserCaregivers();
+    getUserFaces();
     setState(() {});
     refreshController.refreshCompleted();
   }
 
-  Future<void> getUserCaregivers() async {
+  Future<void> getUserFaces() async {
     dio = Dio();
     dioClient = DioClient(dio);
     userApi = PatientUserApi(dioClient: dioClient);
     patientUserRepository = PatientUserRepository(userApi);
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     String? userToken = prefs.getString('currentUserToken');
-    List<dynamic> userCaregivers =
-        await patientUserRepository.getPatientCaregiversRequest(userToken!);
+    List<dynamic> userAllFaces =
+        await patientUserRepository.getUserAllFaces(userToken!);
 
-    log(userCaregivers.toString());
+    log(userAllFaces.toString());
     setState(() {
-      careGiversList = userCaregivers;
+      careGiversList = userAllFaces;
       isLoading = false;
     });
   }
@@ -114,7 +118,7 @@ class _FamilyAndFriendsScreenState extends State<FamilyAndFriendsScreen>
           "email": "-",
           "full_name": name,
           "phone": "-",
-          "relation": "-"
+          "relation": "-",
         },
       );
     });
@@ -123,7 +127,7 @@ class _FamilyAndFriendsScreenState extends State<FamilyAndFriendsScreen>
   @override
   void initState() {
     super.initState();
-    getUserCaregivers();
+    getUserFaces();
     prograssDialog = SimpleFontelicoProgressDialog(context: context);
     _controller = AnimationController(
       duration: const Duration(seconds: 1),
@@ -312,21 +316,44 @@ class _FamilyAndFriendsScreenState extends State<FamilyAndFriendsScreen>
                                 )),
                             onTap: () async {
                               if (formKey.currentState!.validate()) {
-                                if (careGiverImageFile != null) {
-                                  AddCareGiver(
-                                      careName: careNameController.value.text,
-                                      careRelation:
-                                          careRelationController.value.text,
-                                      careImage: careGiverImageFile);
-                                  addCareGiverStater(
-                                      careNameController.value.text,
-                                      careRelationController.value.text);
+                                try {
+                                  if (careGiverImageFile != null) {
+                                    showPrograssDialog();
+                                    final SharedPreferences prefs =
+                                        await SharedPreferences.getInstance();
+                                    String? userToken =
+                                        prefs.getString('currentUserToken');
+                                    String image = await fileToBase64(
+                                        careGiverImageFile!.file.path
+                                            .toString());
 
-                                  Navigator.of(context).pop();
-                                } else {
-                                  Fluttertoast.showToast(
-                                      msg: 'لا يمكن إضافة شخص بدون صورة !',
-                                      backgroundColor: AppColors.mintGreen);
+                                    await patientUserRepository
+                                        .postUserNewFaceRequest(
+                                            careNameController.value.text,
+                                            careRelationController.value.text,
+                                            image,
+                                            userToken!);
+
+                                    await refresh();
+
+                                    await hidePrograssDialog();
+
+                                    // ignore: use_build_context_synchronously
+                                    Navigator.of(context).pop();
+
+                                  } else {
+                                    Fluttertoast.showToast(
+                                        msg: 'لا يمكن إضافة شخص بدون صورة !',
+                                        backgroundColor: AppColors.mintGreen);
+                                  }
+                                } catch (e) {
+                                  hidePrograssDialog();
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                        backgroundColor: Colors.red,
+                                        content: Text(
+                                            'حدث خطأ غير متوقع يرجي إعادة المحاولة')),
+                                  );
                                 }
                               }
                             },
@@ -366,116 +393,54 @@ class _FamilyAndFriendsScreenState extends State<FamilyAndFriendsScreen>
                     controller: refreshController,
                     enablePullDown: true,
                     onRefresh: refresh,
-                    child: ListView.builder(
+                    child: GridView.builder(
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                        ),
                         itemCount: careGiversList.length,
                         itemBuilder: (context, index) {
-                          return Dismissible(
-                              key: UniqueKey(),
-                              direction: DismissDirection.startToEnd,
-                              background: Container(
-                                color: Colors.red,
-                                child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: const [
-                                      Text(
-                                        'حذف',
-                                        style: TextStyle(
-                                            fontSize: 20,
-                                            color: AppColors.white),
-                                      ),
-                                      Icon(
-                                        Icons.delete_outline,
-                                        color: AppColors.white,
-                                        size: 35,
-                                      ),
-                                    ]),
-                              ),
-                              onDismissed: (direction) async {
-                                final SharedPreferences prefs =
-                                    await SharedPreferences.getInstance();
-                                String? userToken =
-                                    prefs.getString('currentUserToken');
-
-                                await patientUserRepository
-                                    .deleteMemoryUserRequest(
-                                        careGiversList[index]['id'].toString(),
-                                        userToken!);
-                                setState(() {
-                                  careGiversList.removeAt(index);
-                                });
-                              },
-                              confirmDismiss:
-                                  (DismissDirection direction) async {
-                                return await showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return AlertDialog(
-                                      title: const Text(
-                                        'تأكيد حذف مقدم الرعاية',
-                                        textAlign: TextAlign.center,
-                                      ),
-                                      content: const Text(
-                                        'هل تريد حذف هذا الشخص بالفعل؟',
-                                        textAlign: TextAlign.center,
-                                      ),
-                                      actions: <Widget>[
-                                        TextButton(
-                                          onPressed: () =>
-                                              Navigator.of(context).pop(false),
-                                          child: const Text('إلغاء'),
-                                        ),
-                                        TextButton(
-                                          onPressed: () {
-                                            Navigator.of(context).pop(true);
-                                          },
-                                          child: const Text('حذف'),
-                                        ),
-                                      ],
-                                    );
-                                  },
-                                );
-                              },
-                              child: Card(
-                                shadowColor: Colors.transparent,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(20.0),
-                                ),
-                                color: const Color.fromARGB(255, 244, 244, 244),
-                                child: Directionality(
-                                  textDirection: TextDirection.rtl,
-                                  child: Row(
-                                    children: [
-                                      Container(
-                                        padding: const EdgeInsets.fromLTRB(
-                                            5, 10, 10, 10),
-                                        child: Image(
-                                            width: 100,
-                                            height: 100,
-                                            image: NetworkImage(imageLink)),
-                                      ),
-                                      Expanded(
-                                        child: ListTile(
-                                          title: Text(
-                                            careGiversList[index]['full_name'],
-                                            style: const TextStyle(
-                                                fontSize: 22,
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                          subtitle: Text(
-                                            careGiversList[index]['bio'],
-                                            style: const TextStyle(
-                                                fontSize: 18,
-                                                color: AppColors.mintGreen,
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
+                          return Card(
+                            shadowColor: AppColors.mintGreen,
+                            elevation: 3,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20.0),
+                            ),
+                            color: const Color.fromARGB(255, 244, 244, 244),
+                            child: Directionality(
+                              textDirection: TextDirection.rtl,
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Image(
+                                      width: 100,
+                                      height: 100,
+                                      image: NetworkImage(
+                                          careGiversList[index]['face_url'])),
+                                  const SizedBox(
+                                    height: 10,
                                   ),
-                                ),
-                              ));
+                                  Text(
+                                    careGiversList[index]['name'],
+                                    style: const TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  const SizedBox(
+                                    height: 3,
+                                  ),
+                                  Text(
+                                    careGiversList[index]['bio'],
+                                    style: const TextStyle(
+                                        fontSize: 18,
+                                        color: AppColors.mintGreen,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
                         }),
                   ));
   }

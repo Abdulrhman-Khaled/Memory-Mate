@@ -128,7 +128,7 @@ class PatientUserApi {
     }
   }
 
-   Future<Response> verifyOtpRequest(
+  Future<Response> verifyOtpRequest(
     String code,
     String token,
   ) async {
@@ -205,7 +205,7 @@ class PatientUserApi {
   }
 
 // Link with Caregiver
-Future<Response> linkWithCaregiver(
+  Future<Response> linkWithCaregiver(
     String bio,
     String relation,
     String email,
@@ -215,9 +215,7 @@ Future<Response> linkWithCaregiver(
       final Response response = await dioClient.post(
         Endpoints.contacts,
         userToken: token,
-        data: {"relation": relation,
-        "bio": bio,
-        "email": email},
+        data: {"relation": relation, "bio": bio, "email": email},
       );
       return response;
     } catch (e) {
@@ -225,7 +223,7 @@ Future<Response> linkWithCaregiver(
     }
   }
 
-Future<Response> getPatientCaregivers(String userToken) async {
+  Future<Response> getPatientCaregivers(String userToken) async {
     try {
       final Response response = await dioClient
           .get('${Endpoints.contacts}/caregivers', userToken: userToken);
@@ -235,17 +233,16 @@ Future<Response> getPatientCaregivers(String userToken) async {
     }
   }
 
-Future<void> deleteCaregiver(String id, String token) async {
+  Future<void> deleteCaregiver(String id, String token) async {
     try {
-      await dioClient.delete('${Endpoints.contacts}/$id',
-          userToken: token);
+      await dioClient.delete('${Endpoints.contacts}/$id', userToken: token);
     } catch (e) {
       rethrow;
     }
   }
 
 // fetch patients to caregiver
-Future<Response> getCaregiverPatients(String userToken) async {
+  Future<Response> getCaregiverPatients(String userToken) async {
     try {
       final Response response = await dioClient
           .get('${Endpoints.contacts}/patients', userToken: userToken);
@@ -256,4 +253,69 @@ Future<Response> getCaregiverPatients(String userToken) async {
   }
 
 // Fcaes add and Detection with AI
+  Future<Response> getPatientFaces(String userToken) async {
+    try {
+      final Response response =
+          await dioClient.get('/userfaces', userToken: userToken);
+      return response;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<Response> postPtientNewface(
+    String name,
+    String bio,
+    String face,
+    String token,
+  ) async {
+    try {
+      final Response response = await dioClient.post(
+        "/userfaces",
+        userToken: token,
+        data: {
+          'name': name,
+          'bio': bio,
+          'face_url': face,
+        },
+      );
+      return response;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<Response> postFaceToDetect(
+    String face,
+    String token,
+  ) async {
+    try {
+      final Response response = await dioClient.post(
+        "/Face/RecBase64",
+        userToken: token,
+        data: {
+          'pic': face,
+        },
+      );
+      return response;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<Response> postXRayToDetect(
+    String xRay,
+  ) async {
+    try {
+      final Response response = await dioClient.post(
+        "/Alzahemer/sendBase64",
+        data: {
+          'pic': xRay,
+        },
+      );
+      return response;
+    } catch (e) {
+      rethrow;
+    }
+  }
 }

@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:developer';
 
 import 'package:dio/dio.dart';
@@ -11,6 +12,8 @@ import '../../../constants/color_constatnts.dart';
 import '../../../networking/dio/api/dio_client.dart';
 import '../../../networking/dio/models api/patient_user_api.dart';
 import '../../../networking/dio/repositories/patient_user_repsitory.dart';
+// ignore: depend_on_referenced_packages
+import 'package:http/http.dart' as http;
 
 class LinkWithCaregiverScreen extends StatefulWidget {
   const LinkWithCaregiverScreen({super.key});
@@ -50,6 +53,17 @@ class _LinkWithCaregiverScreenState extends State<LinkWithCaregiverScreen> {
 
   Future<void> hidePrograssDialog() async {
     prograssDialog!.hide();
+  }
+
+  Future<String> imageLinkToBase64(String imageUrl) async {
+    // Download the image bytes
+    final response = await http.get(Uri.parse(imageUrl));
+    final bytes = response.bodyBytes;
+
+    // Encode the bytes as Base64
+    final base64 = base64Encode(bytes);
+
+    return base64;
   }
 
   @override
@@ -144,16 +158,32 @@ class _LinkWithCaregiverScreenState extends State<LinkWithCaregiverScreen> {
                               String? userToken =
                                   prefs.getString('currentUserToken');
 
-                              Map<String, dynamic> caregiverLinkedInfo =
-                                  await patientUserRepository
-                                      .linkWithCaregiverRequest(
-                                          bioController.value.text,
-                                          "close",
-                                          emailController.value.text,
-                                          userToken!);
-                              log(caregiverLinkedInfo.toString());
+                              await patientUserRepository
+                                  .linkWithCaregiverRequest(
+                                      bioController.value.text,
+                                      "close",
+                                      emailController.value.text,
+                                      userToken!);
 
-                              log(caregiverLinkedInfo['id'].toString());
+                              List userCaregivers = await patientUserRepository
+                                  .getPatientCaregiversRequest(userToken);
+
+                              int userId = userCaregivers[0]['user_id'];
+                              log(userId.toString());
+                              log(userCaregivers.toString());
+
+                              String name =
+                                  userCaregivers[0]['full_name'].toString();
+                              String bio = userCaregivers[0]['bio'].toString();
+                              String photo =
+                                  userCaregivers[0]['photo_path'].toString();
+
+                              String convertedPhoto =
+                                  await imageLinkToBase64(photo);
+
+                              await patientUserRepository
+                                  .postUserNewFaceRequest(
+                                      name, bio, convertedPhoto, userToken);
 
                               hidePrograssDialog();
 

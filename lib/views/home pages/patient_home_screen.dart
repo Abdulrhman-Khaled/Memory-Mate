@@ -26,6 +26,7 @@ import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../games and practice/onbord.dart';
 import '../medicines and alarms/medical_appointment.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class PatientHomeScreen extends StatefulWidget {
   const PatientHomeScreen({super.key});
@@ -39,6 +40,8 @@ class _PatientHomeScreenState extends State<PatientHomeScreen> {
   late DioClient dioClient;
   late PatientUserApi userApi;
   late PatientUserRepository patientUserRepository;
+
+  late FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
 
   String username = '';
 
@@ -126,6 +129,32 @@ class _PatientHomeScreenState extends State<PatientHomeScreen> {
     super.initState();
     getUserInfo();
     prograssDialog = SimpleFontelicoProgressDialog(context: context);
+    var initializationSettingsAndroid =
+        const AndroidInitializationSettings('launch_background');
+
+    var initializationSettings = InitializationSettings(
+      android: initializationSettingsAndroid,
+    );
+
+    flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+    flutterLocalNotificationsPlugin.initialize(initializationSettings);
+    scheduleNotifications();
+  }
+
+  void scheduleNotifications() async {
+    var androidPlatformChannelSpecifics = const AndroidNotificationDetails(
+        'channel_id', 'channel_name',
+        channelDescription: 'channel_description',
+        importance: Importance.high,
+        priority: Priority.high,
+        ticker: 'ticker');
+
+    var platformChannelSpecifics = NotificationDetails(
+      android: androidPlatformChannelSpecifics,
+    );
+
+    await flutterLocalNotificationsPlugin.periodicallyShow(
+        0, 'Title', 'Body', RepeatInterval.hourly, platformChannelSpecifics);
   }
 
   @override

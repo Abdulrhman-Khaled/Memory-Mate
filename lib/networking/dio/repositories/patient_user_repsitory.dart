@@ -165,7 +165,7 @@ class PatientUserRepository {
 
   Future<Response> getUserMemoryRequest(String userToken) async {
     try {
-      final response = await patientUserApi.getUserMemories(userToken);   
+      final response = await patientUserApi.getUserMemories(userToken);
       return response;
     } on DioError catch (e) {
       final errorMessage = DioExceptions.fromDioError(e).toString();
@@ -223,6 +223,56 @@ class PatientUserRepository {
   }
 
 // Fcaes add and Detection with AI
+  Future<List> getUserAllFaces(String userToken) async {
+    try {
+      final response = await patientUserApi.getPatientFaces(userToken);
+      List userFaces = (response.data);
+      return userFaces;
+    } on DioError catch (e) {
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      throw errorMessage;
+    }
+  }
 
+  Future<Response> postUserNewFaceRequest(
+    String name,
+    String bio,
+    String face,
+    String token,
+  ) async {
+    try {
+      final response =
+          await patientUserApi.postPtientNewface(name, bio, face, token);
+      return response;
+    } on DioError catch (e) {
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      throw errorMessage;
+    }
+  }
 
+  Future<Map<String, dynamic>> postFaceToDetectRequest(
+    String face,
+    String token,
+  ) async {
+    try {
+      final response = await patientUserApi.postFaceToDetect(face, token);
+      Map<String, dynamic> detectionResult = (response.data['Person Info']);
+      return detectionResult;
+    } on DioError catch (e) {
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      throw errorMessage;
+    }
+  }
+
+  Future<Response> postXRayToDetectRequest(
+    String xRay,
+  ) async {
+    try {
+      final response = await patientUserApi.postXRayToDetect(xRay);
+      return response;
+    } on DioError catch (e) {
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      throw errorMessage;
+    }
+  }
 }

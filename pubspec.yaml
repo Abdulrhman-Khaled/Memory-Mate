@@ -73,6 +73,7 @@ dependencies:
   geocoding:
   flutter_polyline_points:
   animated_text_kit: 
+  flutter_local_notifications:
 
   
   
