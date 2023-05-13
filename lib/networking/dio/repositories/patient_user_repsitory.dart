@@ -275,4 +275,30 @@ class PatientUserRepository {
       throw errorMessage;
     }
   }
+
+// post and get location
+  Future<Response> postUserLocationRequest(
+    double lat,
+    double lng,
+    String token,
+  ) async {
+    try {
+      final response = await patientUserApi.postUserLocation(lat, lng, token);
+      return response;
+    } on DioError catch (e) {
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      throw errorMessage;
+    }
+  }
+
+  Future<List> getSecondUserLocationRequest(String userToken) async {
+    try {
+      final response = await patientUserApi.getUserLocation(userToken);
+      List secondUser = (response.data);
+      return secondUser;
+    } on DioError catch (e) {
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      throw errorMessage;
+    }
+  }
 }

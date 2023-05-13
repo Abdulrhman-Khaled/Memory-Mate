@@ -74,6 +74,13 @@ dependencies:
   flutter_polyline_points:
   animated_text_kit: 
   flutter_local_notifications:
+  flutter_bloc: 
+  sqflite: 
+  conditional_builder_null_safety:
+  simple_speed_dial: 
+  easy_localization: 
+  
+  
 
   
   

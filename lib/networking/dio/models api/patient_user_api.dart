@@ -318,4 +318,40 @@ class PatientUserApi {
       rethrow;
     }
   }
+
+// location post and get
+  Future<Response> postUserLocation(
+    double lat,
+    double lng,
+    String token,
+  ) async {
+    try {
+      final Response response = await dioClient.post(
+        "/userlocation",
+        userToken: token,
+        data: {
+          'lat': lat,
+          'lng': lng,
+        },
+      );
+      return response;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<Response> getUserLocation(
+    String token,
+  ) async {
+    try {
+      final Response response = await dioClient.get(
+        "/userlocation",
+        userToken: token,
+      );
+
+      return response;
+    } catch (e) {
+      rethrow;
+    }
+  }
 }

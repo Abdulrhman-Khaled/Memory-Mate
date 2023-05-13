@@ -7,7 +7,9 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:memory_mate/constants/color_constatnts.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:memory_mate/providers/medicine_provider.dart';
+import 'package:memory_mate/providers/second_user_location.dart';
 import 'package:memory_mate/views/splash%20and%20onboarding/splash_screen.dart';
+import 'package:provider/provider.dart';
 import 'models/board_adapter.dart';
 import 'package:provider/provider.dart' as provider;
 
@@ -44,16 +46,22 @@ Future<void> main() async {
 
 class MyApp extends StatelessWidget {
   final MedicineListModel medicineListModel = MedicineListModel();
+  final SecondUserLocationProvider secondUserLocationProvider =
+      SecondUserLocationProvider();
   MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return provider.ChangeNotifierProvider.value(
-      value: medicineListModel,
+    return MultiProvider(
+      providers: [
+        provider.ChangeNotifierProvider.value(value: medicineListModel),
+        provider.ChangeNotifierProvider.value(
+            value: secondUserLocationProvider),
+      ],
       child: ProviderScope(
         child: MaterialApp(
           debugShowCheckedModeBanner: false,
-          title: 'Memory Mate',
+          title: 'رفيق الذاكرة',
           localizationsDelegates: const [
             GlobalMaterialLocalizations.delegate,
             GlobalWidgetsLocalizations.delegate,

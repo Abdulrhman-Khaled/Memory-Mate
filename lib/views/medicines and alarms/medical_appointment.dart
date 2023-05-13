@@ -120,7 +120,10 @@ class medical_appointmentState extends State<medical_appointment> {
             ),
             Expanded(
               child: _filteredItems.isEmpty
-                  ? Image.asset('assets/images/pictures/Group 218.png')
+                  ? Image.asset(
+                      'assets/images/pictures/Group 218.png',
+                      width: 300,
+                    )
                   : ListView.separated(
                       itemBuilder: ((context, index) => Dismissible(
                             direction: DismissDirection.startToEnd,

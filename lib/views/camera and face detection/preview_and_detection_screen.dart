@@ -151,7 +151,8 @@ class _PreviewAndDetectionScreenState extends State<PreviewAndDetectionScreen> {
 
                             String detectName = filteredList[0]['name'];
                             String detectBio = filteredList[0]['bio'];
-                            String detectImageLink = filteredList[0]['face_url'];
+                            String detectImageLink =
+                                filteredList[0]['face_url'];
 
                             // ignore: use_build_context_synchronously
                             await showDialog(
@@ -192,7 +193,8 @@ class MyDialog extends StatelessWidget {
   final String text;
   final String imageLink;
 
-  const MyDialog({super.key, 
+  const MyDialog({
+    super.key,
     required this.name,
     required this.bio,
     required this.text,
@@ -202,21 +204,39 @@ class MyDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text("تحديد الشخص"),
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Image.network(imageLink),
-          const SizedBox(height: 16),
-          const Text("", style: TextStyle(fontSize: 18)),
-          const SizedBox(height: 8),
-          Text(text),
-        ],
+      title: const Text("تحديد الشخص",
+          style: TextStyle(fontSize: 18, color: AppColors.mintGreen)),
+      content: Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Image.network(
+              imageLink,
+              width: 100,
+              height: 100,
+            ),
+            const SizedBox(height: 10),
+            Text(text,
+                style:
+                    const TextStyle(fontSize: 18, color: AppColors.mintGreen)),
+            const SizedBox(height: 5),
+            Text(name,
+                style:
+                    const TextStyle(fontSize: 20, color: AppColors.lightBlack)),
+            const SizedBox(height: 5),
+            Text(bio,
+                style:
+                    const TextStyle(fontSize: 20, color: AppColors.lightBlack)),
+          ],
+        ),
       ),
       actions: [
         TextButton(
           onPressed: () => Navigator.of(context).pop(),
-          child: const Text('حسناً'),
+          child: const Text('حسناً',
+              style: TextStyle(fontSize: 16, color: AppColors.mintGreen)),
         ),
       ],
     );

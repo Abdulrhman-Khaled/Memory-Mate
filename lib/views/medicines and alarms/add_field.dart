@@ -1,3 +1,5 @@
+
+
 import 'package:flutter/material.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 
@@ -71,6 +73,64 @@ Widget addfield({
               icon,
               size: 32,
               color: AppColors.mintGreen,
+            ),
+          ),
+        ],
+      ),
+    );
+
+Widget addfield2({
+  required String hint,
+  String assest = 'assets/images/pictures/medicine.png',
+  IconData icon = Icons.label_outline,
+  double height = 83,
+  double iconSize = 35,
+  String text = "يرجي ملأ هذا الفراغ",
+  required TextEditingController nameController,
+}) =>
+    SizedBox(
+      height: 70,
+      width: 250,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          SizedBox(
+            width: 120,
+            child: TextFormField(
+              controller: nameController,
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return text;
+                }
+                return null;
+              },
+              cursorHeight: 25,
+              textDirection: TextDirection.rtl,
+              decoration: InputDecoration(
+                hintMaxLines: 2,
+                border: InputBorder.none,
+                hintText: hint,
+                hintTextDirection: TextDirection.rtl,
+              ),
+            ),
+          ),
+          const SizedBox(
+            width: 10,
+          ),
+          Container(
+            width: 1.5,
+            color: AppColors.mintGreen,
+            height: 50,
+          ),
+          const SizedBox(
+            width: 10,
+          ),
+          Container(
+            margin: const EdgeInsets.fromLTRB(0, 0, 10, 0),
+            child: Transform(
+              alignment: Alignment.center,
+              transform: Matrix4.rotationY(3.14),
+              child: Icon(icon, size: 30, color: AppColors.mintGreen),
             ),
           ),
         ],

@@ -11,6 +11,7 @@ import 'package:memory_mate/views/home%20pages/drawer%20pages/link_with_casregiv
 import 'package:memory_mate/views/maps%20and%20locations/map_view_screen.dart';
 import 'package:memory_mate/views/profile/who_i_am_screen.dart';
 import 'package:memory_mate/views/splash%20and%20onboarding/sign_in_or_register_screen.dart';
+import 'package:memory_mate/views/todo%20and%20mission/todo.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -142,6 +143,14 @@ class _PatientHomeScreenState extends State<PatientHomeScreen> {
   }
 
   void scheduleNotifications() async {
+    var randomQuatosList = [
+      'انا تطبيق رفيق الذاكرة اود ان اطمئن ان كل شئ بخير واريد اخبارك ان الذكريات هي اليوميات المميزة التي نتذكرها مدي الحياة، قم بتدوين ذكرياتك مع عائلتك واصدقائك واحتفظ بها',
+      'انا تطبيق رفيق الذاكرة اود ان اطمئن ان كل شئ علي ما يرام ونصيحتي لك هي الا تدع يومك يمر عبثا ، نشط ذاكرتك بالممارسات اليومية ،دون مهامك وابدأ في تنفيذها الآن، نتمني لك يوماً سعيداً',
+      'انا تطبيق رفيق الذاكرة اود ان اطمئن عليك وارجو ان تحافظ علي صحتك وتتناول ادويتك في مواعيدها؛ هناك الكثير من الاشخاص الذين يهمهم امرك وصحتك، دمت بخير وسعادة',
+    ];
+    final random = Random();
+    String element = randomQuatosList[random.nextInt(randomQuatosList.length)];
+
     var androidPlatformChannelSpecifics = const AndroidNotificationDetails(
         'channel_id', 'channel_name',
         channelDescription: 'channel_description',
@@ -154,19 +163,17 @@ class _PatientHomeScreenState extends State<PatientHomeScreen> {
     );
 
     await flutterLocalNotificationsPlugin.periodicallyShow(
-        0, 'Title', 'Body', RepeatInterval.hourly, platformChannelSpecifics);
+        0,
+        'تطبيق رفيق الذاكرة',
+        element,
+        RepeatInterval.hourly,
+        platformChannelSpecifics);
   }
 
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
-
-    var randomQuatosList = [
-      'نتمني ان يكون كل شئ بخير',
-    ];
-    final random = Random();
-    String element = randomQuatosList[random.nextInt(randomQuatosList.length)];
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: const SystemUiOverlayStyle(
@@ -384,16 +391,16 @@ class _PatientHomeScreenState extends State<PatientHomeScreen> {
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
                                       Text(
-                                        'مرحبا يا $username',
+                                        'مرحباً يا $username',
                                         textAlign: TextAlign.end,
                                         style: const TextStyle(
                                             fontSize: 22,
                                             color: AppColors.lightBlack),
                                       ),
-                                      Text(
-                                        element,
+                                      const Text(
+                                        'نتمني ان يكون كل شئ بخير',
                                         textAlign: TextAlign.start,
-                                        style: const TextStyle(
+                                        style: TextStyle(
                                             fontSize: 15,
                                             color: AppColors.lightBlack),
                                       ),
@@ -714,7 +721,14 @@ class _PatientHomeScreenState extends State<PatientHomeScreen> {
                                                 BorderRadius.circular(25.0),
                                           ),
                                         ),
-                                        onPressed: () {},
+                                        onPressed: () {
+                                          Navigator.push(
+                                            context,
+                                            PageTransition(
+                                                type: PageTransitionType.fade,
+                                                child: const Todo()),
+                                          );
+                                        },
                                         child: Column(
                                           mainAxisAlignment:
                                               MainAxisAlignment.center,
