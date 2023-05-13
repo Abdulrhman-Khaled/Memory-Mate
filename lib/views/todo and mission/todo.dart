@@ -85,14 +85,10 @@ class _TodoState extends State<Todo> {
     refreshController.refreshCompleted();
   }
 
-
   @override
   void initState() {
     super.initState();
-    AppCubit cubit = AppCubit.get(context);
-    cubit.createDatabase();
   }
-
 
   @override
   Widget build(BuildContext context) {

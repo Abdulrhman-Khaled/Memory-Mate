@@ -13,7 +13,7 @@ class AppCubit extends Cubit<AppStates> {
   AppCubit() : super(AppInitialStates());
   static AppCubit get(context) => BlocProvider.of(context);
 
-  Database? db;
+  late Database db;
   List<Map> newtasks = [];
   List<Map> tasks = [];
   List<Map> startasks = [];
@@ -39,32 +39,34 @@ class AppCubit extends Cubit<AppStates> {
 
   void createDatabase() {
     openDatabase('todotasks.db', version: 1, onCreate: (db, version) {
-    db.execute(
+      db
+          .execute(
               'CREATE TABLE todotasks (id INTEGER PRIMARY KEY,star INTEGER, date TEXT, title TEXT, disc TEXT, time TEXT,done TEXT)')
           // ignore: avoid_print
           .then((value) => print('table created'))
           // ignore: avoid_print
           .catchError((onError) => print('error found'));
     }, onOpen: (db) {
-      getDatafromDatabase(db);
+      //
       // ignore: avoid_print
       print('database opened');
     }).then((value) {
       db = value;
+      getDatafromDatabase(db);
       emit(AppcreateDatabaseState());
     });
   }
 
   void updateStatus({required int id, required String done}) async {
-    db!.rawUpdate(
-        'UPDATE todotasks SET done = ? WHERE id = ?', [done, id]).then((value) {
+    db.rawUpdate('UPDATE todotasks SET done = ? WHERE id = ?', [done, id]).then(
+        (value) {
       getDatafromDatabase(db);
       emit(ApptDatabaseUpdateState());
     });
   }
 
   void deleteStatus({required int id}) async {
-    db!.rawDelete('DELETE FROM todotasks WHERE id = ?', [id]).then((value) {
+    db.rawDelete('DELETE FROM todotasks WHERE id = ?', [id]).then((value) {
       getDatafromDatabase(db);
       emit(ApptDatabaseDeleteState());
     });
@@ -77,7 +79,7 @@ class AppCubit extends Cubit<AppStates> {
     required String time,
     required bool star,
   }) async {
-    await db?.transaction((txn) async {
+    await db.transaction((txn) async {
       txn
           .rawInsert(
               'INSERT INTO todotasks( star, date, title, disc, time,done) VALUES("$star","$date","$title","$disc","$time","False" )')
@@ -96,14 +98,13 @@ class AppCubit extends Cubit<AppStates> {
   }
 
   void getDatafromDatabase(db) {
+    newtasks = [];
+    donetasks = [];
+    startasks = [];
     emit(ApptDatabaseLoadState());
     db.rawQuery('SELECT * FROM todotasks').then(
       (value) {
-        newtasks = [];
-        donetasks = [];
-        startasks = [];
         tasks = value;
-
         for (var task in tasks) {
           if (task['done'] == 'true') {
             donetasks.add(task);
