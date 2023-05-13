@@ -226,6 +226,7 @@ class _MapViewScreenState extends State<MapViewScreen> {
 
   @override
   void dispose() {
+    mapController.dispose();
     timer.cancel();
     super.dispose();
   }

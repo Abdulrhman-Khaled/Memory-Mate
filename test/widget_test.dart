@@ -13,7 +13,7 @@ import 'package:memory_mate/main.dart';
 
 void main() {
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
+    // Build our app and trigger the frame.
     await tester.pumpWidget(MyApp());
 
     // Verify that our counter starts at 0.

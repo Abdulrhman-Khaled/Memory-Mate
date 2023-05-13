@@ -151,12 +151,19 @@ class _PatientHomeScreenState extends State<PatientHomeScreen> {
     final random = Random();
     String element = randomQuatosList[random.nextInt(randomQuatosList.length)];
 
-    var androidPlatformChannelSpecifics = const AndroidNotificationDetails(
-        'channel_id', 'channel_name',
-        channelDescription: 'channel_description',
-        importance: Importance.high,
-        priority: Priority.high,
-        ticker: 'ticker');
+    var androidPlatformChannelSpecifics = AndroidNotificationDetails(
+      'channel_id',
+      'channel_name',
+      channelDescription: 'channel_description',
+      importance: Importance.high,
+      priority: Priority.high,
+      ticker: 'ticker',
+      styleInformation: BigTextStyleInformation(
+        element,
+        contentTitle: 'تطبيق رفيق الذاكرة',
+        summaryText: 'إشعار جديد',
+      ),
+    );
 
     var platformChannelSpecifics = NotificationDetails(
       android: androidPlatformChannelSpecifics,
@@ -305,6 +312,7 @@ class _PatientHomeScreenState extends State<PatientHomeScreen> {
                 height: 0.5,
                 thickness: 0.5,
               ),
+
               Expanded(
                 child: Align(
                   alignment: Alignment.bottomCenter,

@@ -25,7 +25,6 @@ Future<void> main() async {
     systemNavigationBarIconBrightness: Brightness.light, //navigation bar icon
   ));
   WidgetsFlutterBinding.ensureInitialized();
-  // mariem edit
   await SystemChrome.setPreferredOrientations(
     [DeviceOrientation.portraitUp],
   );
@@ -40,7 +39,6 @@ Future<void> main() async {
       print('Error in fetching the cameras: $e');
     }
   }
-
   runApp(MyApp());
 }
 
