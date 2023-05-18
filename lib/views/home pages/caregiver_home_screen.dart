@@ -8,6 +8,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:simple_fontellico_progress_dialog/simple_fontico_loading.dart';
 
 import '../../constants/color_constatnts.dart';
+import '../camera and face detection/ai_rays_detect.dart';
 import '../maps and locations/map_view_screen.dart';
 import '../splash and onboarding/sign_in_or_register_screen.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -442,12 +443,12 @@ class _CareGiverHomeScreenState extends State<CareGiverHomeScreen> {
                                         ),
                                       ),
                                       onPressed: () {
-                                        /*Navigator.push(
+                                        Navigator.push(
                                           context,
                                           PageTransition(
                                               type: PageTransitionType.fade,
-                                              child: const OnBoard()),
-                                        );*/
+                                              child: const raysDetect()),
+                                        );
                                       },
                                       child: Column(
                                         mainAxisAlignment:
@@ -503,7 +504,7 @@ class _CareGiverHomeScreenState extends State<CareGiverHomeScreen> {
                                             MainAxisAlignment.center,
                                         children: <Widget>[
                                           Image.asset(
-                                            'assets/images/pictures/linkedpatient.png',
+                                            'assets/images/icons/family.png',
                                             width: 100,
                                             height: 80,
                                           ),

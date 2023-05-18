@@ -177,6 +177,7 @@ class _PreviewAndDetectionScreenState extends State<PreviewAndDetectionScreen> {
                                                 'تم التعرف علي هذا الشخص بنجاح الا تتذكره؟؟',
                                             imageLink: detectImageLink);
                                       });
+                            hidePrograssDialog();
 
                             log(result.toString());
                           })),
@@ -204,39 +205,51 @@ class MyDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text("تحديد الشخص",
-          style: TextStyle(fontSize: 18, color: AppColors.mintGreen)),
-      content: Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Image.network(
-              imageLink,
-              width: 100,
-              height: 100,
-            ),
-            const SizedBox(height: 10),
-            Text(text,
-                style:
-                    const TextStyle(fontSize: 18, color: AppColors.mintGreen)),
-            const SizedBox(height: 5),
-            Text(name,
-                style:
-                    const TextStyle(fontSize: 20, color: AppColors.lightBlack)),
-            const SizedBox(height: 5),
-            Text(bio,
-                style:
-                    const TextStyle(fontSize: 20, color: AppColors.lightBlack)),
-          ],
-        ),
+      title: const Center(
+        child: Text("تحديد الشخص",
+            style: TextStyle(
+                fontSize: 22,
+                color: AppColors.mintGreen,
+                fontWeight: FontWeight.bold)),
+      ),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Image.network(
+            imageLink,
+            width: 300,
+            height: 300,
+          ),
+          const SizedBox(height: 20),
+          Text(text,
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                fontSize: 22,
+                color: AppColors.lightBlack,
+              )),
+          const SizedBox(height: 10),
+          Text('اسم الشخص : $name',
+              style: const TextStyle(
+                  fontSize: 20,
+                  color: AppColors.mintGreen,
+                  fontWeight: FontWeight.bold)),
+          const SizedBox(height: 5),
+          Text('العلاقة : $bio',
+              style: const TextStyle(
+                  fontSize: 20,
+                  color: AppColors.lightBlack,
+                  fontWeight: FontWeight.bold)),
+        ],
       ),
       actions: [
         TextButton(
           onPressed: () => Navigator.of(context).pop(),
-          child: const Text('حسناً',
-              style: TextStyle(fontSize: 16, color: AppColors.mintGreen)),
+          child: const Center(
+            child: Text('حسناً',
+                style: TextStyle(fontSize: 20, color: AppColors.mintGreen)),
+          ),
         ),
       ],
     );

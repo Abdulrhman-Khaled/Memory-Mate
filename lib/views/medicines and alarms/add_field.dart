@@ -1,5 +1,3 @@
-
-
 import 'package:flutter/material.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 
@@ -164,14 +162,14 @@ Widget appointment({
                   SizedBox(
                     width: 50,
                     child: Switcher(
-                      value: false,
+                      value: true,
                       size: SwitcherSize.small,
                       switcherButtonRadius: 50,
                       enabledSwitcherButtonRotate: true,
                       colorOff: AppColors.lightGrey.withOpacity(0.3),
                       colorOn: AppColors.mintGreen,
                       onChanged: (bool state) {
-                        //
+                        
                       },
                     ),
                   ),

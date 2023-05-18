@@ -17,7 +17,7 @@ List<CameraDescription> cameras = [];
 Future<void> main() async {
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
     systemNavigationBarColor: AppColors.mintGreen, // navigation bar color
-    statusBarColor: AppColors.white, // status bar color
+    statusBarColor: AppColors.white,
     statusBarBrightness: Brightness.dark, //status bar brigtness
     statusBarIconBrightness: Brightness.dark, //status barIcon Brightness
     systemNavigationBarDividerColor:

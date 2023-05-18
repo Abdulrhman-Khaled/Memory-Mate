@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -154,6 +155,11 @@ class _FamilyAndFriendsScreenState extends State<FamilyAndFriendsScreen>
 
   Future<void> hidePrograssDialog() async {
     prograssDialog!.hide();
+  }
+
+  ImageProvider base64ImageToNetworkImage(String base64String) {
+    Uint8List bytes = base64.decode(base64String);
+    return MemoryImage(bytes);
   }
 
   @override
@@ -340,7 +346,6 @@ class _FamilyAndFriendsScreenState extends State<FamilyAndFriendsScreen>
 
                                     // ignore: use_build_context_synchronously
                                     Navigator.of(context).pop();
-
                                   } else {
                                     Fluttertoast.showToast(
                                         msg: 'لا يمكن إضافة شخص بدون صورة !',
@@ -400,6 +405,8 @@ class _FamilyAndFriendsScreenState extends State<FamilyAndFriendsScreen>
                         ),
                         itemCount: careGiversList.length,
                         itemBuilder: (context, index) {
+                          //String base64String =  careGiversList[index]['face_url'];
+                          //ImageProvider networkImage = base64ImageToNetworkImage(base64String);
                           return Card(
                             shadowColor: AppColors.mintGreen,
                             elevation: 3,
@@ -416,8 +423,7 @@ class _FamilyAndFriendsScreenState extends State<FamilyAndFriendsScreen>
                                   Image(
                                       width: 100,
                                       height: 100,
-                                      image: NetworkImage(
-                                          careGiversList[index]['face_url'])),
+                                      image: NetworkImage(careGiversList[index]['face_url'])),
                                   const SizedBox(
                                     height: 10,
                                   ),

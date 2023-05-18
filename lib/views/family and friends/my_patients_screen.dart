@@ -131,114 +131,54 @@ class _MyPatientsScreenState extends State<MyPatientsScreen>
                   controller: refreshController,
                   enablePullDown: true,
                   onRefresh: refresh,
-                  child: ListView.builder(
+                  child: GridView.builder(
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                      ),
                       itemCount: patientsList.length,
                       itemBuilder: (context, index) {
-                        return Dismissible(
-                            key: UniqueKey(),
-                            direction: DismissDirection.startToEnd,
-                            background: Container(
-                              color: Colors.red,
-                              child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: const [
-                                    Text(
-                                      'حذف',
-                                      style: TextStyle(
-                                          fontSize: 20, color: AppColors.white),
-                                    ),
-                                    Icon(
-                                      Icons.delete_outline,
-                                      color: AppColors.white,
-                                      size: 35,
-                                    ),
-                                  ]),
-                            ),
-                            onDismissed: (direction) async {
-                              final SharedPreferences prefs =
-                                  await SharedPreferences.getInstance();
-                              String? userToken =
-                                  prefs.getString('currentUserToken');
-
-                              await patientUserRepository
-                                  .deleteMemoryUserRequest(
-                                      patientsList[index]['id'].toString(),
-                                      userToken!);
-
-                              setState(() {
-                                patientsList.removeAt(index);
-                              });
-                            },
-                            confirmDismiss: (DismissDirection direction) async {
-                              return await showDialog(
-                                context: context,
-                                builder: (BuildContext context) {
-                                  return AlertDialog(
-                                    title: const Text(
-                                      'تأكيد حذف الشخص',
-                                      textAlign: TextAlign.center,
-                                    ),
-                                    content: const Text(
-                                      'هل تريد حذف هذا الشخص بالفعل؟',
-                                      textAlign: TextAlign.center,
-                                    ),
-                                    actions: <Widget>[
-                                      TextButton(
-                                        onPressed: () =>
-                                            Navigator.of(context).pop(false),
-                                        child: const Text('إلغاء'),
-                                      ),
-                                      TextButton(
-                                        onPressed: () {
-                                          Navigator.of(context).pop(true);
-                                        },
-                                        child: const Text('حذف'),
-                                      ),
-                                    ],
-                                  );
-                                },
-                              );
-                            },
-                            child: Card(
-                              shadowColor: Colors.transparent,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20.0),
-                              ),
-                              color: const Color.fromARGB(255, 244, 244, 244),
-                              child: Directionality(
-                                textDirection: TextDirection.rtl,
-                                child: Row(
-                                  children: [
-                                    Container(
-                                      padding: const EdgeInsets.fromLTRB(
-                                          5, 10, 10, 10),
-                                      child: Image(
-                                          width: 100,
-                                          height: 100,
-                                          image: NetworkImage(imageLink)),
-                                    ),
-                                    Expanded(
-                                      child: ListTile(
-                                        title: Text(
-                                          patientsList[index]['full_name'],
-                                          style: const TextStyle(
-                                              fontSize: 22,
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                        subtitle: Text(
-                                          patientsList[index]['email'],
-                                          style: const TextStyle(
-                                              fontSize: 18,
-                                              color: AppColors.mintGreen,
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
+                        return Card(
+                          shadowColor: Colors.transparent,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20.0),
+                          ),
+                          color: const Color.fromARGB(255, 244, 244, 244),
+                          child: Directionality(
+                            textDirection: TextDirection.rtl,
+                            child: Column(
+                              children: [
+                                Container(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(5, 10, 10, 10),
+                                  child: Image(
+                                      width: 100,
+                                      height: 100,
+                                      image: NetworkImage(imageLink)),
                                 ),
-                              ),
-                            ));
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                                Text(
+                                  patientsList[index]['full_name'],
+                                  style: const TextStyle(
+                                      fontSize: 22,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                                Text(
+                                  patientsList[index]['email'],
+                                  style: const TextStyle(
+                                      fontSize: 18,
+                                      color: AppColors.mintGreen,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
                       }),
                 ),
     );
