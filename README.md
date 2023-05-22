@@ -1,5 +1,8 @@
-# Project Name
+# Memory Mate App
 >Nowadays, computer systems play a very important role in the health care context. However, many of these systems are also becoming increasingly complex. In particular, the design of these systems should be compatible with Alzheimer’s situation, as the condition of Alzheimer patients is growing worse, especially with the poor understanding of the disease, lack of support language difficulties, and memory loss. These systems should meet the various needs of such patients. In this paper, we are focusing on evaluating Alzheimer's assistance systems. Usually, in designing those systems, the human computer interaction (HCI) is left behind. Thus, we demonstrate several aspects to improve Alzheimer’s patient ability to interact with these systems. Moreover, we discussed the key factors that affect the success or failure of those systems taking into consideration criterion such as bringing down health care costs, learning ability, usability, dependability, readability, and facilitate automating. In the end, the paper illustrates using charts, and tables to show the impact of applying HCI when designing an interface to achieve user-friendly, intuitive interfaces, and higher usability of the systems.
+
+## App Logo
+![logo](https://github.com/bodykh/Memory-Mate/assets/58918060/25d5901b-4994-4dab-9615-f9cdf86bc7c6)
 
 ## Table of Contents
 * [General Info](#general-information)
