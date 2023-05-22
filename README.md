@@ -6,13 +6,8 @@
 * [Technologies Used](#technologies-used)
 * [Features](#features)
 * [Screenshots](#screenshots)
-* [Setup](#setup)
-* [Usage](#usage)
-* [Project Status](#project-status)
 * [Room for Improvement](#room-for-improvement)
-* [Acknowledgements](#acknowledgements)
-* [Contact](#contact)
-<!-- * [License](#license) -->
+* [License](#license)
 
 
 ## General Information
@@ -26,59 +21,22 @@
 
 
 ## Features
-List the ready features here:
-- Awesome feature 1
-- Awesome feature 2
-- Awesome feature 3
+- Saving and displaying the photos and names of the patients’ relatives and caregivers or other information related to them, thereby helping the patients review or reconstruct their memories.
+- Reminding the patient to take the correct medicines on time, eating meals, drinking water, taking a bath, closing windows and door, joining their events.
+- The interaction between each human role (patients, assistant) is the most important of this system. As a result, the developed application consists of two parts: An Alzheimer’s patient interface, and the assistant's interface.
+- Let the patient write things they should do to remind.
+- Allows patients to use the phone's camera to identify the person standing in front of them using facial recognition technology.
+- To test a patient's cognitive abilities, we have divided the tests into 4 different test categories: - (thinking tests, Concentration tests, memory tests, Decision making).
 
 
 ## Screenshots
-![Example screenshot](./img/screenshot.png)
-<!-- If you have screenshots you'd like to share, include them here. -->
-
-
-## Setup
-What are the project requirements/dependencies? Where are they listed? A requirements.txt or a Pipfile.lock file perhaps? Where is it located?
-
-Proceed to describe how to install / setup one's local environment / get started with the project.
-
-
-## Usage
-How does one go about using it?
-Provide various use cases and code examples here.
-
-`write-your-code-here`
-
-
-## Project Status
-Project is: _in progress_ / _complete_ / _no longer being worked on_. If you are no longer working on it, provide reasons why.
 
 
 ## Room for Improvement
-Include areas you believe need improvement / could be improved. Also add TODOs for future development.
-
-Room for improvement:
-- Improvement to be done 1
-- Improvement to be done 2
-
-To do:
-- Feature to be added 1
-- Feature to be added 2
+>We are working on making this app convenient and useful for all Alzheimer's patients we also work on reporting and data. More accurate and professional processing. We hope to improve Security and performance of the application and making the application competitive with it all global therapeutic applications. So, there are several steps and stages that we hope to develop In the future, like adding more treatment than removing chronic and intractable diseases as an alternative solution, and also for all categories of patients. Make the app more inclusive More than one medical field makes the app more effective and usable from many categories and increases the number of users to request. The use of data science techniques and artificial intelligence in our application makes reports more accurate and professional, and helps the patient's relatives and companions to follow up their patient well. Optimal use of data and analytics will also ensure that improvements are kept up to date on an ongoing basis as a result of the overall vision and measure. Key operational metrics. Use plans and methods that make the application appropriate and Compatible with all Alzheimer's patients we will make the application support English and In addition to the Arabic language that will provide an interface the number of application users. Our main goal is to treat Alzheimer's patients and find a real cure for them instead of going back or forth to the doctor in vain Test the application with 70-100 patients and collect their feedback with them. With interactions automatically generated and analyzed to produce a paper that discusses our experience with the results we found.
 
 
-## Acknowledgements
-Give credit here.
-- This project was inspired by...
-- This project was based on [this tutorial](https://www.example.com).
-- Many thanks to...
+## License
 
 
-## Contact
-Created by [@flynerdpl](https://www.flynerd.pl/) - feel free to contact me!
 
-
-<!-- Optional -->
-<!-- ## License -->
-<!-- This project is open source and available under the [... License](). -->
-
-<!-- You don't have to include all sections - just the one's relevant to your project -->
