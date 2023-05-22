@@ -16,7 +16,7 @@
 
 
 ## General Information
-- Alzheimer’s disease has become a very significant problem in the current era that is very likely to worsen due to increasing life expectancy, Alzheimer's disease is currently ranked as the sixth leading cause of death in the United States.
+>Alzheimer’s disease has become a very significant problem in the current era that is very likely to worsen due to increasing life expectancy, Alzheimer's disease is currently ranked as the sixth leading cause of death in the United States.
 
 
 ## Technologies Used
