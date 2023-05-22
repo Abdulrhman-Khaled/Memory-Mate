@@ -16,11 +16,7 @@
 
 
 ## General Information
-- Provide general information about your project here.
-- What problem does it (intend to) solve?
-- What is the purpose of your project?
-- Why did you undertake it?
-<!-- You don't have to answer all the questions - just the ones relevant to your project. -->
+- Alzheimer’s disease has become a very significant problem in the current era that is very likely to worsen due to increasing life expectancy, Alzheimer's disease is currently ranked as the sixth leading cause of death in the United States.
 
 
 ## Technologies Used
