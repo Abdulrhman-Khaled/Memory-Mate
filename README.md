@@ -5,7 +5,7 @@
 ![logo](https://github.com/bodykh/Memory-Mate/assets/58918060/25d5901b-4994-4dab-9615-f9cdf86bc7c6)
 
 ## App Demo
-### Check project's flow, Ui, test and functionality through ![Demo Video](https://drive.google.com/drive/folders/1yuU8P8H5nitlW4voAFv7gfPgMJVL6Wud?usp=sharing) 
+ >Check project's flow, Ui, test and functionality through [Demo Video](https://drive.google.com/drive/folders/1yuU8P8H5nitlW4voAFv7gfPgMJVL6Wud?usp=sharing) 
 
 ## Table of Contents
 * [General Info](#general-information)
