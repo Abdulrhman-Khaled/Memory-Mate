@@ -9,8 +9,8 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import 'package:simple_speed_dial/simple_speed_dial.dart';
 import '../../constants/color_constatnts.dart';
-import '../../cubit/cubit.dart';
-import '../../cubit/states.dart';
+import '../../controllers/cubit/cubit.dart';
+import '../../controllers/cubit/states.dart';
 import '../medicines and alarms/add_field.dart';
 
 class Todo extends StatefulWidget {

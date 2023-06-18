@@ -1,13 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:memory_mate/cubit/states.dart';
+import 'package:memory_mate/controllers/cubit/states.dart';
 
 import 'package:sqflite/sqflite.dart';
 
-import '../views/todo and mission/done.dart';
-import '../views/todo and mission/newtodo.dart';
-import '../views/todo and mission/starredtodo.dart';
+import '../../views/todo and mission/done.dart';
+import '../../views/todo and mission/newtodo.dart';
+import '../../views/todo and mission/starredtodo.dart';
+
 
 class AppCubit extends Cubit<AppStates> {
   AppCubit() : super(AppInitialStates());

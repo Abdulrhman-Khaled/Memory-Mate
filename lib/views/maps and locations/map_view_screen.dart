@@ -18,7 +18,7 @@ import '../../constants/color_constatnts.dart';
 import '../../networking/dio/api/dio_client.dart';
 import '../../networking/dio/models api/patient_user_api.dart';
 import '../../networking/dio/repositories/patient_user_repsitory.dart';
-import '../../providers/second_user_location.dart';
+import '../../controllers/providers/second_user_location.dart';
 
 class MapViewScreen extends StatefulWidget {
   const MapViewScreen({super.key});

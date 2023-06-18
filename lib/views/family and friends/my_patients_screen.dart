@@ -154,7 +154,7 @@ class _MyPatientsScreenState extends State<MyPatientsScreen>
                                   child: Image(
                                       width: 100,
                                       height: 100,
-                                      image: NetworkImage(imageLink)),
+                                      image: NetworkImage(patientsList[index]['photo_path'])),
                                 ),
                                 const SizedBox(
                                   height: 10,

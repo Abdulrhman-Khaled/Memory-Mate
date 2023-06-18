@@ -8,7 +8,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 
 import '../../components/buttons.dart';
 import '../../constants/color_constatnts.dart';
-import '../../providers/medicine_provider.dart';
+import '../../controllers/providers/medicine_provider.dart';
 import 'add_field.dart';
 
 // ignore: camel_case_types, must_be_immutable

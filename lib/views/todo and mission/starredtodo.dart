@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:memory_mate/constants/color_constatnts.dart';
 
-import '../../cubit/cubit.dart';
-import '../../cubit/states.dart';
+import '../../controllers/cubit/cubit.dart';
+import '../../controllers/cubit/states.dart';
 import 'addtodo.dart';
 
 class StarredTodo extends StatelessWidget {

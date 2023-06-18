@@ -4,7 +4,7 @@ import 'package:memory_mate/constants/color_constatnts.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 
-import '../../providers/medicine_provider.dart';
+import '../../controllers/providers/medicine_provider.dart';
 import 'add_field.dart';
 
 import 'create_appointment.dart';
